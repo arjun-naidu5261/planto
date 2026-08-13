@@ -72,27 +72,18 @@ export default function CartPage() {
 
   if (cart.length === 0 && !showLiveTracker) {
     return (
-      <div id="view-cart" className="page-view active" style={{ display: 'block', paddingBottom: '60px', minHeight: 'calc(100vh - 120px)' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px 0' }}>
-          <div className="section-title-row" style={{ marginBottom: '24px' }}>
-            <div>
-              <h2 className="section-title" style={{ fontFamily: 'var(--font-serif)', color: '#1b4332', fontSize: '28px' }}>My Gardening Cart</h2>
-              <p className="section-subtitle" style={{ color: '#64748b' }}>Review items, set delivery options, and complete checkout using your wallet balance.</p>
-            </div>
+      <div id="view-cart" className="page-view active" style={{ display: 'block', paddingBottom: '60px' }}>
+        <div className="section-title-row" style={{ marginBottom: '30px' }}>
+          <div>
+            <h2 className="section-title">My Gardening Cart</h2>
+            <p className="section-subtitle">Review items, set delivery options, and complete checkout using your wallet balance.</p>
           </div>
-
-          <div id="cart-empty-state" style={{ textAlign: 'center', padding: '70px 24px', background: '#ffffff', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#e8f5e9', color: '#1b4332', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', fontSize: '38px' }}>
-              🛒
-            </div>
-            <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: '0 0 10px 0' }}>Your Gardening Cart is Empty</h3>
-            <p style={{ fontSize: '14px', color: '#64748b', maxWidth: '480px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-              Explore our nearby plant nursery stalls, terracotta pots, organic fertilizers, and fresh flower bouquets to fill your cart for 3-5 hour same-day delivery!
-            </p>
-            <Link to="/nurseries" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#1b4332', color: '#ffffff', padding: '14px 28px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', textDecoration: 'none', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
-              🌿 Explore Nearby Nursery Stalls →
-            </Link>
-          </div>
+        </div>
+        <div id="cart-empty-state" style={{ textAlign: 'center', padding: '80px 20px', background: '#fff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.06)' }}>
+          <svg width="64" height="64" style={{ color: '#ccc', marginBottom: '16px' }}><use href="#icon-cart"></use></svg>
+          <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', marginBottom: '8px' }}>Your cart is empty</h3>
+          <p style={{ color: '#666', marginBottom: '24px' }}>Explore nearby nurseries or browse our plant & pot catalog to add items.</p>
+          <Link to="/" className="btn" style={{ textDecoration: 'none', display: 'inline-block', padding: '12px 28px', borderRadius: '12px' }}>Explore Nearby Nurseries</Link>
         </div>
       </div>
     );

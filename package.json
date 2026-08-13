@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "PLANTO - Premium Smart Plant & Nursery Marketplace Monorepo",
   "scripts": {
-    "install-all": "npm install --prefix client && npm install --prefix server",
+    "install-all": "npm install --prefix client && npm install --prefix business && npm install --prefix admin && npm install --prefix server",
     "client": "npm run dev --prefix client",
+    "business": "npm run dev --prefix business",
+    "admin": "npm run dev --prefix admin",
     "server": "npm run dev --prefix server",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run business\" \"npm run admin\""
   },
   "dependencies": {
     "concurrently": "^8.2.2"

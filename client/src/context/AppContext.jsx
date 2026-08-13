@@ -198,11 +198,6 @@ export const AppProvider = ({ children }) => {
 
   // Wishlist
   const toggleWishlist = (productId) => {
-    if (!isLoggedIn) {
-      alert("Please login first to manage your wishlist.");
-      return;
-    }
-    
     setWishlist((prev) => {
       if (prev.includes(productId)) {
         return prev.filter((id) => id !== productId);

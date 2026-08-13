@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import VendorCard from '../components/VendorCard';
@@ -7,75 +7,14 @@ import ProductCard from '../components/ProductCard';
 export default function HomePage() {
   const { vendors, products, setSelectedCategoryName, setShowCategoryModal, setLoginPresetEmail, setShowLogin } = useApp();
   const [searchVal, setSearchVal] = useState('');
-  const [gpsStatus, setGpsStatus] = useState('📍 Detecting Live Location...');
-  const [showAllVendors, setShowAllVendors] = useState(false);
+  const [gpsStatus, setGpsStatus] = useState('📍 Indiranagar, Bengaluru (30-45 mins)');
   const [vendorFilter, setVendorFilter] = useState('all');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
-
-  const requestLiveLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
-      setGpsStatus('📍 Indiranagar, Bengaluru (30-45 mins)');
-      return;
-    }
-
-    setGpsStatus('📍 Requesting Location Permission...');
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        
-        try {
-          // Reverse Geocode with high detail level (zoom=18 & addressdetails=1)
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
-          const data = await res.json();
-          
-          const road = data.address?.road || data.address?.pedestrian || data.address?.street || '';
-          const locality = data.address?.suburb || data.address?.neighbourhood || data.address?.residential || data.address?.village || data.address?.quarter || data.address?.hamlet || '';
-          const city = data.address?.city || data.address?.town || data.address?.county || data.address?.state_district || data.address?.district || '';
-
-          const parts = data.display_name ? data.display_name.split(',').map(s => s.trim()) : [];
-
-          let exactAddress = '';
-          if (road && locality) {
-            exactAddress = `${road}, ${locality}`;
-          } else if (locality && city) {
-            exactAddress = `${locality}, ${city}`;
-          } else if (road && city) {
-            exactAddress = `${road}, ${city}`;
-          } else if (parts.length >= 2) {
-            exactAddress = `${parts[0]}, ${parts[1]}`;
-          } else {
-            exactAddress = city || 'Live Location';
-          }
-
-          setGpsStatus(`📍 ${exactAddress} (Same-Day Delivery within 5 Hrs)`);
-        } catch (err) {
-          setGpsStatus(`📍 GPS (${lat.toFixed(2)}, ${lng.toFixed(2)}) • 5 Hrs Delivery`);
-        }
-      },
-      (error) => {
-        console.warn("Geolocation permission result:", error);
-        if (error.code === error.PERMISSION_DENIED) {
-          setGpsStatus('📍 Klef Road, Tadepalle (Tap to allow location)');
-        } else {
-          setGpsStatus('📍 Klef Road, Tadepalle (Same-Day Delivery within 5 Hrs)');
-        }
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
-  };
-
-  useEffect(() => {
-    requestLiveLocation();
-  }, []);
 
   const categories = [
     { name: "Indoor Plants", icon: "🪴", badge: "Air Purifiers", color: "#e8f5e9" },
     { name: "Outdoor Plants", icon: "🌸", badge: "Sun Lovers", color: "#fff3e0" },
     { name: "Pots & Planters", icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
-    { name: "Bouquets & Flowers", icon: "💐", badge: "Fresh Floral Gifts", color: "#fce4ec" },
     { name: "Soil & Manure", icon: "🌿", badge: "100% Organic", color: "#e8f5e9" },
     { name: "Seeds Collection", icon: "🌱", badge: "High Yield", color: "#f3e5f5" },
     { name: "Tools & Care", icon: "✂️", badge: "Pruners & Sprays", color: "#e0f2f1" }
@@ -96,14 +35,11 @@ export default function HomePage() {
     return true;
   });
 
-  const visibleVendors = showAllVendors ? filteredVendors : filteredVendors.slice(0, 5);
-
   // Filter products based on active tab
   const filteredProducts = products.filter(p => {
     if (productCategoryFilter === 'all') return true;
     if (productCategoryFilter === 'plants') return p.type === 'plant' || p.category.toLowerCase().includes('plant');
     if (productCategoryFilter === 'pots') return p.type === 'pot' || p.category.toLowerCase().includes('pot');
-    if (productCategoryFilter === 'bouquets') return p.type === 'bouquet' || p.category.toLowerCase().includes('bouquet') || p.category.toLowerCase().includes('flower');
     if (productCategoryFilter === 'soil') return p.type === 'soil' || p.category.toLowerCase().includes('soil') || p.category.toLowerCase().includes('seed');
     return true;
   });
@@ -114,7 +50,7 @@ export default function HomePage() {
   };
 
   const handleGpsConnect = () => {
-    requestLiveLocation();
+    setGpsStatus('📍 Jayanagar 4th Block, Bengaluru (Live Location ✅)');
   };
 
   const handleSearchSubmit = () => {
@@ -141,16 +77,14 @@ export default function HomePage() {
   return (
     <div id="view-home" className="page-view active" style={{ paddingBottom: '40px' }}>
       
-      {/* Hyperlocal Top Delivery Bar (Animated Same-Day 5-Hour Delivery) */}
+      {/* Hyperlocal Top Delivery Bar (Zomato/Swiggy style) */}
       <div style={{ background: 'linear-gradient(90deg, #1b4332 0%, #2d6a4f 100%)', color: '#fff', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: '12px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(27,67,50,0.15)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', fontWeight: 600 }}>
-          <span className="sameday-badge-animated" style={{ background: '#ffb703', color: '#000', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-            <span className="truck-bounce-icon">🚚</span> SAME-DAY DELIVERY
-          </span>
+          <span style={{ background: '#ffb703', color: '#000', padding: '3px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 800 }}>⚡ INSTANT DELIVERY</span>
           <span style={{ cursor: 'pointer' }} onClick={handleGpsConnect}>{gpsStatus}</span>
         </div>
         <div style={{ display: 'flex', gap: '16px', fontSize: '12px', fontWeight: 700 }}>
-          <span style={{ color: '#d8f3dc' }}>⏱️ Delivered within 3-5 Hours</span>
+          <span style={{ color: '#d8f3dc' }}>🛵 30-45 Mins Express</span>
           <span style={{ color: '#d8f3dc' }}>🪴 Hydration Plant Packaging</span>
         </div>
       </div>
@@ -166,7 +100,7 @@ export default function HomePage() {
             Order Plants, Pots & Soil<br />From <span>Nearby Nurseries</span>
           </h1>
           <p className="hero-desc" style={{ fontSize: '16px', color: '#4a5568', marginTop: '12px' }}>
-            Buy live plants, hand-crafted terracotta pots, and organic compost directly from local nursery stalls. Delivered fresh & hydrated to your doorstep within 3-5 hours today or reserve for self-pickup.
+            Buy live plants, hand-crafted terracotta pots, and organic compost directly from local nursery stalls. Delivered fresh to your doorstep in 30-45 minutes or reserve for self-pickup.
           </p>
           
           {/* Search Bar */}
@@ -257,43 +191,10 @@ export default function HomePage() {
         </div>
         
         <div className="category-slider" id="home-vendors-list" style={{ paddingBottom: '12px', overflowX: 'auto', display: 'flex', gap: '16px' }}>
-          {visibleVendors.map((vendor) => (
+          {filteredVendors.map((vendor) => (
             <VendorCard key={vendor.id} vendor={vendor} />
           ))}
         </div>
-
-        {filteredVendors.length > 5 && (
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <Link 
-              to="/nurseries"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                textDecoration: 'none',
-                background: 'var(--white)',
-                color: 'var(--primary-green)',
-                border: '2px solid var(--primary-green)',
-                padding: '12px 32px',
-                borderRadius: '30px',
-                fontWeight: 800,
-                fontSize: '13px',
-                boxShadow: '0 4px 16px rgba(46,125,50,0.12)',
-                transition: 'all 0.25s ease'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = 'var(--primary-green)';
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = 'var(--white)';
-                e.currentTarget.style.color = 'var(--primary-green)';
-              }}
-            >
-              View More Nearby Nursery Stores ({vendors.length} Stores Available) →
-            </Link>
-          </div>
-        )}
       </section>
 
       {/* Nursery Partner Banner (For Nursery Owners to sell plants) */}
@@ -367,58 +268,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Seasonal Curation Grid Sector */}
-      <section style={{ 
-        clear: 'both', 
-        marginTop: '64px', 
-        paddingTop: '32px', 
-        borderTop: '1px solid rgba(0,0,0,0.06)',
-        position: 'relative', 
-        zIndex: 1 
-      }}>
-        <div className="section-title-row" style={{ marginBottom: '20px', alignItems: 'flex-end' }}>
+      {/* Seasonal Curation Grid */}
+      <section>
+        <div className="section-title-row" style={{ marginBottom: '16px' }}>
           <div>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
-              🌸 HYPERLOCAL BOTANICAL CALENDAR
-            </div>
-            <h2 className="section-title" style={{ fontSize: '28px', margin: 0 }}>Seasonal Plant Collections</h2>
-            <p className="section-subtitle" style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
-              Handpicked flowering saplings & organic soil recipes tailored for India's weather cycles
-            </p>
+            <h2 className="section-title" style={{ fontSize: '24px' }}>Seasonal Plant Collections</h2>
+            <p className="section-subtitle">Handpicked flowering plants & fertilizer recipes for every season</p>
           </div>
         </div>
         
-        <div className="season-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+        <div className="season-grid">
           {seasonalItems.map((item, idx) => (
             <div 
               key={idx} 
               className="season-card" 
               style={{ 
                 cursor: 'pointer',
-                minHeight: '260px',
-                borderRadius: '20px',
-                backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.85)), url(${item.img})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.85)), url(${item.img})`
               }} 
               onClick={() => handleSeasonalClick(item.name)}
             >
-              {/* Top Season Badge */}
-              <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '4px 10px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.3)' }}>
-                {idx === 0 ? 'March - May' : idx === 1 ? 'June - August' : idx === 2 ? 'Sept - Nov' : 'Dec - Feb'}
-              </div>
-
-              <div className="season-icon" style={{ fontSize: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {item.emoji}
-              </div>
-
+              <div className="season-icon">{item.emoji}</div>
               <div className="season-content-overlay" style={{ zIndex: 2, position: 'relative' }}>
-                <h3 style={{ color: '#ffffff', textShadow: '0 2px 6px rgba(0,0,0,0.8)', fontSize: '20px', margin: '0 0 6px 0', fontFamily: 'var(--font-serif)' }}>{item.name}</h3>
-                <p style={{ color: 'rgba(255, 255, 255, 0.95)', textShadow: '0 1px 4px rgba(0,0,0,0.8)', fontSize: '13px', margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
-                
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#ffb703', fontWeight: 800, marginTop: '10px' }}>
-                  Explore Collection →
-                </span>
+                <h3 style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.6)' }}>{item.name}</h3>
+                <p style={{ color: 'rgba(255, 255, 255, 0.95)', textShadow: '0 1px 3px rgba(0,0,0,0.6)' }}>{item.desc}</p>
               </div>
             </div>
           ))}

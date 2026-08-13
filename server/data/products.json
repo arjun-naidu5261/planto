@@ -436,5 +436,63 @@
       "fertilizer": "N/A",
       "potType": "N/A"
     }
+  },
+  {
+    "id": "bq1",
+    "name": "Royal Velvet Red Rose Bouquet",
+    "category": "Bouquets & Flowers",
+    "tag": "Fresh Flower Bouquets",
+    "type": "bouquet",
+    "price": 499,
+    "vendorId": "v1",
+    "rating": 4.9,
+    "reviewsCount": 42,
+    "description": "Hand-crafted bouquet of 12 fresh Dutch red roses with Gypsy fillers and eco-friendly burlap wrapping.",
+    "height": "45 cm",
+    "weight": "0.6 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 5,
+    "potSize": "N/A",
+    "sizesAvailable": ["12 Roses", "24 Roses Premium"],
+    "quantity": 20,
+    "images": ["https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80"],
+    "careInstructions": {
+      "waterLevel": "Trim stems by 1cm and place in fresh clean vase water",
+      "sunlight": "Keep in cool shaded room away from direct sunlight",
+      "temperature": "18°C - 25°C",
+      "humidity": "N/A",
+      "fertilizer": "Includes 1 packet flower food solution",
+      "potType": "Handcrafted Burlap Wrap"
+    }
+  },
+  {
+    "id": "bq2",
+    "name": "Exotic Purple Orchid & Lily Bouquet",
+    "category": "Bouquets & Flowers",
+    "tag": "Fresh Flower Bouquets",
+    "type": "bouquet",
+    "price": 699,
+    "vendorId": "v3",
+    "rating": 5.0,
+    "reviewsCount": 18,
+    "description": "Luxurious arrangement of imported purple Dendrobium Orchids, Asiatic Lilies, and lush green monstera foliage.",
+    "height": "50 cm",
+    "weight": "0.8 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 6,
+    "potSize": "N/A",
+    "sizesAvailable": ["Standard Luxury"],
+    "quantity": 15,
+    "images": ["https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80"],
+    "careInstructions": {
+      "waterLevel": "Change vase water every 2 days and mist petals gently",
+      "sunlight": "Indirect ambient lighting",
+      "temperature": "18°C - 24°C",
+      "humidity": "High humidity preferred",
+      "fertilizer": "Includes flower food",
+      "potType": "Satin Ribbon Premium Wrap"
+    }
   }
 ]

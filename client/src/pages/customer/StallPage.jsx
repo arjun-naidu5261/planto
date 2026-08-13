@@ -94,7 +94,7 @@ export default function StallPage() {
             <div style={{ display: 'flex', gap: '16px', marginTop: '14px', fontSize: '13px', fontWeight: 700, color: '#d8f3dc' }}>
               <span>⭐ {vendor.rating} ({vendor.reviewsCount} customer reviews)</span>
               <span>📍 {vendor.distance} away</span>
-              <span>🚚 Same-Day Delivery within 3-5 Hours</span>
+              <span>⚡ 25-35 min Express Delivery</span>
             </div>
           </div>
 

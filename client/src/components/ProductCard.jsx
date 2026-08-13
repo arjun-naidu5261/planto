@@ -26,10 +26,6 @@ export default function ProductCard({ product }) {
   const handleFavClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isLoggedIn) {
-      setShowLogin(true);
-      return;
-    }
     toggleWishlist(product.id);
   };
 
@@ -57,7 +53,14 @@ export default function ProductCard({ product }) {
       
       <div className="product-img-wrapper">
         <Link to={`/product/${product.id}`}>
-          <img src={product.images[0]} alt={product.name} />
+          <img 
+            src={product.images[0]} 
+            alt={product.name} 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=600&q=80";
+            }}
+          />
         </Link>
       </div>
       
@@ -95,8 +98,12 @@ export default function ProductCard({ product }) {
             </span>
           </div>
           
-          <button className="add-cart-btn" onClick={handleCartClick}>
-            <svg width="20" height="20" style={{ color: 'white' }}><use href="#icon-cart"></use></svg>
+          <button className="add-cart-btn" onClick={handleCartClick} aria-label="Add to Cart" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--primary-green)', color: '#ffffff' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
           </button>
         </div>
       </div>

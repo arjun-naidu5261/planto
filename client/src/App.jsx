@@ -33,6 +33,7 @@ import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import SeasonalPage from './pages/SeasonalPage';
 import VirtualGardenPage from './pages/VirtualGardenPage';
+import NurseriesPage from './pages/NurseriesPage';
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/nurseries" element={<NurseriesPage />} />
             <Route path="/category/:name" element={<CategoryPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/stall/:id" element={<StallPage />} />
@@ -61,7 +63,8 @@ export default function App() {
             <Route path="/delivery" element={<DeliveryDashboardPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/cart" element={<CartPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<ProfilePage defaultTab="dashboard" />} />
+            <Route path="/wishlist" element={<ProfilePage defaultTab="wishlist" />} />
             <Route path="/seasonal/:season" element={<SeasonalPage />} />
             <Route path="/garden" element={<VirtualGardenPage />} />
           </Routes>

@@ -167,14 +167,6 @@ export default function ProductPage() {
               <div className="spec-lbl">Suggested Soil</div>
             </div>
           </div>
-
-          <div style={{ marginTop: '24px', padding: '16px', background: '#e8f5e9', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #c8e6c9' }}>
-            <span style={{ fontSize: '24px' }}>🚚</span>
-            <div>
-              <div style={{ fontWeight: 800, fontSize: '13px', color: '#1b4332' }}>Same-Day Express Delivery (3-5 Hours)</div>
-              <div style={{ fontSize: '11px', color: '#2d6a4f' }}>Moisture-preserved packaging directly from nearest verified nursery stall</div>
-            </div>
-          </div>
         </div>
       </div>
 

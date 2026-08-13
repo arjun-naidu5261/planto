@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 
-export default function ProfilePage({ defaultTab }) {
+export default function ProfilePage() {
   const { 
     wishlist, 
     products, 
@@ -25,37 +25,119 @@ export default function ProfilePage({ defaultTab }) {
     toggleWishlist
   } = useApp();
 
-  // Real wishlist products from context
-  const wishlistProducts = products.filter(p => wishlist.includes(p.id));
+  const demoWishlistItems = [
+    {
+      id: "demo-p1",
+      name: "Money Plant (Golden Pothos)",
+      category: "Indoor Plant",
+      price: 180,
+      oldPrice: 220,
+      discount: "18% OFF",
+      img: "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "In Stock"
+    },
+    {
+      id: "demo-p2",
+      name: "Succulent Jade Plant",
+      category: "Succulent",
+      price: 120,
+      oldPrice: 150,
+      discount: "20% OFF",
+      img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "In Stock"
+    },
+    {
+      id: "demo-p3",
+      name: "Snake Plant (Sansevieria)",
+      category: "Air Purifying Plant",
+      price: 250,
+      oldPrice: 300,
+      discount: "17% OFF",
+      img: "https://images.unsplash.com/photo-1597055181300-e3633a207518?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "Low Stock"
+    },
+    {
+      id: "demo-p4",
+      name: "Marigold Flower Seeds",
+      category: "Flower Seeds",
+      price: 35,
+      oldPrice: 45,
+      discount: "22% OFF",
+      img: "https://images.unsplash.com/photo-1588615419954-47c0fae39b21?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "In Stock"
+    },
+    {
+      id: "demo-p5",
+      name: "Terracotta Pot (6 inch)",
+      category: "Pots & Planters",
+      price: 80,
+      oldPrice: 100,
+      discount: "20% OFF",
+      img: "https://images.unsplash.com/photo-1520440229-6469a149ac59?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "In Stock"
+    },
+    {
+      id: "demo-p6",
+      name: "Premium Potting Mix (5kg)",
+      category: "Soil & Fertilizers",
+      price: 150,
+      oldPrice: 180,
+      discount: "16% OFF",
+      img: "https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=400&q=80",
+      stockStatus: "In Stock"
+    }
+  ];
 
-  const handleRemoveWishlist = (id) => {
-    toggleWishlist(id);
+  const [localWishlist, setLocalWishlist] = useState(demoWishlistItems);
+
+  const handleRemoveLocalWishlist = (id) => {
+    setLocalWishlist(prev => prev.filter(item => item.id !== id));
+    // Toggle globally if in user's real wishlist context
+    const realId = id.replace('demo-', '');
+    if (wishlist.includes(realId)) {
+      toggleWishlist(realId);
+    }
+  };
+
+  const handleAddLocalToCart = (item) => {
+    addToCart({
+      id: item.id.replace('demo-', ''),
+      name: item.name,
+      price: item.price,
+      img: item.img,
+      category: item.category
+    }, 1);
+    alert(`${item.name} added to your shopping cart!`);
   };
 
   const handleMoveAllToCart = () => {
-    if (wishlistProducts.length === 0) {
+    if (localWishlist.length === 0) {
       alert("Your wishlist is empty.");
       return;
     }
-    wishlistProducts.forEach(item => {
-      addToCart(item, 1);
+    localWishlist.forEach(item => {
+      addToCart({
+        id: item.id.replace('demo-', ''),
+        name: item.name,
+        price: item.price,
+        img: item.img,
+        category: item.category
+      }, 1);
     });
     alert("All items from your wishlist have been moved to your shopping cart!");
   };
 
   // Active tab state
-  const [activeTab, setActiveTab] = useState(defaultTab || (isLoggedIn && currentUser?.role === 'Customer' ? 'dashboard' : 'wishlist'));
+  const [activeTab, setActiveTab] = useState(isLoggedIn && currentUser?.role === 'Customer' ? 'dashboard' : 'wishlist');
   
-  // Sync activeTab when defaultTab or auth status changes
+  // Sync activeTab when authentication status changes
   React.useEffect(() => {
-    if (defaultTab) {
-      setActiveTab(defaultTab);
-    } else if (isLoggedIn && currentUser?.role === 'Customer') {
+    if (isLoggedIn && currentUser?.role === 'Customer') {
       setActiveTab('dashboard');
     } else {
       setActiveTab('wishlist');
     }
-  }, [defaultTab, isLoggedIn, currentUser]);
+  }, [isLoggedIn, currentUser]);
   
   // Profile editing
   const [isEditing, setIsEditing] = useState(false);
@@ -344,88 +426,60 @@ export default function ProfilePage({ defaultTab }) {
     return true;
   });
 
-  const showSidebar = isLoggedIn && currentUser?.role === 'Customer';
-
   return (
     <div style={{ display: 'flex', minHeight: 'calc(100vh - 70px)', background: '#f8f9fa', fontFamily: 'var(--font-main)' }}>
-      {/* 1. LEFT SIDEBAR (Only rendered for logged in customer dashboard) */}
-      {showSidebar && (
-        <aside style={{ width: '250px', background: '#ffffff', borderRight: '1px solid #eef2f5', padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
-          <div>
-            {/* Logo removed */}
+      {/* 1. LEFT SIDEBAR */}
+      <aside style={{ width: '250px', background: '#ffffff', borderRight: '1px solid #eef2f5', padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div>
+          {/* Logo removed */}
 
-            {/* Navigation links */}
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {filteredSidebarItems.map(item => {
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setIsEditing(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      width: '100%',
-                      padding: '10px 14px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      background: isActive ? 'var(--primary-green)' : 'transparent',
-                      color: isActive ? '#ffffff' : '#4a5568',
-                      fontSize: '13.5px',
-                      fontWeight: isActive ? 600 : 500,
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseOver={(e) => {
-                      if (!isActive) e.currentTarget.style.background = '#f7fafc';
-                    }}
-                    onMouseOut={(e) => {
-                      if (!isActive) e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    {renderProfileIcon(item.id, isActive ? '#ffffff' : '#4a5568', 16)}
-                    {item.label}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
+          {/* Navigation links */}
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {filteredSidebarItems.map(item => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setIsEditing(false);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: isActive ? 'var(--primary-green)' : 'transparent',
+                    color: isActive ? '#ffffff' : '#4a5568',
+                    fontSize: '13.5px',
+                    fontWeight: isActive ? 600 : 500,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    if (!isActive) e.currentTarget.style.background = '#f7fafc';
+                  }}
+                  onMouseOut={(e) => {
+                    if (!isActive) e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  {renderProfileIcon(item.id, isActive ? '#ffffff' : '#4a5568', 16)}
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
 
-          {/* Sidebar Bottom: Logout Button */}
-          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #edf2f7' }}>
-            <button
-              onClick={() => {
-                logoutUser();
-                window.location.hash = "#/";
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '12px',
-                border: '1px solid #fee2e2',
-                background: '#fef2f2',
-                color: '#dc2626',
-                fontSize: '13.5px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.background = '#fee2e2'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = '#fef2f2'; }}
-            >
-              <span>🚪</span> Logout Account
-            </button>
-          </div>
-        </aside>
-      )}
+        {/* Sidebar Bottom */}
+        <div style={{ marginTop: '30px' }}>
+          {/* Logout button removed */}
+        </div>
+      </aside>
 
       {/* 2. MAIN CONTENT AREA */}
       <div style={{ flex: 1, padding: '24px 30px', display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto' }}>
@@ -860,69 +914,230 @@ export default function ProfilePage({ defaultTab }) {
           </div>
         )}
 
-        {/* Tab: Wishlist products */}
+        {/* Tab 4: Wishlist products */}
         {activeTab === 'wishlist' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
-            {/* Top Toolbar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ffffff', padding: '20px 28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.02)' }}>
+            {/* Title Row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <div>
-                <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  ❤️ My Wishlist
+                <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--dark)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                  <span style={{ color: '#e53e3e' }}>❤️</span> My Wishlist
                 </h2>
-                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
-                  {wishlistProducts.length > 0 ? `${wishlistProducts.length} saved plants & products in your personal collection` : 'Save your favorite plants & pots in one place'}
-                </p>
+                <p style={{ fontSize: '13px', color: '#718096', marginTop: '4px', marginBottom: 0 }}>Your favorite plants and products, all in one place.</p>
               </div>
 
-              {wishlistProducts.length > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Wishlist share link copied to clipboard!");
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 16px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    borderRadius: '10px',
+                    border: '1px solid #cbd5e0',
+                    background: '#ffffff',
+                    color: '#4a5568',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-green)'}
+                  onMouseOut={(e) => e.currentTarget.style.borderColor = '#cbd5e0'}
+                >
+                  📤 Share Wishlist
+                </button>
+                
                 <button 
                   onClick={handleMoveAllToCart}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 20px',
-                    fontSize: '13px',
-                    fontWeight: 800,
-                    borderRadius: '12px',
+                    gap: '6px',
+                    padding: '8px 16px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    borderRadius: '10px',
                     border: 'none',
-                    background: '#1b4332',
+                    background: 'var(--primary-green)',
                     color: '#ffffff',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(27,67,50,0.2)'
+                    transition: 'opacity 0.2s'
                   }}
+                  onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+                  onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
                 >
                   🛒 Move All to Cart
                 </button>
-              )}
+              </div>
             </div>
 
-            {/* Wishlist Content Grid or Empty State */}
-            {wishlistProducts.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '70px 20px', background: '#ffffff', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', margin: '10px 0' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#e8f5e9', color: '#1b4332', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', fontSize: '38px' }}>
-                  💚
+            {/* Metrics Grid Row */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+              
+              {/* Metric 1 */}
+              <div style={{ background: '#ffffff', padding: '14px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.01)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>🎁</div>
+                <div>
+                  <strong style={{ fontSize: '18px', display: 'block', color: 'var(--dark)' }}>{localWishlist.length}</strong>
+                  <span style={{ fontSize: '11px', color: '#718096', fontWeight: 600 }}>Saved Items</span>
                 </div>
-                <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: '0 0 10px 0' }}>Your Wishlist is Empty</h3>
-                <p style={{ fontSize: '14px', color: '#64748b', maxWidth: '480px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                  Explore our nearby plant nursery stalls and tap the heart icon on any live plant, ceramic planter, bouquet, or seed packet to save your favorites here!
-                </p>
-                <Link to="/nurseries" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#1b4332', color: '#ffffff', padding: '14px 28px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', textDecoration: 'none', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
-                  🌿 Explore Nearby Nursery Stalls →
+              </div>
+
+              {/* Metric 2 */}
+              <div style={{ background: '#ffffff', padding: '14px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.01)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>🏷️</div>
+                <div>
+                  <strong style={{ fontSize: '18px', display: 'block', color: 'var(--dark)' }}>₹{localWishlist.reduce((sum, item) => sum + item.price, 0)}</strong>
+                  <span style={{ fontSize: '11px', color: '#718096', fontWeight: 600 }}>Total Value</span>
+                </div>
+              </div>
+
+              {/* Metric 3 */}
+              <div style={{ background: '#ffffff', padding: '14px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.01)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>🔔</div>
+                <div>
+                  <strong style={{ fontSize: '18px', display: 'block', color: 'var(--dark)' }}>2</strong>
+                  <span style={{ fontSize: '11px', color: '#718096', fontWeight: 600 }}>Price Drops</span>
+                </div>
+              </div>
+
+              {/* Metric 4 */}
+              <div style={{ background: '#ffffff', padding: '14px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.01)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>📦</div>
+                <div>
+                  <strong style={{ fontSize: '18px', display: 'block', color: 'var(--dark)' }}>{localWishlist.filter(item => item.stockStatus === 'In Stock').length}</strong>
+                  <span style={{ fontSize: '11px', color: '#718096', fontWeight: 600 }}>In Stock</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Wishlist Toolbar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #edf2f7', paddingBottom: '12px', marginTop: '10px' }}>
+              <span style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--dark)' }}>{localWishlist.length} Items in Wishlist</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ fontSize: '12.5px', color: '#718096' }}>
+                  Sort by: <select style={{ padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '12px', fontWeight: 600, outline: 'none' }}><option>Recently Added</option></select>
+                </div>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button style={{ background: '#f7fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '4px 6px', cursor: 'pointer', fontSize: '12px' }}>Grid</button>
+                  <button style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '4px 6px', cursor: 'pointer', fontSize: '12px', color: '#ccc' }}>List</button>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+              {localWishlist.length === 0 ? (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#888', padding: '40px 0', background: 'var(--white)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.03)' }}>
+                  No plants added to your wishlist yet.
+                </div>
+              ) : (
+                localWishlist.map(prod => (
+                  <div key={prod.id} style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)', padding: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', boxShadow: '0 2px 8px rgba(0,0,0,0.01)' }}>
+                    
+                    {/* Top image section with absolute badges */}
+                    <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', height: '140px', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img src={prod.img} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      
+                      {/* Heart Icon top right */}
+                      <button 
+                        onClick={() => handleRemoveLocalWishlist(prod.id)}
+                        style={{ position: 'absolute', top: '8px', right: '8px', background: '#ffffff', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}
+                      >
+                        <span style={{ fontSize: '12px', color: '#e53e3e' }}>❤️</span>
+                      </button>
+
+                      {/* Stock Badge top left */}
+                      <span style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '9px', background: prod.stockStatus === 'In Stock' ? '#ebf8f2' : '#fffaf0', color: prod.stockStatus === 'In Stock' ? '#38a169' : '#dd6b20', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
+                        {prod.stockStatus}
+                      </span>
+                    </div>
+
+                    {/* Details section */}
+                    <div style={{ marginTop: '12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <span style={{ fontSize: '9.5px', color: '#a0aec0', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 700 }}>{prod.category}</span>
+                        <h4 style={{ fontSize: '13px', fontWeight: 800, color: 'var(--dark)', marginTop: '2px', height: '36px', overflow: 'hidden', lineHeight: '1.3' }}>{prod.name}</h4>
+                      </div>
+
+                      {/* Prices row */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                        <strong style={{ fontSize: '15px', color: 'var(--dark)' }}>₹{prod.price}</strong>
+                        <span style={{ fontSize: '12px', color: '#a0aec0', textDecoration: 'line-through' }}>₹{prod.oldPrice}</span>
+                        <span style={{ fontSize: '9.5px', color: '#38a169', background: '#ebf8f2', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>{prod.discount}</span>
+                      </div>
+                    </div>
+
+                    {/* Actions row */}
+                    <div style={{ display: 'flex', gap: '6px', marginTop: '14px' }}>
+                      <button 
+                        onClick={() => handleAddLocalToCart(prod)}
+                        style={{ border: '1px solid var(--primary-green)', background: '#ffffff', color: 'var(--primary-green)', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = '#e8f5e9'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = '#ffffff'; }}
+                      >
+                        🛒
+                      </button>
+                      <button 
+                        onClick={() => handleAddLocalToCart(prod)}
+                        style={{ flex: 1, background: 'var(--primary-green)', color: '#ffffff', border: 'none', borderRadius: '8px', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer', transition: 'opacity 0.2s' }}
+                        onMouseOver={(e) => { e.currentTarget.style.opacity = '0.9'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.opacity = '1'; }}
+                      >
+                        Add to Cart
+                      </button>
+                      <button 
+                        onClick={() => alert("Options: Share this product item, or move to private vault.")}
+                        style={{ border: '1px solid #e2e8f0', background: '#ffffff', color: '#718096', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                      >
+                        ⋮
+                      </button>
+                    </div>
+
+                  </div>
+                ))
+              )}
+
+              {/* Call to action Banner (spans remaining 2 grid spaces) */}
+              <div style={{ gridColumn: 'span 2', background: '#f5fdf7', border: '2px dashed #c8e6c9', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', marginBottom: '12px' }}>🪴</div>
+                <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dark)', margin: 0 }}>Find more greenery you'll love!</h4>
+                <p style={{ fontSize: '12px', color: '#718096', marginTop: '4px', marginBottom: '16px', maxWidth: '280px' }}>Explore our bestsellers and new arrivals.</p>
+                <Link 
+                  to="/"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 18px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    borderRadius: '8px',
+                    border: '1px solid var(--primary-green)',
+                    background: '#ffffff',
+                    color: 'var(--primary-green)',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#e8f5e9'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = '#ffffff'; }}
+                >
+                  🧭 Explore Plants
                 </Link>
               </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '24px' }}>
-                {wishlistProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            )}
+
+            </div>
 
             {/* Footer lock label */}
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#a0aec0', marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '16px' }}>
-              <span>🔒</span> <strong>Secure & Private</strong> Your wishlist is saved locally on your device.
+              <span>🔒</span> <strong>Secure & Private</strong> Your wishlist is only visible to you.
             </div>
 
           </div>

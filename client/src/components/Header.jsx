@@ -66,29 +66,30 @@ export default function Header() {
         </Link>
         
         <nav className="desktop-nav">
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Explore Nurseries</NavLink>
           
           {(!isLoggedIn || currentUser?.role === 'Customer') && (
             <>
-              <NavLink to="/map" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Discover Stalls</NavLink>
-              <NavLink to="/ai" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>AI Diagnostician</NavLink>
+              <NavLink to="/map" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Nearby Stalls Map</NavLink>
+              <NavLink to="/ai" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>AI Plant Doctor</NavLink>
               <NavLink to="/garden" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Virtual Garden</NavLink>
               <NavLink to="/community" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Community</NavLink>
             </>
           )}
 
           {isLoggedIn && currentUser?.role === 'Vendor' && (
-            <NavLink to="/vendor" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Vendor Desk</NavLink>
+            <NavLink to="/vendor" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>🏪 Nursery Vendor Desk</NavLink>
           )}
 
           {isLoggedIn && currentUser?.role === 'Delivery Partner' && (
-            <NavLink to="/delivery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Delivery Desk</NavLink>
+            <NavLink to="/delivery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>🛵 Delivery Desk</NavLink>
           )}
 
           {isLoggedIn && currentUser?.role === 'Admin' && (
             <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Admin Portal</NavLink>
           )}
         </nav>
+
 
         <div className="header-actions">
           <button 
@@ -102,7 +103,7 @@ export default function Header() {
           
           {/* Wishlist */}
           {(!isLoggedIn || currentUser?.role === 'Customer') && (
-            <Link to="/profile" className="action-btn" title="My Wishlist">
+            <Link to="/wishlist" className="action-btn" title="My Wishlist">
               <svg width="22" height="22"><use href="#icon-wishlist"></use></svg>
               {wishlist.length > 0 && (
                 <span className="badge" id="wishlist-badge">{wishlist.length}</span>
@@ -153,56 +154,88 @@ export default function Header() {
             {isLoggedIn && showDropdown && (
               <div style={{
                 position: 'absolute',
-                top: 'calc(100% + 8px)',
+                top: 'calc(100% + 10px)',
                 right: 0,
-                width: '140px',
+                width: '240px',
                 background: '#ffffff',
-                borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.06)',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.08)',
-                padding: '4px',
+                borderRadius: '16px',
+                border: '1px solid #e2e8f0',
+                boxShadow: '0 12px 32px rgba(0,0,0,0.12)',
+                padding: '16px',
                 zIndex: 999,
                 display: 'flex',
                 flexDirection: 'column',
+                gap: '12px',
                 animation: 'headerDropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                 transformOrigin: 'top right'
               }}>
-                <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                    logoutUser();
-                    window.location.hash = "#/";
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    border: 'none',
-                    background: 'transparent',
-                    color: '#d32f2f',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    transition: 'background 0.2s ease'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = '#ffebee';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                  </svg>
-                  Logout
-                </button>
+                {/* User Header Info: Name & Email below name */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                  <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#1b4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '16px', flexShrink: 0 }}>
+                    {currentUser?.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                  </div>
+                  <div style={{ overflow: 'hidden' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#1b4332', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {currentUser?.name || 'User'}
+                    </h4>
+                    <span style={{ fontSize: '11px', color: '#64748b', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '2px' }}>
+                      {currentUser?.email || 'customer@planto.in'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Menu Options */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <Link 
+                    to={getDashboardRoute()} 
+                    onClick={() => setShowDropdown(false)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '10px', color: '#1b4332', textDecoration: 'none', fontSize: '13px', fontWeight: 700, transition: 'background 0.2s' }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <span>⚙️</span> Account Settings & Profile
+                  </Link>
+
+                  <Link 
+                    to="/wishlist" 
+                    onClick={() => setShowDropdown(false)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '10px', color: '#1b4332', textDecoration: 'none', fontSize: '13px', fontWeight: 700, transition: 'background 0.2s' }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <span>❤️</span> My Wishlist ({wishlist.length})
+                  </Link>
+                </div>
+
+                {/* Logout Button below options */}
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '8px' }}>
+                  <button
+                    onClick={() => {
+                      setShowDropdown(false);
+                      logoutUser();
+                      window.location.hash = "#/";
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      background: '#fef2f2',
+                      color: '#dc2626',
+                      fontSize: '13px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#fee2e2'}
+                    onMouseOut={(e) => e.currentTarget.style.background = '#fef2f2'}
+                  >
+                    <span>🚪</span> Logout Account
+                  </button>
+                </div>
               </div>
             )}
           </div>

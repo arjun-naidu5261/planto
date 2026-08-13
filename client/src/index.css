@@ -1707,3 +1707,51 @@ tr:last-child td {
 #category-detail-modal.active .modal-content {
   transform: scale(1);
 }
+
+/* Delivery Ribbon Pulse & Truck Animations */
+@keyframes sameDayBadgePulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 183, 3, 0.7); }
+  70% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(255, 183, 3, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 183, 3, 0); }
+}
+
+@keyframes truckDrive {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.sameday-badge-animated {
+  animation: sameDayBadgePulse 2.2s infinite ease-in-out;
+}
+
+.truck-bounce-icon {
+  display: inline-block;
+  animation: truckDrive 1.2s infinite ease-in-out;
+}
+
+/* Seasonal Collections Sector Animated Styles */
+@keyframes seasonIconFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.08); }
+}
+
+.season-card {
+  border-radius: 20px !important;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.season-card:hover {
+  transform: translateY(-12px) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.season-card:hover .season-icon {
+  animation: seasonIconFloat 1.5s ease-in-out infinite;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6) !important;
+}
