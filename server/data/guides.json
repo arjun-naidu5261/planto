@@ -1,0 +1,26 @@
+[
+  {
+    "id": "g1",
+    "title": "How to Avoid Root Rot in Snake Plants",
+    "category": "Indoor Plants",
+    "difficulty": "Beginner",
+    "content": "The snake plant is practically indestructible, except when it is overwatered. Overwatering causes the roots to sit in stagnant water, cutting off oxygen supply and fostering fungal growth. Water only when the potting mix is dry all the way to the bottom. Choose a potting soil containing sand or perlite for faster drainage.",
+    "readTime": "3 min read"
+  },
+  {
+    "id": "g2",
+    "title": "Ugadi Garden Preparation Checklist",
+    "category": "Season Collections",
+    "difficulty": "Intermediate",
+    "content": "As spring enters and we celebrate Ugadi, prepare your garden for high temperatures. 1. Clean the dry winter leaves. 2. Repot root-bound plants into containers 2 inches larger. 3. Top-dress pots with fresh organic compost to retain soil moisture. 4. Prune hibiscus and rose plants to encourage new shoots.",
+    "readTime": "5 min read"
+  },
+  {
+    "id": "g3",
+    "title": "Vermicompost vs. Chemical Fertilizers",
+    "category": "Gardening Essentials",
+    "difficulty": "Advanced",
+    "content": "Vermicompost feeds the soil, while chemical fertilizers feed the plant directly but degrade soil structure over time. Vermicompost contains earthworm castings rich in humic acids, beneficial microbes, and trace elements that stimulate natural root immunity. Apply vermicompost every 30 days to sustain natural organic growth.",
+    "readTime": "4 min read"
+  }
+]

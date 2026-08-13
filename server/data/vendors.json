@@ -1,0 +1,196 @@
+[
+  {
+    "id": "v1",
+    "name": "Sai Baba Plant & Pot Stall",
+    "owner": "Suresh Rao",
+    "type": "Roadside Seller",
+    "distance": "0.6 km",
+    "rating": 4.6,
+    "reviewsCount": 42,
+    "isOpen": true,
+    "phone": "+91 98480 22334",
+    "hours": "7:00 AM - 7:30 PM",
+    "coords": {
+      "x": 60,
+      "y": 25
+    },
+    "lat": 12.9784,
+    "lng": 77.6408,
+    "address": "Opposite Metro Station Pillar 124, Indiranagar, Bengaluru",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": [
+      {
+        "user": "Aditi S.",
+        "rating": 5,
+        "comment": "Suresh uncle has the best collection of terracotta pots! Extremely reasonable price.",
+        "date": "2 days ago"
+      },
+      {
+        "user": "Rohan M.",
+        "rating": 4,
+        "comment": "Great variety of seasonal flowering plants. Located right on the main road.",
+        "date": "1 week ago"
+      }
+    ]
+  },
+  {
+    "id": "v2",
+    "name": "Green Flora Roadside Nursery",
+    "owner": "Ramesh Kumar",
+    "type": "Roadside Seller",
+    "distance": "1.2 km",
+    "rating": 4.8,
+    "reviewsCount": 89,
+    "isOpen": true,
+    "phone": "+91 98765 43210",
+    "hours": "6:30 AM - 8:00 PM",
+    "coords": {
+      "x": 35,
+      "y": 40
+    },
+    "lat": 12.9568,
+    "lng": 77.6487,
+    "address": "Under Flyover, Near Ring Road Junction, Bengaluru",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": [
+      {
+        "user": "Amit K.",
+        "rating": 5,
+        "comment": "Unbelievable price for Indoor Plants. Ramesh is very helpful and explains plant care tips in detail.",
+        "date": "Yesterday"
+      },
+      {
+        "user": "Shweta G.",
+        "rating": 4.5,
+        "comment": "Healthy Aloe Vera and Succulents. Highly recommended.",
+        "date": "4 days ago"
+      }
+    ]
+  },
+  {
+    "id": "v3",
+    "name": "Balaji Premium Gardening Hub",
+    "owner": "Laxmi Prasanna",
+    "type": "Verified Vendor",
+    "distance": "2.5 km",
+    "rating": 4.9,
+    "reviewsCount": 156,
+    "isOpen": true,
+    "phone": "+91 80081 23456",
+    "hours": "8:00 AM - 9:00 PM",
+    "coords": {
+      "x": 20,
+      "y": 70
+    },
+    "lat": 12.9507,
+    "lng": 77.5844,
+    "address": "Shop No. 12, Horticultural Lane, Lalbagh Road, Bengaluru",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1534710961216-75c9740290c5?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1508500387859-6e2abc94314e?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": [
+      {
+        "user": "Deepak N.",
+        "rating": 5,
+        "comment": "Premium designer ceramic pots and rare Bonsai collections. Quality is top-notch.",
+        "date": "1 week ago"
+      }
+    ]
+  },
+  {
+    "id": "v4",
+    "name": "Siri Indoor Plants & Seeds",
+    "owner": "Siri Gowda",
+    "type": "Roadside Seller",
+    "distance": "1.8 km",
+    "rating": 4.3,
+    "reviewsCount": 27,
+    "isOpen": true,
+    "phone": "+91 99001 88776",
+    "hours": "8:00 AM - 7:00 PM",
+    "coords": {
+      "x": 80,
+      "y": 55
+    },
+    "lat": 12.9281,
+    "lng": 77.583,
+    "address": "Next to Corner House Ice Cream, Jayanagar, Bengaluru",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": [
+      {
+        "user": "Kavya P.",
+        "rating": 4,
+        "comment": "Very cute table-top succulents and organic seeds available here.",
+        "date": "3 days ago"
+      }
+    ]
+  },
+  {
+    "id": "v5",
+    "name": "Krishna Nursery & Stones",
+    "owner": "Krishna Reddy",
+    "type": "Verified Vendor",
+    "distance": "3.1 km",
+    "rating": 4.7,
+    "reviewsCount": 112,
+    "isOpen": false,
+    "phone": "+91 91234 56789",
+    "hours": "8:00 AM - 6:30 PM",
+    "coords": {
+      "x": 45,
+      "y": 85
+    },
+    "lat": 12.9352,
+    "lng": 77.6244,
+    "address": "Gate 3 Lane, Kengeri Main Road, Bengaluru",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": [
+      {
+        "user": "Vinay R.",
+        "rating": 5,
+        "comment": "Excellent place for landscaping stones and fountains. Fair prices.",
+        "date": "2 weeks ago"
+      }
+    ]
+  },
+  {
+    "id": "v1786545375598",
+    "name": "Greenland Organic Nursery",
+    "owner": "Manjunath Gowda",
+    "type": "Roadside Seller",
+    "distance": "2.1 km",
+    "rating": 5,
+    "reviewsCount": 1,
+    "isOpen": true,
+    "phone": "+91 99887 76655",
+    "hours": "8:00 AM - 8:00 PM",
+    "coords": {
+      "x": 50,
+      "y": 50
+    },
+    "lat": 12.96,
+    "lng": 77.62,
+    "address": "Kanakapura Road, Bangalore",
+    "googleMapsUrl": "https://maps.google.com",
+    "photos": [
+      "https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=600&q=80"
+    ],
+    "reviews": []
+  }
+]

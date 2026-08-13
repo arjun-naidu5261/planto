@@ -1,0 +1,24 @@
+[
+  {
+    "id": "b1",
+    "title": "Bringing Nature Home: 5 Air Purifying Plants You Need",
+    "author": "Dr. Ananya Hegde",
+    "role": "Horticulture Specialist",
+    "date": "July 28, 2026",
+    "summary": "According to NASA clean air studies, certain plants capture volatile compounds. Learn about the top 5 cost-effective plants for apartments.",
+    "image": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
+    "likes": 124,
+    "comments": 18
+  },
+  {
+    "id": "b2",
+    "title": "Empowering Local Roadside Vendors with QR Technology",
+    "author": "PLANTO Founders",
+    "role": "Social Impact Team",
+    "date": "August 01, 2026",
+    "summary": "How scanning a QR code at a roadside plant stall is changing livelihoods. Bridging street-level horticulturists with city apartment dwellers.",
+    "image": "https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=600&q=80",
+    "likes": 342,
+    "comments": 47
+  }
+]

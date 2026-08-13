@@ -1,0 +1,16 @@
+[
+  {
+    "id": "r1",
+    "name": "Water Snake Plant",
+    "interval": "Every 15 Days",
+    "nextDue": "2026-08-21",
+    "active": true
+  },
+  {
+    "id": "r2",
+    "name": "Fertilize Ficus Bonsai",
+    "interval": "Every 30 Days",
+    "nextDue": "2026-09-05",
+    "active": true
+  }
+]

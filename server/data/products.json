@@ -1,0 +1,440 @@
+[
+  {
+    "id": "p1",
+    "name": "Premium Golden Pothos (Money Plant)",
+    "category": "Indoor Plants",
+    "tag": "Air Purifying Plants",
+    "type": "plant",
+    "price": 180,
+    "vendorId": "v1",
+    "rating": 4.7,
+    "reviewsCount": 34,
+    "description": "An extremely popular indoor plant known for its air-purifying qualities and trailing vines of heart-shaped leaves splashed with gold.",
+    "height": "25 cm",
+    "weight": "0.8 kg",
+    "growthRate": "Fast",
+    "petFriendly": false,
+    "airPurificationScore": 9,
+    "potSize": "6 inch",
+    "sizesAvailable": [
+      "Small",
+      "Medium",
+      "Large"
+    ],
+    "quantity": 10,
+    "images": [
+      "/images/golden_pothos.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Moderate (once a week, let soil dry)",
+      "sunlight": "Indirect bright light, tolerates low light",
+      "temperature": "15°C - 30°C",
+      "humidity": "Medium (40% - 60%)",
+      "fertilizer": "Once a month in spring & summer",
+      "potType": "Self Watering / Hanging Pot"
+    }
+  },
+  {
+    "id": "p2",
+    "name": "Luxury Snake Plant (Sansevieria Laurentii)",
+    "category": "Indoor Plants",
+    "tag": "Air Purifying Plants",
+    "type": "plant",
+    "price": 320,
+    "vendorId": "v2",
+    "rating": 4.9,
+    "reviewsCount": 78,
+    "description": "Architectural and highly resilient. Snake plant is famous for emitting oxygen at night, making it the perfect bedroom companion.",
+    "height": "40 cm",
+    "weight": "1.5 kg",
+    "growthRate": "Slow",
+    "petFriendly": false,
+    "airPurificationScore": 10,
+    "potSize": "8 inch",
+    "sizesAvailable": [
+      "Medium",
+      "Large"
+    ],
+    "quantity": 12,
+    "images": [
+      "/images/snake_plant.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Low (every 2-3 weeks, drought tolerant)",
+      "sunlight": "Indirect sun, survives in dark corners",
+      "temperature": "18°C - 32°C",
+      "humidity": "Low",
+      "fertilizer": "Bi-monthly with organic liquid compost",
+      "potType": "Ceramic / Clay Pot"
+    }
+  },
+  {
+    "id": "p3",
+    "name": "Mini Jade Plant (Succulent)",
+    "category": "Indoor Plants",
+    "tag": "Lucky Plants",
+    "type": "plant",
+    "price": 120,
+    "vendorId": "v1",
+    "rating": 4.5,
+    "reviewsCount": 18,
+    "description": "Thought to bring good fortune, this dwarf succulent features thick, shiny, fleshy leaves on wood-like stems.",
+    "height": "15 cm",
+    "weight": "0.5 kg",
+    "growthRate": "Slow",
+    "petFriendly": false,
+    "airPurificationScore": 5,
+    "potSize": "4 inch",
+    "sizesAvailable": [
+      "Small"
+    ],
+    "quantity": 25,
+    "images": [
+      "/images/mini_jade.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Very Low (water only when leaves wrinkle)",
+      "sunlight": "Direct bright sunlight (4-5 hours daily)",
+      "temperature": "20°C - 35°C",
+      "humidity": "Low",
+      "fertilizer": "Quarter strength fertilizer in growing season",
+      "potType": "Terracotta Pot"
+    }
+  },
+  {
+    "id": "p4",
+    "name": "Red Hibiscus Plant",
+    "category": "Outdoor Plants",
+    "tag": "Outdoor Plants",
+    "type": "plant",
+    "price": 90,
+    "vendorId": "v2",
+    "rating": 4.6,
+    "reviewsCount": 29,
+    "description": "Classic tropical shrub producing gorgeous, large, trumpet-shaped red blooms that attract butterflies and hummingbirds.",
+    "height": "50 cm",
+    "weight": "2.0 kg",
+    "growthRate": "Medium",
+    "petFriendly": true,
+    "airPurificationScore": 4,
+    "potSize": "10 inch",
+    "sizesAvailable": [
+      "Medium",
+      "Large"
+    ],
+    "quantity": 30,
+    "images": [
+      "/images/red_hibiscus.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "High (keep soil moist, especially in summers)",
+      "sunlight": "Full direct sunlight (6+ hours)",
+      "temperature": "22°C - 38°C",
+      "humidity": "High",
+      "fertilizer": "High potassium organic fertilizer every 2 weeks",
+      "potType": "Traditional Clay Pot"
+    }
+  },
+  {
+    "id": "p5",
+    "name": "Premium Ficus Bonsai (Ginseng)",
+    "category": "Indoor Plants",
+    "tag": "Lucky Plants",
+    "type": "plant",
+    "price": 750,
+    "vendorId": "v3",
+    "rating": 4.9,
+    "reviewsCount": 52,
+    "description": "Artistically pruned thick, pot-bellied trunk with glossy green foliage. Highly popular indoor beginner bonsai tree.",
+    "height": "35 cm",
+    "weight": "3.2 kg",
+    "growthRate": "Slow",
+    "petFriendly": false,
+    "airPurificationScore": 7,
+    "potSize": "8 inch (Bonsai Tray)",
+    "sizesAvailable": [
+      "Medium"
+    ],
+    "quantity": 6,
+    "images": [
+      "/images/ficus_bonsai.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Moderate (water thoroughly when topsoil dry)",
+      "sunlight": "Bright indirect sun, morning direct sun helpful",
+      "temperature": "18°C - 30°C",
+      "humidity": "High (benefits from misting)",
+      "fertilizer": "Organic Bonsai food once in 15 days",
+      "potType": "Designer Ceramic Bonsai Pot"
+    }
+  },
+  {
+    "id": "s1",
+    "name": "Organic Heirloom Tomato Seeds",
+    "category": "Seeds Collection",
+    "tag": "Organic Seeds",
+    "type": "seed",
+    "price": 45,
+    "vendorId": "v4",
+    "rating": 4.4,
+    "reviewsCount": 14,
+    "description": "High germination organic seeds for big, juicy heirloom tomatoes. 95% germination rate tested.",
+    "height": "N/A",
+    "weight": "10g (approx 100 seeds)",
+    "growthRate": "Fast",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "Grow bags / Seedling trays",
+    "sizesAvailable": [
+      "Standard Pack"
+    ],
+    "quantity": 100,
+    "images": [
+      "/images/tomato_seeds.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Keep moist during germination, moderate after",
+      "sunlight": "Full sun (6-8 hours)",
+      "temperature": "20°C - 35°C",
+      "humidity": "Medium",
+      "fertilizer": "Add Vermicompost before planting",
+      "potType": "Biodegradable seedling pots"
+    }
+  },
+  {
+    "id": "s2",
+    "name": "Marigold Flower Seeds (Double Petal)",
+    "category": "Seeds Collection",
+    "tag": "Seasonal Seeds",
+    "type": "seed",
+    "price": 35,
+    "vendorId": "v1",
+    "rating": 4.8,
+    "reviewsCount": 22,
+    "description": "Vibrant yellow and orange double-petalled marigold seeds. Helps repel garden pests naturally.",
+    "height": "N/A",
+    "weight": "5g (approx 200 seeds)",
+    "growthRate": "Fast",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "Seedling tray",
+    "sizesAvailable": [
+      "Standard Pack"
+    ],
+    "quantity": 80,
+    "images": [
+      "/images/marigold_seeds.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Mist daily till germination, then water alternate days",
+      "sunlight": "Direct sun",
+      "temperature": "15°C - 35°C",
+      "humidity": "Medium",
+      "fertilizer": "Balanced NPK fertilizer during bud stage",
+      "potType": "Clay Pot / Raised Bed"
+    }
+  },
+  {
+    "id": "so1",
+    "name": "Premium Aerated Potting Mix (With Cocopeat & Perlite)",
+    "category": "Soil Collection",
+    "tag": "Soil Collection",
+    "type": "soil",
+    "price": 150,
+    "vendorId": "v2",
+    "rating": 4.7,
+    "reviewsCount": 45,
+    "description": "Highly aerated organic potting mix enriched with micro-nutrients, charcoal, perlite, and premium cocopeat to prevent root rot.",
+    "height": "N/A",
+    "weight": "5 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "5kg Bag",
+      "10kg Bag"
+    ],
+    "quantity": 40,
+    "images": [
+      "/images/potting_mix.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Excellent water retention, water when topsoil is completely dry",
+      "sunlight": "N/A",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "Pre-fertilized for 60 days",
+      "potType": "All Pot types"
+    }
+  },
+  {
+    "id": "so2",
+    "name": "Organic Vermicompost (Nutrient Rich)",
+    "category": "Soil Collection",
+    "tag": "Soil Collection",
+    "type": "soil",
+    "price": 90,
+    "vendorId": "v1",
+    "rating": 4.8,
+    "reviewsCount": 61,
+    "description": "100% organic earthworm manure. Enriches soil structure, improves aeration, and acts as a powerful plant growth promoter.",
+    "height": "N/A",
+    "weight": "2 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "2kg Bag",
+      "5kg Bag"
+    ],
+    "quantity": 50,
+    "images": [
+      "/images/vermicompost.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "N/A",
+      "sunlight": "Keep the bag in shade",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "Is a fertilizer itself, add 2 handfuls monthly to plants",
+      "potType": "N/A"
+    }
+  },
+  {
+    "id": "po1",
+    "name": "Handcrafted Terracotta Clay Pot",
+    "category": "Pots & Containers",
+    "tag": "Clay Pots",
+    "type": "pot",
+    "price": 80,
+    "vendorId": "v1",
+    "rating": 4.6,
+    "reviewsCount": 30,
+    "description": "Classic breathable red clay pots. Porous walls allow air and moisture to reach the roots, keeping plants healthy.",
+    "height": "20 cm",
+    "weight": "1.8 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "8 inch diameter",
+    "sizesAvailable": [
+      "6 inch",
+      "8 inch",
+      "10 inch"
+    ],
+    "quantity": 45,
+    "images": [
+      "/images/terracotta_pot.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Soak in water before first use. Breathable walls absorb water.",
+      "sunlight": "UV resistant, can stand full outdoor sun",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "N/A",
+      "potType": "N/A"
+    }
+  },
+  {
+    "id": "po2",
+    "name": "Sleek Glassmorphism Self-Watering Pot",
+    "category": "Pots & Containers",
+    "tag": "Designer Pots",
+    "type": "pot",
+    "price": 240,
+    "vendorId": "v3",
+    "rating": 4.9,
+    "reviewsCount": 44,
+    "description": "Innovative dual-layer plastic pot with a transparent reservoir. Keeps the plant watered for up to 2 weeks automatically.",
+    "height": "18 cm",
+    "weight": "0.4 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "6 inch",
+    "sizesAvailable": [
+      "5 inch",
+      "6 inch"
+    ],
+    "quantity": 20,
+    "images": [
+      "/images/self_watering_pot.png"
+    ],
+    "careInstructions": {
+      "waterLevel": "Refill outer reservoir when water indicator drops to minimum",
+      "sunlight": "Indoor / semi-shade placement recommended",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "Can mix liquid fertilizer in the reservoir",
+      "potType": "Self Watering"
+    }
+  },
+  {
+    "id": "d1",
+    "name": "Polished Snow-White Decorative Stones",
+    "category": "Garden Decoration",
+    "tag": "Garden Decoration",
+    "type": "stones",
+    "price": 130,
+    "vendorId": "v5",
+    "rating": 4.8,
+    "reviewsCount": 39,
+    "description": "Perfect for landscaping, top-dressing pots, indoor zen gardens, or accentuating walkway pathways.",
+    "height": "N/A",
+    "weight": "1.5 kg Pack",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "1.5kg Pack"
+    ],
+    "quantity": 60,
+    "images": [
+      "https://images.unsplash.com/photo-1607513746990-21dc07f59d4c?auto=format&fit=crop&w=600&q=80"
+    ],
+    "careInstructions": {
+      "waterLevel": "Wash with water occasionally to retain the shining white texture",
+      "sunlight": "N/A",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "N/A",
+      "potType": "N/A"
+    }
+  },
+  {
+    "id": "e1",
+    "name": "Neem Oil Pesticide Spray (Organic)",
+    "category": "Gardening Essentials",
+    "tag": "Gardening Essentials",
+    "type": "essential",
+    "price": 160,
+    "vendorId": "v4",
+    "rating": 4.5,
+    "reviewsCount": 23,
+    "description": "Ready-to-use organic neem spray. Effective against mealybugs, aphids, spider mites, and whiteflies.",
+    "height": "N/A",
+    "weight": "500 ml",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 0,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "500ml Spray"
+    ],
+    "quantity": 35,
+    "images": [
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=80"
+    ],
+    "careInstructions": {
+      "waterLevel": "Spray once in 15 days on leaves for protection, or once a week for active infestation",
+      "sunlight": "Spray during early morning or evening. Avoid midday hot sun.",
+      "temperature": "N/A",
+      "humidity": "N/A",
+      "fertilizer": "N/A",
+      "potType": "N/A"
+    }
+  }
+]
