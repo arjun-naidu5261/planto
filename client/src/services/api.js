@@ -163,5 +163,25 @@ export const api = {
       body: JSON.stringify({ amount })
     });
     return handleResponse(res);
+  },
+
+  // Categories
+  getCategories: async () => {
+    const res = await fetch(`${API_BASE}/categories`);
+    return handleResponse(res);
+  },
+  addCategory: async (catData) => {
+    const res = await fetch(`${API_BASE}/categories`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(catData)
+    });
+    return handleResponse(res);
+  },
+  deleteCategory: async (id) => {
+    const res = await fetch(`${API_BASE}/categories/${id}`, {
+      method: 'DELETE'
+    });
+    return handleResponse(res);
   }
 };

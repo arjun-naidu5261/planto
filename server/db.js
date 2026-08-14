@@ -49,6 +49,12 @@ export const db = {
   getReminders: () => readJSON('reminders.json'),
   saveReminders: (data) => writeJSON('reminders.json', data),
   
+  getCategories: () => readJSON('categories.json'),
+  saveCategories: (data) => writeJSON('categories.json', data),
+  
+  getRiders: () => readJSON('riders.json'),
+  saveRiders: (data) => writeJSON('riders.json', data),
+  
   getWallet: () => {
     try {
       const data = fs.readFileSync(getFilePath('wallet.txt'), 'utf8');

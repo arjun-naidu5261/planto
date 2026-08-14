@@ -68,17 +68,20 @@ export const AppProvider = ({ children }) => {
     });
   };
 
+  const [categories, setCategories] = useState([]);
+
   const loadAllData = async () => {
     try {
       setLoading(true);
-      const [vList, pList, bList, gList, oList, rList, wData] = await Promise.all([
+      const [vList, pList, bList, gList, oList, rList, wData, cList] = await Promise.all([
         api.getVendors(),
         api.getProducts(),
         api.getBlogs(),
         api.getGuides(),
         api.getOrders(),
         api.getReminders(),
-        api.getWallet()
+        api.getWallet(),
+        api.getCategories()
       ]);
       setVendors(vList);
       setProducts(pList);
@@ -87,6 +90,7 @@ export const AppProvider = ({ children }) => {
       setOrders(oList);
       setReminders(rList);
       setWallet(wData.wallet);
+      setCategories(cList);
     } catch (err) {
       console.error("Error loading data from API:", err);
     } finally {
@@ -337,6 +341,7 @@ export const AppProvider = ({ children }) => {
         reminders,
         orders,
         wallet,
+        categories,
         loading,
         isDarkMode,
         toggleDarkMode,

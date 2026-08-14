@@ -1,0 +1,8 @@
+[
+  { "id": "cat_1", "name": "Indoor Plants", "description": "Air-purifying foliage, shade lovers & succulents", "itemCount": 12, "status": "Active" },
+  { "id": "cat_2", "name": "Outdoor & Flowering Plants", "description": "Sun-loving flowering garden shrubs & climbers", "itemCount": 8, "status": "Active" },
+  { "id": "cat_3", "name": "Pots & Terracotta Planters", "description": "Handcrafted ceramic, terracotta & eco planters", "itemCount": 15, "status": "Active" },
+  { "id": "cat_4", "name": "Seeds & Organic Soil", "description": "Hybrid flower seeds, potting mix & bio fertilizers", "itemCount": 10, "status": "Active" },
+  { "id": "cat_5", "name": "Fresh Flower Bouquets", "description": "Hand-picked floral arrangements & gift hampers", "itemCount": 6, "status": "Active" },
+  { "id": "cat_6", "name": "Gardening Tools", "description": "Pruners, watering cans, sprayers & shears", "itemCount": 5, "status": "Active" }
+]

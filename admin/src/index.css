@@ -1,14 +1,19 @@
+/* PLANTO Super Admin Console Design System */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap');
+
 :root {
-  --primary: #0f172a;
-  --accent: #ffb703;
-  --success: #2e7d32;
-  --bg-dark: #090d16;
-  --card-dark: #1e293b;
-  --text-light: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-  --font-main: 'Plus Jakarta Sans', sans-serif;
-  --font-serif: 'Playfair Display', serif;
+  --primary-green: #1b4332;
+  --secondary-green: #2d6a4f;
+  --light-green: #e8f5e9;
+  --bg-green: #f4f9f5;
+  --accent-gold: #ffb703;
+  --white: #ffffff;
+  --dark: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
 }
 
 * {
@@ -19,8 +24,8 @@
 
 body {
   font-family: var(--font-main);
-  background-color: var(--bg-dark);
-  color: var(--text-light);
+  background-color: var(--bg-green);
+  color: var(--dark);
   min-height: 100vh;
 }
 
@@ -29,22 +34,42 @@ body {
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  background-color: #2563eb;
+  background-color: var(--primary-green);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-weight: 700;
+  border-radius: 12px;
+  font-weight: 800;
   font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(27,67,50,0.15);
 }
 
 .btn:hover {
-  background-color: #1d4ed8;
+  background-color: var(--secondary-green);
+  transform: translateY(-1px);
 }
 
 .card {
-  background: var(--card-dark);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
   padding: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

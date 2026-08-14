@@ -88,3 +88,54 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--primary-light);
   box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
 }
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseBorder {
+  0% { border-color: #2d6a4f; box-shadow: 0 0 0 0 rgba(45,106,79,0.2); }
+  50% { border-color: #ffb703; box-shadow: 0 0 0 4px rgba(255,183,3,0.2); }
+  100% { border-color: #2d6a4f; box-shadow: 0 0 0 0 rgba(45,106,79,0.2); }
+}
+
+.modal-content-animated {
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-backdrop-animated {
+  animation: backdropFadeIn 0.25s ease forwards;
+}
+
+.dropzone-box {
+  border: 2px dashed #cbd5e1;
+  background: #f8faf9;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dropzone-box:hover {
+  border-color: #2d6a4f;
+  background: #f0fdf4;
+}
+
+.dropzone-active {
+  border-color: #ffb703 !important;
+  background: #fffbeb !important;
+}
+

@@ -11,7 +11,7 @@ app.use(express.json());
 // --- AUTHENTICATION ---
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  // Mock login check
+  // Mock customer login check
   if (email === 'customer@planto.in' && password === 'planto123') {
     return res.json({
       success: true,
@@ -24,7 +24,7 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
   // Mock vendor login
-  if (email === 'vendor@planto.in') {
+  if (email === 'vendor@planto.in' && (password === 'planto123' || password === 'vendor123')) {
     return res.json({
       success: true,
       user: {
@@ -36,7 +36,7 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
   // Mock admin login
-  if (email === 'admin@planto.in') {
+  if (email === 'admin@planto.in' && (password === 'admin123' || password === 'planto123')) {
     return res.json({
       success: true,
       user: {
@@ -46,19 +46,33 @@ app.post('/api/auth/login', (req, res) => {
       }
     });
   }
-  // Mock delivery partner login
-  if (email === 'delivery@planto.in') {
+
+  // Check Delivery Riders DB
+  const riders = db.getRiders();
+  const rider = riders.find(r => r.email.toLowerCase() === email.toLowerCase());
+  if (rider) {
+    if (rider.password && rider.password !== password) {
+      return res.status(401).json({ success: false, message: 'Invalid password. Please check your credentials.' });
+    }
+    if (rider.status === 'PENDING_APPROVAL') {
+      return res.status(403).json({ success: false, message: 'Your Delivery Rider Application is under Super Admin verification. You will be able to log in once approved.' });
+    }
+    if (rider.status === 'REJECTED') {
+      return res.status(403).json({ success: false, message: 'Your Delivery Rider Application was rejected by Super Admin.' });
+    }
     return res.json({
       success: true,
       user: {
-        email,
-        name: 'Ramu Prasad',
+        email: rider.email,
+        name: rider.name,
         role: 'Delivery Partner',
-        partnerId: 'd1'
+        partnerId: rider.id,
+        status: rider.status
       }
     });
   }
-  return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
+  return res.status(401).json({ success: false, message: 'Invalid credentials or user not registered.' });
 });
 
 // --- VENDORS ---
@@ -279,6 +293,83 @@ app.delete('/api/reminders/:id', (req, res) => {
   const filtered = reminders.filter(r => r.id !== req.params.id);
   db.saveReminders(filtered);
   res.json({ success: true });
+});
+
+// --- CATEGORIES ---
+app.get('/api/categories', (req, res) => {
+  res.json(db.getCategories());
+});
+
+app.post('/api/categories', (req, res) => {
+  const categories = db.getCategories();
+  const newCat = {
+    id: 'cat_' + Date.now(),
+    name: req.body.name,
+    description: req.body.description || 'Custom plant category',
+    itemCount: 0,
+    status: 'Active'
+  };
+  categories.push(newCat);
+  db.saveCategories(categories);
+  res.json(newCat);
+});
+
+app.delete('/api/categories/:id', (req, res) => {
+  const categories = db.getCategories();
+  const filtered = categories.filter(c => c.id !== req.params.id);
+  db.saveCategories(filtered);
+  res.json({ success: true, message: 'Category deleted successfully' });
+});
+
+// --- DELIVERY FLEET RIDERS ---
+app.get('/api/riders', (req, res) => {
+  res.json(db.getRiders());
+});
+
+app.post('/api/riders/register', (req, res) => {
+  const riders = db.getRiders();
+  const { name, email, password, phone, address, vehicle, vehicleNumber, drivingLicense, aadhaar, dlDoc, dlFileName, dlFileType, aadhaarDoc, aadhaarFileName, aadhaarFileType, status } = req.body;
+  
+  const existing = riders.find(r => r.email.toLowerCase() === email.toLowerCase());
+  if (existing) {
+    return res.status(400).json({ success: false, message: 'Account with this email already exists.' });
+  }
+
+  const newRider = {
+    id: 'r_' + Date.now(),
+    name,
+    email,
+    password,
+    phone,
+    address,
+    vehicle: vehicle || 'Electric Scooter',
+    vehicleNumber: vehicleNumber || 'KA-05-EQ-8821',
+    drivingLicense: drivingLicense || 'KA-01-EXP',
+    aadhaar: aadhaar || '0000-0000-0000',
+    dlDoc: dlDoc || 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
+    dlFileName: dlFileName || 'Driving_License.pdf',
+    dlFileType: dlFileType || (dlDoc && dlDoc.startsWith('data:application/pdf') ? 'application/pdf' : 'image/jpeg'),
+    aadhaarDoc: aadhaarDoc || 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&q=80',
+    aadhaarFileName: aadhaarFileName || 'Aadhaar_Card.pdf',
+    aadhaarFileType: aadhaarFileType || (aadhaarDoc && aadhaarDoc.startsWith('data:application/pdf') ? 'application/pdf' : 'image/jpeg'),
+    status: status || 'PENDING_APPROVAL',
+    registeredAt: new Date().toISOString().split('T')[0]
+  };
+
+  riders.push(newRider);
+  db.saveRiders(riders);
+  res.json({ success: true, rider: newRider });
+});
+
+app.put('/api/riders/:id/approval', (req, res) => {
+  const { status } = req.body; // 'APPROVED' or 'REJECTED'
+  const riders = db.getRiders();
+  const index = riders.findIndex(r => r.id === req.params.id);
+  if (index === -1) return res.status(404).json({ message: 'Rider not found' });
+
+  riders[index].status = status;
+  db.saveRiders(riders);
+  res.json({ success: true, rider: riders[index] });
 });
 
 // --- WALLET ---
