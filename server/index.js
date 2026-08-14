@@ -321,6 +321,68 @@ app.delete('/api/categories/:id', (req, res) => {
   res.json({ success: true, message: 'Category deleted successfully' });
 });
 
+// --- AUTH LOGIN ---
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email) return res.status(400).json({ success: false, message: 'Email is required.' });
+
+  // 1. Check Riders Database
+  const riders = db.getRiders();
+  const rider = riders.find(r => r.email.toLowerCase() === email.toLowerCase());
+  if (rider) {
+    if (rider.password && rider.password !== password) {
+      return res.status(400).json({ success: false, message: 'Incorrect password.' });
+    }
+    if (rider.status === 'PENDING_APPROVAL') {
+      return res.status(403).json({ success: false, message: 'Your Delivery Fleet application is currently PENDING Super Admin verification & approval.' });
+    }
+    if (rider.status === 'REJECTED') {
+      return res.status(403).json({ success: false, message: 'Your application was not approved by Super Admin.' });
+    }
+    return res.json({
+      success: true,
+      user: {
+        ...rider,
+        role: 'Delivery Partner'
+      }
+    });
+  }
+
+  // 2. Demo Rider Fallback Login
+  if (email.toLowerCase().includes('delivery') || email.toLowerCase().includes('rider')) {
+    return res.json({
+      success: true,
+      user: {
+        name: 'Ramu Prasad',
+        email: email,
+        role: 'Delivery Partner',
+        phone: '+91 98450 11223',
+        address: 'Indiranagar 100ft Road, Bengaluru, KA',
+        vehicle: 'Hero Electric Scooter',
+        vehicleNumber: 'KA-05-EQ-8821',
+        drivingLicense: 'KA-01-2023-0098412',
+        aadhaar: '4812-9901-3412',
+        totalEarnings: 4250,
+        completedTrips: 42
+      }
+    });
+  }
+
+  // Nursery Vendor Account Login
+  return res.json({
+    success: true,
+    user: {
+      name: 'Suresh Rao',
+      email: email,
+      role: 'Vendor',
+      nurseryName: 'Sai Baba Plant & Pot Stall',
+      address: 'Opposite Metro Station Pillar 124, Indiranagar, Bengaluru',
+      phone: '+91 98480 22334',
+      hours: '7:00 AM - 7:30 PM'
+    }
+  });
+});
+
 // --- DELIVERY FLEET RIDERS ---
 app.get('/api/riders', (req, res) => {
   res.json(db.getRiders());

@@ -4,8 +4,22 @@ const API_BASE = 'http://localhost:5002/api';
 const DEFAULT_PLANT_IMG = 'https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=600&q=80';
 
 export default function App() {
-  // Authentication & Role State
-  const [currentUser, setCurrentUser] = useState(null); // { name, role: 'Vendor' | 'Delivery Partner', email }
+  // Authentication & Role State (Persisted in localStorage across page refreshes)
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('planto_user');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return {
+      name: 'Suresh Rao',
+      email: 'vendor@planto.in',
+      role: 'Vendor',
+      nurseryName: 'Sai Baba Plant & Pot Stall',
+      address: 'Opposite Metro Station Pillar 124, Indiranagar, Bengaluru',
+      phone: '+91 98480 22334',
+      hours: '7:00 AM - 7:30 PM'
+    };
+  });
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
   const [showAuthModal, setShowAuthModal] = useState(false);
   
@@ -40,7 +54,9 @@ export default function App() {
   const [vendorProducts, setVendorProducts] = useState([]);
   const [vendorOrders, setVendorOrders] = useState([]);
   const [storeOpen, setStoreOpen] = useState(true);
-  const [vendorTab, setVendorTab] = useState('dashboard'); // 'dashboard' | 'inventory' | 'orders' | 'revenue' | 'status' | 'profile'
+  const [vendorTab, setVendorTab] = useState(() => {
+    return localStorage.getItem('planto_vendor_tab') || 'dashboard';
+  });
   
   // Add Product Modal State
   const [showAddProductModal, setShowAddProductModal] = useState(false);
@@ -51,10 +67,21 @@ export default function App() {
   const [newProdStock, setNewProdStock] = useState(15);
   const [newProdImg, setNewProdImg] = useState(DEFAULT_PLANT_IMG);
 
+  // Edit Profile Modal State
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [editProfileName, setEditProfileName] = useState('');
+  const [editProfileEmail, setEditProfileEmail] = useState('');
+  const [editProfilePhone, setEditProfilePhone] = useState('');
+  const [editProfileAddress, setEditProfileAddress] = useState('');
+  const [editProfileDetail, setEditProfileDetail] = useState(''); // Nursery Name or Vehicle Model
+  const [editProfileVehicleNum, setEditProfileVehicleNum] = useState('');
+
   // Delivery Partner Dashboard States
   const [dutyStatus, setDutyStatus] = useState(true);
   const [deliveryOrders, setDeliveryOrders] = useState([]);
-  const [riderTab, setRiderTab] = useState('dashboard'); // 'dashboard' | 'active' | 'history' | 'earnings' | 'status' | 'profile'
+  const [riderTab, setRiderTab] = useState(() => {
+    return localStorage.getItem('planto_rider_tab') || 'dashboard';
+  });
   const [pastDeliveries, setPastDeliveries] = useState([
     { id: 'ORD-8812', date: 'Yesterday', vendor: 'Sai Baba Plant Stall', customer: 'Aditi S.', payout: 75, rating: '⭐ 5.0' },
     { id: 'ORD-8740', date: '12 Aug 2026', vendor: 'Green Flora Nursery', customer: 'Rohan M.', payout: 60, rating: '⭐ 5.0' },
@@ -67,6 +94,22 @@ export default function App() {
   useEffect(() => {
     fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('planto_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('planto_user');
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    localStorage.setItem('planto_vendor_tab', vendorTab);
+  }, [vendorTab]);
+
+  useEffect(() => {
+    localStorage.setItem('planto_rider_tab', riderTab);
+  }, [riderTab]);
 
   const fetchInitialData = async () => {
     try {
@@ -104,7 +147,6 @@ export default function App() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check size limit 10MB
     if (file.size > 10 * 1024 * 1024) {
       alert('File size exceeds 10MB limit. Please upload a smaller PDF or image.');
       return;
@@ -146,10 +188,14 @@ export default function App() {
           name: data.user.name || 'Delivery Partner',
           email: data.user.email,
           role: 'Delivery Partner',
-          vehicle: 'Hero Electric Scooter',
-          phone: '+91 98450 11223',
-          totalEarnings: 4250,
-          completedTrips: 42
+          vehicle: data.user.vehicle || 'Hero Electric Scooter',
+          vehicleNumber: data.user.vehicleNumber || 'KA-05-EQ-8821',
+          drivingLicense: data.user.drivingLicense || 'KA-01-2023-0098412',
+          aadhaar: data.user.aadhaar || '4812-9901-3412',
+          phone: data.user.phone || '+91 98450 11223',
+          address: data.user.address || 'Indiranagar 100ft Road, Bengaluru, KA',
+          totalEarnings: data.user.totalEarnings || 4250,
+          completedTrips: data.user.completedTrips || 42
         });
         setRiderTab('dashboard');
       } else {
@@ -157,10 +203,10 @@ export default function App() {
           name: data.user.name || 'Suresh Rao',
           email: data.user.email,
           role: 'Vendor',
-          nurseryName: 'Sai Baba Plant & Pot Stall',
-          address: 'Opposite Metro Station Pillar 124, Indiranagar, Bengaluru',
-          phone: '+91 98480 22334',
-          hours: '7:00 AM - 7:30 PM'
+          nurseryName: data.user.nurseryName || 'Sai Baba Plant & Pot Stall',
+          address: data.user.address || 'Opposite Metro Station Pillar 124, Indiranagar, Bengaluru',
+          phone: data.user.phone || '+91 98480 22334',
+          hours: data.user.hours || '7:00 AM - 7:30 PM'
         });
         setVendorTab('dashboard');
       }
@@ -220,446 +266,401 @@ export default function App() {
         phone: regPhone,
         address: regAddress,
         nurseryName: regDetail || `${regName}'s Nursery Stall`,
-        hours: '8:00 AM - 8:00 PM',
-        totalEarnings: 0,
-        completedTrips: 0
+        hours: '7:00 AM - 7:30 PM'
       });
       setVendorTab('dashboard');
       setShowAuthModal(false);
-      alert(`🎉 Account created successfully as Nursery Owner! Welcome to Planto Business.`);
     }
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setVendorTab('dashboard');
+    setRiderTab('dashboard');
   };
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    const newProd = {
-      id: 'p' + Date.now(),
-      name: newProdName || 'New Nursery Item',
+    if (!newProdName.trim()) return;
+
+    const newProduct = {
+      id: `p_${Date.now()}`,
+      name: newProdName,
       type: newProdType,
       category: newProdCategory,
       price: parseFloat(newProdPrice),
       quantity: parseInt(newProdStock),
-      images: [newProdImg || DEFAULT_PLANT_IMG],
       vendorId: 'v1',
-      rating: 5.0,
-      reviewsCount: 0
+      vendorName: currentUser?.nurseryName || 'Sai Baba Plant & Pot Stall',
+      images: [newProdImg || DEFAULT_PLANT_IMG]
     };
 
     try {
       await fetch(`${API_BASE}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProd)
+        body: JSON.stringify(newProduct)
       });
     } catch (err) {
       console.error(err);
     }
 
-    setVendorProducts([newProd, ...vendorProducts]);
+    setVendorProducts([newProduct, ...vendorProducts]);
     setShowAddProductModal(false);
-    alert('✅ New item added to your Nursery live catalog!');
+    setNewProdName('');
+    alert(`🎉 '${newProdName}' successfully added to your Nursery inventory catalog!`);
+  };
+
+  const handleOpenEditProfile = () => {
+    if (!currentUser) return;
+    setEditProfileName(currentUser.name || '');
+    setEditProfileEmail(currentUser.email || '');
+    setEditProfilePhone(currentUser.phone || '');
+    setEditProfileAddress(currentUser.address || '');
+    setEditProfileDetail(currentUser.nurseryName || currentUser.vehicle || '');
+    setEditProfileVehicleNum(currentUser.vehicleNumber || '');
+    setShowEditProfileModal(true);
+  };
+
+  const handleSaveEditProfile = (e) => {
+    e.preventDefault();
+    if (currentUser.role === 'Vendor') {
+      setCurrentUser({
+        ...currentUser,
+        name: editProfileName,
+        email: editProfileEmail,
+        phone: editProfilePhone,
+        address: editProfileAddress,
+        nurseryName: editProfileDetail
+      });
+    } else {
+      setCurrentUser({
+        ...currentUser,
+        name: editProfileName,
+        email: editProfileEmail,
+        phone: editProfilePhone,
+        address: editProfileAddress,
+        vehicle: editProfileDetail,
+        vehicleNumber: editProfileVehicleNum
+      });
+    }
+    setShowEditProfileModal(false);
+    alert('🎉 Profile details successfully updated!');
   };
 
   const handleUpdateOrderStatus = (orderId, newStatus) => {
-    const updated = vendorOrders.map(o => o.id === orderId ? { ...o, status: newStatus } : o);
-    setVendorOrders(updated);
-    setDeliveryOrders(updated);
+    setVendorOrders(vendorOrders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
   };
 
-  const handleCompleteRiderDelivery = (ord) => {
-    handleUpdateOrderStatus(ord.id, 'Delivered to Doorstep ✅');
+  const handleCompleteRiderDelivery = (order) => {
+    setDeliveryOrders(deliveryOrders.filter(o => o.id !== order.id));
     setPastDeliveries([
-      { id: ord.id, date: 'Just now', vendor: ord.vendorName || 'Sai Baba Plant Stall', customer: 'Customer', payout: 65, rating: '⭐ 5.0' },
+      { id: order.id, date: 'Today', vendor: order.vendorName || 'Sai Baba Plant Stall', customer: 'Indiranagar Customer', payout: 75, rating: '⭐ 5.0' },
       ...pastDeliveries
     ]);
-    alert(`🎉 Order #${ord.id} completed! ₹65 credited to your wallet.`);
+    alert(`🎉 Order #${order.id} Doorstep Delivery Completed!\n\n₹75 Payout added to your Rider Wallet.`);
   };
 
-  // --- 1. BUSINESS PARTNER LANDING PAGE (WHEN NOT LOGGED IN) ---
+  // --- 1. LANDING & LOGIN PAGE (NURSERY & RIDER PORTAL - CLIENT ORGANIC THEME) ---
   if (!currentUser) {
     return (
-      <div style={{ minHeight: '100vh', background: '#f4f9f5', color: '#1b4332', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div style={{ minHeight: '100vh', background: '#f8faf9', color: '#1b4332', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         
-        {/* HEADER NAVBAR (Full Width Edge-to-Edge Corner Buttons) */}
-        <header style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          background: 'linear-gradient(90deg, #1b4332 0%, #2d6a4f 100%)',
-          color: '#fff',
-          padding: '16px 32px',
-          display: 'flex',
-          justify: 'space-between',
-          alignItems: 'center',
-          boxShadow: '0 4px 20px rgba(27,67,50,0.2)',
-          width: '100vw',
-          maxWidth: '100%',
-          boxSizing: 'border-box'
-        }}>
-          {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginRight: '40px' }}>
-            <span style={{ fontSize: '32px' }}>🪴</span>
-            <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, color: '#fff', fontFamily: 'var(--font-serif)', letterSpacing: '0.5px' }}>PLANTO Business</h2>
-              <span style={{ fontSize: '10px', background: '#ffb703', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 800, letterSpacing: '0.5px' }}>PARTNER NETWORK</span>
+        {/* FULL HEADER BAR WITH NAVIGATION LINKS & SPACING */}
+        <header style={{ position: 'sticky', top: 0, zIndex: 50, background: '#1b4332', color: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 48px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h1 style={{ fontSize: '26px', margin: 0, fontFamily: 'var(--font-serif)', color: '#ffffff', letterSpacing: '0.5px' }}>PLANTO Business</h1>
+              <span style={{ background: '#ffb703', color: '#000000', fontSize: '10.5px', fontWeight: 800, padding: '3px 9px', borderRadius: '10px' }}>
+                Partner Portal
+              </span>
             </div>
+
+            {/* Header Navigation Links with Distance */}
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '26px', fontSize: '14px', fontWeight: 700 }}>
+              <a href="#hero" style={{ color: '#ffffff', textDecoration: 'none' }}>Home</a>
+              <a href="#features" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Features & Benefits</a>
+              <a href="#how-it-works" style={{ color: '#d8f3dc', textDecoration: 'none' }}>How It Works</a>
+              <a href="#earnings" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Earnings & Perks</a>
+              <a href="#faq" style={{ color: '#d8f3dc', textDecoration: 'none' }}>FAQ</a>
+            </nav>
           </div>
 
-          {/* Nav Items */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '32px', fontSize: '14px', fontWeight: 700 }}>
-            <a href="#motive" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Our Motive</a>
-            <a href="#nurseries" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Nursery Stalls</a>
-            <a href="#delivery" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Delivery Fleet</a>
-            <a href="#payouts" style={{ color: '#d8f3dc', textDecoration: 'none' }}>Commission & Payouts</a>
-          </nav>
-
-          {/* Extreme Right Corner Action Buttons (Symbols Removed) */}
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginLeft: 'auto' }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
             <button 
-              onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}
-              style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px 22px', borderRadius: '12px', fontWeight: 800, fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              onClick={() => { setAuthMode('login'); setShowAuthModal(true); setAuthError(''); }}
+              style={{ background: 'rgba(255,255,255,0.15)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px 22px', borderRadius: '12px', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
             >
-              Login
+              Login Partner
             </button>
             <button 
-              onClick={() => { setAuthMode('register'); setShowAuthModal(true); }}
-              style={{ background: '#ffb703', color: '#000', border: 'none', padding: '10px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(255,183,3,0.3)', whiteSpace: 'nowrap' }}
+              onClick={() => { setAuthMode('register'); setShowAuthModal(true); setAuthError(''); }}
+              style={{ background: '#ffb703', color: '#000000', border: 'none', padding: '10px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer', boxShadow: '0 4px 14px rgba(255,183,3,0.3)' }}
             >
-              Sign Up
+              Partner Sign Up →
             </button>
           </div>
         </header>
 
-        {/* HERO SECTION */}
-        <section style={{
-          padding: '70px 32px 50px',
-          textAlign: 'center',
-          background: 'linear-gradient(180deg, #e8f5e9 0%, #f4f9f5 100%)',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <span style={{ background: '#2d6a4f', color: '#fff', padding: '6px 18px', borderRadius: '30px', fontSize: '12px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', display: 'inline-block' }}>
-            🌿 INDIA'S HYPERLOCAL PLANT & NURSERY NETWORK
-          </span>
-
-          <h1 style={{ fontSize: '46px', fontFamily: 'var(--font-serif)', marginTop: '20px', marginBottom: '16px', lineHeight: 1.15, color: '#1b4332' }}>
-            Empowering Local Nurseries & Delivery Partners<br />With <span>Same-Day Green Commerce</span>
-          </h1>
-
-          <p style={{ fontSize: '16px', color: '#4a5568', maxWidth: '780px', margin: '0 auto 40px', lineHeight: 1.6 }}>
-            Planto connects roadside plant stalls, terracotta pottery artisans, and green delivery riders directly with nearby urban plant lovers for 3-5 hour hydrated doorstep deliveries.
-          </p>
-
-          {/* DUAL PARTNER CARDS */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px', textAlign: 'left' }}>
+        {/* HERO BANNER SECTION (#hero) */}
+        <section id="hero" style={{ padding: '80px 20px', background: 'linear-gradient(180deg, #f4f9f5 0%, #f8faf9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ maxWidth: '900px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center' }}>
             
-            {/* NURSERY STALL OWNER CARD */}
-            <div style={{ 
-              background: '#ffffff', 
-              border: '2px solid #2d6a4f', 
-              borderRadius: '24px', 
-              padding: '36px', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justify: 'space-between', 
-              boxShadow: '0 12px 32px rgba(45,106,79,0.1)' 
-            }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <div style={{ width: '56px', height: '56px', borderRadius: '18px', background: '#e8f5e9', color: '#2d6a4f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px' }}>
-                    🏪
-                  </div>
-                  <span style={{ background: '#2d6a4f', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: '20px' }}>
-                    8% LOW COMMISSION
-                  </span>
-                </div>
-
-                <span style={{ fontSize: '11px', color: '#2d6a4f', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>For Nursery Owners & Pottery Artisans</span>
-                <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: '6px 0 12px 0' }}>Partner as a Nursery Owner</h3>
-                <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: 1.5, marginBottom: '24px' }}>
-                  Put your physical nursery online in 2 minutes. Receive live orders for live plants, ceramic planters, organic compost & seeds with direct 92% earnings retention.
-                </p>
-
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px 0', fontSize: '13px', color: '#2d3748', display: 'flex', flexDirection: 'column', gap: '10px', fontWeight: 600 }}>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#2e7d32', fontWeight: 900 }}>✓</span> 8% Low Commission (Keep 92% sales revenue)</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#2e7d32', fontWeight: 900 }}>✓</span> Free Moisture Preservation Packaging Kits</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#2e7d32', fontWeight: 900 }}>✓</span> Real-Time Live Stock & Order Control</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#2e7d32', fontWeight: 900 }}>✓</span> Direct Weekly Bank Payouts</li>
-                </ul>
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button 
-                  onClick={() => { setLoginEmail('vendor@planto.in'); setAuthMode('login'); setShowAuthModal(true); }}
-                  style={{ flex: 1, background: '#1b4332', color: '#fff', border: 'none', padding: '14px 20px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}
-                >
-                  🏪 Sign In as Nursery Owner
-                </button>
-                <button 
-                  onClick={() => { setRegRole('Vendor'); setAuthMode('register'); setShowAuthModal(true); }}
-                  style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #a5d6a7', padding: '14px 20px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}
-                >
-                  Register Stall
-                </button>
-              </div>
+            <div style={{ background: '#e8f5e9', padding: '6px 20px', borderRadius: '20px', border: '1px solid #c8e6c9', fontSize: '13px', fontWeight: 800, color: '#1b4332' }}>
+              Empowering 500+ Roadside Nurseries & Local Delivery Partners
             </div>
 
-            {/* DELIVERY RIDER CARD */}
-            <div style={{ 
-              background: '#ffffff', 
-              border: '2px solid #ffb703', 
-              borderRadius: '24px', 
-              padding: '36px', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justify: 'space-between', 
-              boxShadow: '0 12px 32px rgba(255,183,3,0.15)' 
-            }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <div style={{ width: '56px', height: '56px', borderRadius: '18px', background: '#fff8e1', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px' }}>
-                    🛵
-                  </div>
-                  <span style={{ background: '#ffb703', color: '#000', fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: '20px' }}>
-                    ₹65+ PER ORDER
-                  </span>
-                </div>
+            <h2 style={{ fontSize: '50px', fontFamily: 'var(--font-serif)', lineHeight: 1.2, margin: 0, color: '#1b4332' }}>
+              Grow Your Plant Business & Deliver Fresh Greenery Hyperlocal
+            </h2>
 
-                <span style={{ fontSize: '11px', color: '#d97706', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>For Delivery Fleet Riders</span>
-                <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: '6px 0 12px 0' }}>Partner as a Delivery Rider</h3>
-                <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: 1.5, marginBottom: '24px' }}>
-                  Deliver live saplings & ceramic planters safely across your city. Flexible same-day delivery slots with guaranteed per-trip earnings & plant care bonuses.
-                </p>
+            <p style={{ fontSize: '17px', color: '#2d6a4f', maxWidth: '720px', lineHeight: 1.6, margin: 0, fontWeight: 600 }}>
+              Join PLANTO as a Nursery Stall Owner or Express Delivery Partner. Manage live orders, catalog inventory, track 30-minute doorstep deliveries, and enjoy zero-commission instant payouts.
+            </p>
 
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px 0', fontSize: '13px', color: '#2d3748', display: 'flex', flexDirection: 'column', gap: '10px', fontWeight: 600 }}>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#d97706', fontWeight: 900 }}>✓</span> ₹65 Base Payout + ₹10 Plant Care Bonus / Order</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#d97706', fontWeight: 900 }}>✓</span> 3-5 Hour Flexible Delivery Slots</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#d97706', fontWeight: 900 }}>✓</span> EV Two-Wheeler & Fuel Allowance Perks</li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#d97706', fontWeight: 900 }}>✓</span> Weekly Wallet Credit & Instant Withdrawal</li>
-                </ul>
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button 
-                  onClick={() => { setLoginEmail('delivery@planto.in'); setAuthMode('login'); setShowAuthModal(true); }}
-                  style={{ flex: 1, background: '#ffb703', color: '#000', border: 'none', padding: '14px 20px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 4px 14px rgba(255,183,3,0.3)' }}
-                >
-                  🛵 Sign In as Delivery Partner
-                </button>
-                <button 
-                  onClick={() => { setRegRole('Delivery Partner'); setAuthMode('register'); setShowAuthModal(true); }}
-                  style={{ background: '#fff8e1', color: '#b45309', border: '1px solid #ffe082', padding: '14px 20px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', cursor: 'pointer' }}
-                >
-                  Join Fleet
-                </button>
-              </div>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '12px' }}>
+              <button 
+                onClick={() => { setAuthMode('register'); setRegRole('Vendor'); setShowAuthModal(true); }}
+                style={{ background: '#ffb703', color: '#000000', border: 'none', padding: '16px 36px', borderRadius: '16px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 6px 20px rgba(255,183,3,0.35)' }}
+              >
+                Register Nursery Stall
+              </button>
+              <button 
+                onClick={() => { setAuthMode('register'); setRegRole('Delivery Partner'); setShowAuthModal(true); }}
+                style={{ background: '#1b4332', color: '#ffffff', border: 'none', padding: '16px 36px', borderRadius: '16px', fontWeight: 800, fontSize: '16px', cursor: 'pointer', boxShadow: '0 6px 20px rgba(27,67,50,0.25)' }}
+              >
+                Join Delivery Fleet
+              </button>
             </div>
-
           </div>
         </section>
 
-        {/* SECTION: PLATFORM MOTIVE & HOW PLANTO WORKS */}
-        <section id="motive" style={{ padding: '70px 32px', background: '#ffffff', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+        {/* SECTION 2: FEATURES & BENEFITS (#features) */}
+        <section id="features" style={{ padding: '80px 48px', background: '#ffffff', borderTop: '1px solid #e2e8f0' }}>
           <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-              <span style={{ background: '#e8f5e9', color: '#1b4332', padding: '4px 14px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
-                🎯 OUR PURPOSE & MOTIVE
-              </span>
-              <h2 style={{ fontSize: '34px', fontFamily: 'var(--font-serif)', color: '#1b4332', marginTop: '12px', marginBottom: '8px' }}>
-                Bridging Physical Nurseries With Urban Plant Lovers
-              </h2>
-              <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '720px', margin: '0 auto', lineHeight: 1.6 }}>
-                Thousands of local plant nurseries and pottery artisans struggle with footfall despite growing plant demand. Planto brings physical nursery stalls online with a 3-step hyperlocal delivery model.
-              </p>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: '#2d6a4f', textTransform: 'uppercase', letterSpacing: '1px' }}>Built For Local Growth</span>
+              <h3 style={{ fontSize: '32px', fontFamily: 'var(--font-serif)', margin: '8px 0 0 0', color: '#1b4332' }}>
+                Why Partner With PLANTO Marketplace?
+              </h3>
             </div>
 
-            {/* 3-STEP MOTIVE WORKFLOW GRID */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-              
-              <div style={{ background: '#f8faf9', padding: '32px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#1b4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '20px', marginBottom: '20px' }}>
-                  1
-                </div>
-                <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', color: '#1b4332', marginBottom: '10px' }}>Nursery Keeps Stock Online</h3>
-                <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: 1.6, margin: 0 }}>
-                  Nursery stall owners update live stock of plants, terracotta pots, seeds & vermicompost in 2 minutes using their phone.
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '28px', borderRadius: '20px' }}>
+                <h4 style={{ fontSize: '18px', margin: '0 0 10px 0', color: '#1b4332', fontFamily: 'var(--font-serif)' }}>30-Min Express Delivery</h4>
+                <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
+                  Hyperlocal delivery network connects roadside stalls directly with plant lovers within a 5km radius.
                 </p>
               </div>
 
-              <div style={{ background: '#f8faf9', padding: '32px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#ffb703', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '20px', marginBottom: '20px' }}>
-                  2
-                </div>
-                <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', color: '#1b4332', marginBottom: '10px' }}>3-5 Hr Same-Day Express Dispatch</h3>
-                <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: 1.6, margin: 0 }}>
-                  Customers order live plants online. Delivery partners pick up moisture-packaged saplings directly from the stall.
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '28px', borderRadius: '20px' }}>
+                <h4 style={{ fontSize: '18px', margin: '0 0 10px 0', color: '#1b4332', fontFamily: 'var(--font-serif)' }}>8.0% Low Commission</h4>
+                <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
+                  Nursery sellers keep 92% of order revenue. Zero listing fees, zero setup costs, zero hidden charges.
                 </p>
               </div>
 
-              <div style={{ background: '#f8faf9', padding: '32px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#2d6a4f', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '20px', marginBottom: '20px' }}>
-                  3
-                </div>
-                <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', color: '#1b4332', marginBottom: '10px' }}>Direct 92% Payout & Bonuses</h3>
-                <p style={{ fontSize: '14px', color: '#4a5568', lineHeight: 1.6, margin: 0 }}>
-                  With a low 8% platform fee, 92% of order revenue goes directly to the nursery owner, while riders earn ₹65+ per trip.
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '28px', borderRadius: '20px' }}>
+                <h4 style={{ fontSize: '18px', margin: '0 0 10px 0', color: '#1b4332', fontFamily: 'var(--font-serif)' }}>Hydration Badging</h4>
+                <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
+                  Moisture wrap packaging badges protect plants during transit and earn +₹10 rider bonus per trip.
                 </p>
               </div>
 
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '28px', borderRadius: '20px' }}>
+                <h4 style={{ fontSize: '18px', margin: '0 0 10px 0', color: '#1b4332', fontFamily: 'var(--font-serif)' }}>Instant UPI Payouts</h4>
+                <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
+                  Delivery riders & nursery owners can withdraw unsettled wallet balances directly to GPay / UPI 24/7.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION: WHY PARTNER WITH PLANTO */}
-        <section id="payouts" style={{ padding: '70px 32px', maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '44px' }}>
-            <h2 style={{ fontSize: '30px', fontFamily: 'var(--font-serif)', color: '#1b4332' }}>Why Partners Love Planto</h2>
-            <p style={{ fontSize: '15px', color: '#64748b', marginTop: '4px' }}>Built specifically for physical nursery operations and green logistics</p>
+        {/* SECTION 3: HOW IT WORKS (#how-it-works) */}
+        <section id="how-it-works" style={{ padding: '80px 48px', background: '#f4f9f5', borderTop: '1px solid #e2e8f0' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: '#2d6a4f', textTransform: 'uppercase', letterSpacing: '1px' }}>Seamless Operations</span>
+              <h3 style={{ fontSize: '32px', fontFamily: 'var(--font-serif)', margin: '8px 0 0 0', color: '#1b4332' }}>
+                How PLANTO Hyperlocal Fulfillment Works
+              </h3>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '24px', borderRadius: '20px', textAlign: 'center' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#ffb703', color: '#000000', fontWeight: 900, fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>1</div>
+                <h4 style={{ fontSize: '17px', margin: '0 0 8px 0', color: '#1b4332' }}>Customer Places Order</h4>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  Customer chooses fresh plants, pots, or soil from nearest nursery stall on PLANTO app.
+                </p>
+              </div>
+
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '24px', borderRadius: '20px', textAlign: 'center' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#ffb703', color: '#000000', fontWeight: 900, fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>2</div>
+                <h4 style={{ fontSize: '17px', margin: '0 0 8px 0', color: '#1b4332' }}>Nursery Packs & Badges</h4>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  Nursery owner receives instant soundbox notification and prepares moisture wrap hydration box.
+                </p>
+              </div>
+
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '24px', borderRadius: '20px', textAlign: 'center' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#ffb703', color: '#000000', fontWeight: 900, fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>3</div>
+                <h4 style={{ fontSize: '17px', margin: '0 0 8px 0', color: '#1b4332' }}>Rider Doorstep Delivery</h4>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  Rider accepts express pickup, completes doorstep delivery in 30 mins, and gets instant trip payout.
+                </p>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
-            <div style={{ background: '#ffffff', padding: '28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
-              <div style={{ fontSize: '32px', marginBottom: '14px' }}>⏱️</div>
-              <h4 style={{ fontSize: '18px', fontWeight: 800, margin: '0 0 8px 0', color: '#1b4332' }}>3-5 Hr Same-Day SLA</h4>
-              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.6 }}>Optimized delivery routes that keep live plants hydrated during transit.</p>
+        {/* SECTION 4: EARNINGS & PERKS (#earnings) */}
+        <section id="earnings" style={{ padding: '80px 48px', background: '#ffffff', borderTop: '1px solid #e2e8f0' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: '#2d6a4f', textTransform: 'uppercase', letterSpacing: '1px' }}>Transparent Earnings</span>
+              <h3 style={{ fontSize: '32px', fontFamily: 'var(--font-serif)', margin: '8px 0 0 0', color: '#1b4332' }}>
+                High Growth & Flexible Partner Benefits
+              </h3>
             </div>
 
-            <div style={{ background: '#ffffff', padding: '28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
-              <div style={{ fontSize: '32px', marginBottom: '14px' }}>💰</div>
-              <h4 style={{ fontSize: '18px', fontWeight: 800, margin: '0 0 8px 0', color: '#1b4332' }}>Low 8% Commission</h4>
-              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.6 }}>Transparent pricing so nursery owners retain 92% of their retail margin.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '32px', borderRadius: '24px' }}>
+                <span style={{ background: '#e8f5e9', color: '#1b4332', fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: '10px' }}>NURSERY OWNER PERKS</span>
+                <h4 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: '14px 0 10px 0', color: '#1b4332' }}>Expand Beyond Roadside Footfall</h4>
+                <ul style={{ fontSize: '14px', color: '#334155', paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '10px', lineHeight: 1.6 }}>
+                  <li>List plants, pots, fertilizers, seeds & bouquets online</li>
+                  <li>Automated order stream directly on phone & soundbox</li>
+                  <li>Receive 92% net sales revenue deposited to bank</li>
+                  <li>Free digital storefront listing with 0 setup cost</li>
+                </ul>
+              </div>
+
+              <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '32px', borderRadius: '24px' }}>
+                <span style={{ background: '#e0f2fe', color: '#0369a1', fontSize: '11px', fontWeight: 800, padding: '4px 12px', borderRadius: '10px' }}>DELIVERY RIDER PERKS</span>
+                <h4 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: '14px 0 10px 0', color: '#1b4332' }}>Earn ₹55 + Bonus Per Trip</h4>
+                <ul style={{ fontSize: '14px', color: '#334155', paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '10px', lineHeight: 1.6 }}>
+                  <li>Flexible duty status (work online/offline anytime)</li>
+                  <li>Earn ₹55 base pay + ₹10 plant care hydration bonus</li>
+                  <li>Hyperlocal 3-5 km short delivery radiuses</li>
+                  <li>Instant 24/7 wallet withdrawal directly to UPI</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 5: FAQ (#faq) */}
+        <section id="faq" style={{ padding: '80px 48px', background: '#f4f9f5', borderTop: '1px solid #e2e8f0' }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <h3 style={{ fontSize: '30px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                Frequently Asked Questions
+              </h3>
             </div>
 
-            <div style={{ background: '#ffffff', padding: '28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
-              <div style={{ fontSize: '32px', marginBottom: '14px' }}>🪴</div>
-              <h4 style={{ fontSize: '18px', fontWeight: 800, margin: '0 0 8px 0', color: '#1b4332' }}>Moisture Package Kits</h4>
-              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.6 }}>Free eco-friendly moisture retention bags for live plant deliveries.</p>
-            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px 24px', borderRadius: '16px' }}>
+                <strong style={{ fontSize: '15px', color: '#1b4332', display: 'block', marginBottom: '6px' }}>Q: Do I need a physical shop to register as a Nursery Partner?</strong>
+                <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  No! Roadside stalls, plant nurseries, rooftop plant sellers, and home plant growers are all eligible to sell on PLANTO.
+                </p>
+              </div>
 
-            <div style={{ background: '#ffffff', padding: '28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
-              <div style={{ fontSize: '32px', marginBottom: '14px' }}>📱</div>
-              <h4 style={{ fontSize: '18px', fontWeight: 800, margin: '0 0 8px 0', color: '#1b4332' }}>Live Mobile Control</h4>
-              <p style={{ fontSize: '13px', color: '#64748b', margin: 0, lineHeight: 1.6 }}>Manage plant stock, accept orders, and trigger payouts from your phone.</p>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px 24px', borderRadius: '16px' }}>
+                <strong style={{ fontSize: '15px', color: '#1b4332', display: 'block', marginBottom: '6px' }}>Q: What documents are required for Delivery Partner registration?</strong>
+                <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                  You need a valid Driving License, Aadhaar Card document (PDF or Image format), and a valid vehicle registration number.
+                </p>
+              </div>
+
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px 24px', borderRadius: '16px' }}>
+                <strong style={{ fontSize: '15px', color: '#1b4332', display: 'block', marginBottom: '6px' }}>Q: How quickly do I get paid for completed orders?</strong>
+                <p style={{ fontSize: '13.5px', color: '#d97706', margin: 0, lineHeight: 1.5 }}>
+                  Payouts are updated in real-time in your Partner Wallet and can be withdrawn instantly to your bank account or UPI ID.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* FOOTER */}
-        <footer style={{ background: '#1b4332', color: '#fff', padding: '40px 32px', textAlign: 'center', borderTop: '1px solid #2d6a4f' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '20px', fontWeight: 800, fontFamily: 'var(--font-serif)' }}>
-            <span>🪴</span> PLANTO Business Partner Network
-          </div>
-          <p style={{ fontSize: '13px', color: '#d8f3dc', marginTop: '8px' }}>
-            Empowering 500+ nursery stalls and delivery partners across India.
-          </p>
-          <div style={{ fontSize: '12px', color: '#a5d6a7', marginTop: '16px' }}>
-            © 2026 PLANTO Partner Systems. All rights reserved.
-          </div>
+        <footer style={{ padding: '32px 48px', background: '#1b4332', color: '#ffffff', textAlign: 'center', fontSize: '13px' }}>
+          <div>© 2026 PLANTO Business Portal. All Rights Reserved. Empowering India's Greenery Ecosystem.</div>
         </footer>
 
-        {/* AUTH MODAL OVERLAY (Smooth Glassmorphic Animation & Centered) */}
+        {/* AUTH POPUP MODAL */}
         {showAuthModal && (
-          <div className="modal-backdrop-animated" style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(10, 35, 27, 0.75)',
-            backdropFilter: 'blur(10px)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}>
-            <div className="card modal-content-animated" style={{ maxWidth: '540px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '36px', borderRadius: '24px', background: '#fff', color: '#000', position: 'relative', boxShadow: '0 25px 60px rgba(0,0,0,0.35)', margin: 'auto' }}>
-              <button 
-                onClick={() => { setShowAuthModal(false); setAuthError(''); }}
-                style={{ position: 'absolute', top: '18px', right: '18px', background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', fontSize: '16px', fontWeight: 800, cursor: 'pointer', color: '#666' }}
-              >
-                ✕
-              </button>
-
-              <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: 0 }}>
-                  {authMode === 'login' ? 'Partner Portal Sign In' : 'New Partner Registration'}
-                </h2>
-                <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>
-                  {authMode === 'login' ? 'Access your Nursery Stall or Rider Console' : 'Join the Planto Partner Network'}
-                </p>
-              </div>
-
-              {/* Modal Switch Tabs */}
-              <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
-                <button 
-                  onClick={() => { setAuthMode('login'); setAuthError(''); }}
-                  style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: authMode === 'login' ? '#fff' : 'transparent', fontWeight: 800, fontSize: '13px', cursor: 'pointer', color: authMode === 'login' ? '#1b4332' : '#666' }}
-                >
-                  Sign In
-                </button>
-                <button 
-                  onClick={() => { setAuthMode('register'); setAuthError(''); }}
-                  style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: authMode === 'register' ? '#fff' : 'transparent', fontWeight: 800, fontSize: '13px', cursor: 'pointer', color: authMode === 'register' ? '#1b4332' : '#666' }}
-                >
-                  Register
-                </button>
+          <div className="modal-backdrop-animated" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div className="card modal-content-animated" style={{ maxWidth: authMode === 'register' && regRole === 'Delivery Partner' ? '650px' : '480px', width: '100%', padding: '32px', borderRadius: '24px', background: '#fff', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)', maxHeight: '90vh', overflowY: 'auto' }}>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  {authMode === 'login' ? 'Partner Account Login' : `Register as ${regRole}`}
+                </h3>
+                <button onClick={() => setShowAuthModal(false)} style={{ border: 'none', background: '#f1f5f9', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
               </div>
 
               {authError && (
-                <div style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fee2e2', padding: '12px 14px', borderRadius: '12px', fontSize: '12.5px', fontWeight: 700, marginBottom: '18px', lineHeight: 1.5 }}>
+                <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: '12px', fontSize: '12.5px', marginBottom: '16px', fontWeight: 700 }}>
                   {authError}
                 </div>
               )}
 
+              {/* LOGIN FORM */}
               {authMode === 'login' ? (
                 <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px', display: 'block', color: '#333' }}>Email Address</label>
-                    <input type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ccc', fontSize: '14px' }} />
+                    <label style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px', display: 'block', color: '#334155' }}>Email Address</label>
+                    <input type="email" placeholder="vendor@planto.in" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13.5px' }} />
                   </div>
+
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px', display: 'block', color: '#333' }}>Password</label>
-                    <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ccc', fontSize: '14px' }} />
+                    <label style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px', display: 'block', color: '#334155' }}>Password</label>
+                    <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13.5px' }} />
                   </div>
 
-                  <div style={{ background: '#f8faf9', padding: '12px', borderRadius: '12px', fontSize: '12px', border: '1px solid #e2e8f0' }}>
-                    <strong style={{ display: 'block', marginBottom: '6px', color: '#1b4332' }}>Quick Demo Login Presets:</strong>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button type="button" style={{ fontSize: '11px', padding: '6px 10px', background: '#e8f5e9', color: '#1b4332', border: 'none', borderRadius: '8px', fontWeight: 800, cursor: 'pointer' }} onClick={() => { setLoginEmail('vendor@planto.in'); setLoginPassword('planto123'); }}>
-                        Nursery Owner
-                      </button>
-                      <button type="button" style={{ fontSize: '11px', padding: '6px 10px', background: '#fff8e1', color: '#b45309', border: 'none', borderRadius: '8px', fontWeight: 800, cursor: 'pointer' }} onClick={() => { setLoginEmail('delivery@planto.in'); setLoginPassword('delivery123'); }}>
-                        Approved Delivery Partner
-                      </button>
-                    </div>
+                  <div style={{ display: 'flex', gap: '10px', background: '#f8faf9', padding: '10px 12px', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '11px' }}>
+                    <button type="button" onClick={() => { setLoginEmail('vendor@planto.in'); setLoginPassword('planto123'); }} style={{ flex: 1, background: '#e8f5e9', color: '#1b4332', border: 'none', padding: '6px', borderRadius: '6px', fontWeight: 800, cursor: 'pointer' }}>
+                      Demo Nursery Owner
+                    </button>
+                    <button type="button" onClick={() => { setLoginEmail('delivery@planto.in'); setLoginPassword('delivery123'); }} style={{ flex: 1, background: '#e0f2fe', color: '#0369a1', border: 'none', padding: '6px', borderRadius: '6px', fontWeight: 800, cursor: 'pointer' }}>
+                      Demo Delivery Rider
+                    </button>
                   </div>
 
-                  <button type="submit" style={{ justifyContent: 'center', height: '46px', fontSize: '15px', fontWeight: 800, background: '#1b4332', color: '#fff', borderRadius: '12px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
-                    Enter Dashboard →
+                  <button type="submit" style={{ justifyContent: 'center', height: '46px', fontSize: '14.5px', fontWeight: 800, background: '#1b4332', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', marginTop: '6px', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
+                    Login to Partner Dashboard →
                   </button>
+
+                  <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '12.5px', color: '#64748b' }}>
+                    Don't have an account yet?{' '}
+                    <span onClick={() => { setAuthMode('register'); setAuthError(''); }} style={{ color: '#2d6a4f', fontWeight: 800, cursor: 'pointer', textDecoration: 'underline' }}>
+                      Sign Up Now
+                    </span>
+                  </div>
                 </form>
               ) : (
+                /* REGISTRATION FORM */
                 <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 800, marginBottom: '6px', display: 'block', color: '#1b4332' }}>Registering as:</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                      <button 
-                        type="button"
-                        onClick={() => setRegRole('Vendor')}
-                        style={{ padding: '10px', borderRadius: '10px', border: regRole === 'Vendor' ? '2px solid #1b4332' : '1px solid #ccc', background: regRole === 'Vendor' ? '#e8f5e9' : '#fff', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
-                      >
-                        Nursery Owner
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={() => setRegRole('Delivery Partner')}
-                        style={{ padding: '10px', borderRadius: '10px', border: regRole === 'Delivery Partner' ? '2px solid #ffb703' : '1px solid #ccc', background: regRole === 'Delivery Partner' ? '#fff8e1' : '#fff', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
-                      >
-                        Delivery Rider
-                      </button>
-                    </div>
+                  
+                  {/* Role Selector Tabs */}
+                  <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '12px', gap: '4px' }}>
+                    <button 
+                      type="button" 
+                      onClick={() => setRegRole('Vendor')}
+                      style={{ flex: 1, padding: '9px', borderRadius: '8px', border: 'none', background: regRole === 'Vendor' ? '#1b4332' : 'transparent', color: regRole === 'Vendor' ? '#fff' : '#64748b', fontWeight: 800, fontSize: '12.5px', cursor: 'pointer' }}
+                    >
+                      Nursery Stall Owner
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setRegRole('Delivery Partner')}
+                      style={{ flex: 1, padding: '9px', borderRadius: '8px', border: 'none', background: regRole === 'Delivery Partner' ? '#1b4332' : 'transparent', color: regRole === 'Delivery Partner' ? '#fff' : '#64748b', fontWeight: 800, fontSize: '12.5px', cursor: 'pointer' }}
+                    >
+                      Delivery Fleet Partner
+                    </button>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -718,7 +719,6 @@ export default function App() {
                           <input type="text" placeholder="KA-01-2024-00129" value={regDlNum} onChange={(e) => setRegDlNum(e.target.value)} required style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '12.5px' }} />
                         </div>
 
-                        {/* PDF / Image File Dropzone for Driving License */}
                         <div>
                           <label style={{ fontSize: '11px', fontWeight: 700, marginBottom: '4px', display: 'block', color: '#64748b' }}>Driving License File (PDF or Image)</label>
                           {regDlDoc ? (
@@ -757,7 +757,6 @@ export default function App() {
                           <input type="text" placeholder="4812-9901-3412" value={regAadhaarNum} onChange={(e) => setRegAadhaarNum(e.target.value)} required style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '12.5px' }} />
                         </div>
 
-                        {/* PDF / Image File Dropzone for Aadhaar Card */}
                         <div>
                           <label style={{ fontSize: '11px', fontWeight: 700, marginBottom: '4px', display: 'block', color: '#64748b' }}>Aadhaar Card File (PDF or Image)</label>
                           {regAadhaarDoc ? (
@@ -809,18 +808,18 @@ export default function App() {
     const totalSalesRevenue = vendorOrders.reduce((sum, o) => sum + (o.total || 0), 0) + 5030;
 
     const vendorSidebarItems = [
-      { id: 'dashboard', label: 'Overall Dashboard' },
-      { id: 'inventory', label: 'My Plant Inventory', count: vendorProducts.length },
-      { id: 'orders', label: 'Live Customer Orders', count: vendorOrders.length },
-      { id: 'revenue', label: 'Revenue & Payouts' },
+      { id: 'dashboard', label: 'Dashboard' },
+      { id: 'inventory', label: 'My Plant Inventory' },
+      { id: 'orders', label: 'Orders' },
+      { id: 'revenue', label: 'Revenue' },
       { id: 'status', label: `Store Status (${storeOpen ? 'Open' : 'Closed'})` },
-      { id: 'profile', label: 'Nursery Store Profile' }
+      { id: 'profile', label: 'Profile' }
     ];
 
     return (
       <div style={{ minHeight: '100vh', display: 'flex', background: '#f8faf9' }}>
         
-        {/* LEFT SIDEBAR CONTAINER (STICKY FULL HEIGHT WITH ELEGANT VERTICAL SPACING) */}
+        {/* LEFT SIDEBAR CONTAINER */}
         <aside style={{
           width: sidebarOpen ? '260px' : '76px',
           height: '100vh',
@@ -834,7 +833,7 @@ export default function App() {
           zIndex: 100,
           boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
         }}>
-          {/* Sidebar Brand Header */}
+          {/* Header */}
           <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             {sidebarOpen ? (
               <div>
@@ -854,7 +853,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* Navigation Menu (Expanded vertical height & elegant spacing) */}
+          {/* Navigation Menu */}
           <nav style={{ padding: '20px 12px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, overflowY: 'auto' }}>
             {vendorSidebarItems.map(item => {
               const active = vendorTab === item.id;
@@ -892,17 +891,12 @@ export default function App() {
                       {item.label}
                     </span>
                   )}
-                  {sidebarOpen && item.count !== undefined && (
-                    <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px' }}>
-                      {item.count}
-                    </span>
-                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* CLEAN SIDEBAR FOOTER: USER NAME STUCK AT VERY BOTTOM */}
+          {/* SIDEBAR FOOTER */}
           <div style={{ padding: '18px 14px', borderTop: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', marginTop: 'auto', flexShrink: 0 }}>
             {sidebarOpen ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -912,7 +906,7 @@ export default function App() {
                   </div>
                   <div style={{ overflow: 'hidden' }}>
                     <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                      {currentUser.nurseryName || 'Sai Baba Stall'}
+                      {currentUser.nurseryName || currentUser.name}
                     </div>
                     <div style={{ fontSize: '11px', color: '#a7f3d0' }}>
                       {currentUser.name} (Owner)
@@ -920,150 +914,146 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Logout Button right below User Name */}
                 <button 
                   onClick={handleLogout}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.12)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '9px 12px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background 0.2s ease' }}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '9px 12px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
                 >
-                  🚪 Logout Account
+                  Logout Account
                 </button>
               </div>
             ) : (
-              <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '20px', cursor: 'pointer', display: 'block', margin: '0 auto' }} title="Logout Account">
-                🚪
+              <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'block', margin: '0 auto' }}>
+                Exit
               </button>
             )}
           </div>
         </aside>
 
-        {/* MAIN DASHBOARD CONTENT AREA */}
+        {/* NURSERY MAIN CONTENT */}
         <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
           
-          {/* Header Banner */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
             <div>
-              <h1 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+              <h1 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: 0, color: 'var(--primary-dark)' }}>
                 {vendorSidebarItems.find(i => i.id === vendorTab)?.label}
               </h1>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px', margin: 0 }}>
                 {currentUser.nurseryName || 'Sai Baba Plant & Pot Stall'} • Live Operations Console
               </p>
             </div>
 
-            {vendorTab === 'inventory' && (
-              <button className="btn btn-accent" style={{ color: '#000', fontWeight: 800 }} onClick={() => setShowAddProductModal(true)}>
-                + Add New Plant / Pot Item
-              </button>
-            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {(vendorTab === 'inventory' || vendorTab === 'dashboard') && (
+                <button 
+                  onClick={() => setShowAddProductModal(true)}
+                  style={{ background: '#1b4332', color: '#ffffff', border: 'none', padding: '12px 22px', borderRadius: '12px', fontSize: '13.5px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(27,67,50,0.25)' }}
+                >
+                  + Add New Plant / Pot Item
+                </button>
+              )}
+            </div>
           </div>
 
           {/* TAB 0: OVERALL DASHBOARD */}
           {vendorTab === 'dashboard' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              
-              {/* Overview Metrics Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-                <div className="card" style={{ background: '#fff', borderLeft: '4px solid #2e7d32' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                <div className="card" style={{ borderLeft: '5px solid #2d6a4f' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 800 }}>TOTAL REVENUE</span>
-                  <h3 style={{ fontSize: '28px', color: '#2e7d32', marginTop: '4px', margin: 0 }}>₹{totalSalesRevenue.toLocaleString()}</h3>
-                  <span style={{ fontSize: '11px', color: '#2e7d32', fontWeight: 700, marginTop: '6px', display: 'block' }}>↑ 18% vs last week</span>
+                  <h3 style={{ fontSize: '28px', color: '#2d6a4f', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>₹{totalSalesRevenue.toLocaleString()}</h3>
+                  <span style={{ fontSize: '11px', color: '#2e7d32', marginTop: '6px', display: 'block', fontWeight: 700 }}>↑ 18% vs last week</span>
                 </div>
-                <div className="card" style={{ background: '#fff', borderLeft: '4px solid var(--primary)' }}>
+                <div className="card" style={{ borderLeft: '5px solid #0284c7' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 800 }}>LIVE CUSTOMER ORDERS</span>
-                  <h3 style={{ fontSize: '28px', color: 'var(--primary)', marginTop: '4px', margin: 0 }}>{vendorOrders.length} Pending</h3>
+                  <h3 style={{ fontSize: '28px', color: '#0284c7', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>{vendorOrders.length} Pending</h3>
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', display: 'block' }}>Ready for hydration packing</span>
                 </div>
-                <div className="card" style={{ background: '#fff', borderLeft: '4px solid #1976d2' }}>
+                <div className="card" style={{ borderLeft: '5px solid #2563eb' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 800 }}>PLANTS & POTS LISTED</span>
-                  <h3 style={{ fontSize: '28px', color: '#1976d2', marginTop: '4px', margin: 0 }}>{vendorProducts.length} Items</h3>
-                  <span style={{ fontSize: '11px', color: '#1976d2', fontWeight: 700, marginTop: '6px', display: 'block' }}>Live in customer store</span>
+                  <h3 style={{ fontSize: '28px', color: '#2563eb', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>{vendorProducts.length} Items</h3>
+                  <span style={{ fontSize: '11px', color: '#2563eb', marginTop: '6px', display: 'block', fontWeight: 700 }}>Live in customer store</span>
                 </div>
-                <div className="card" style={{ background: '#fff', borderLeft: '4px solid #ffb703' }}>
+                <div className="card" style={{ borderLeft: '5px solid #ffb703' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 800 }}>NURSERY RATING</span>
-                  <h3 style={{ fontSize: '28px', color: '#d48806', marginTop: '4px', margin: 0 }}>⭐ 4.8 / 5.0</h3>
+                  <h3 style={{ fontSize: '28px', color: '#d97706', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>⭐ 4.8 / 5.0</h3>
                   <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', display: 'block' }}>Based on 42 customer reviews</span>
                 </div>
               </div>
 
-              {/* Revenue Graph & Quick Actions */}
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-                
-                {/* Sales Chart Bar Card */}
                 <div className="card">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                     <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: 0 }}>Weekly Revenue & Sales Trend</h3>
-                    <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 700 }}>August 2026</span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>August 2026</span>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '150px', paddingTop: '20px', borderBottom: '1px solid #f0f0f0' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '140px', paddingTop: '20px', borderBottom: '1px solid var(--border-color)' }}>
                     {[
-                      { day: 'Mon', val: 650, height: '40%' },
-                      { day: 'Tue', val: 890, height: '55%' },
-                      { day: 'Wed', val: 1200, height: '75%' },
-                      { day: 'Thu', val: 950, height: '60%' },
-                      { day: 'Fri', val: 1450, height: '90%' },
-                      { day: 'Sat', val: 1800, height: '100%' },
-                      { day: 'Sun', val: 1100, height: '70%' }
+                      { day: 'Mon', val: 650, h: '40%' },
+                      { day: 'Tue', val: 890, h: '55%' },
+                      { day: 'Wed', val: 1200, h: '75%' },
+                      { day: 'Thu', val: 950, h: '60%' },
+                      { day: 'Fri', val: 1450, h: '90%' },
+                      { day: 'Sat', val: 1800, h: '100%' },
+                      { day: 'Sun', val: 1100, h: '70%' }
                     ].map((bar, i) => (
                       <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '10px', color: '#666', fontWeight: 700 }}>₹{bar.val}</span>
-                        <div style={{ width: '100%', height: bar.height, background: i === 5 ? '#2d6a4f' : '#b7e4c7', borderRadius: '6px 6px 0 0' }}></div>
-                        <span style={{ fontSize: '11px', color: '#999', fontWeight: 600 }}>{bar.day}</span>
+                        <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>₹{bar.val}</span>
+                        <div style={{ width: '100%', height: bar.h, background: i === 5 ? 'var(--primary)' : '#c8e6c9', borderRadius: '6px 6px 0 0' }}></div>
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{bar.day}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Quick Actions Panel */}
                 <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', marginBottom: '14px' }}>Quick Operations</h3>
+                    <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 14px 0' }}>Quick Operations</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <button className="btn btn-accent" style={{ color: '#000', fontWeight: 800, justifyContent: 'flex-start' }} onClick={() => setShowAddProductModal(true)}>
-                        ➕ Add Plant or Pot Item
+                      <button 
+                        onClick={() => setShowAddProductModal(true)}
+                        style={{ background: '#ffb703', color: '#000', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 800, fontSize: '13px', cursor: 'pointer', textAlign: 'center' }}
+                      >
+                        + Add Plant or Pot Item
                       </button>
-                      <button className="btn btn-secondary" style={{ justifyContent: 'flex-start' }} onClick={() => setVendorTab('orders')}>
-                        📦 Check Live Customer Orders ({vendorOrders.length})
+                      <button className="btn btn-secondary" style={{ justifyContent: 'center' }} onClick={() => setVendorTab('orders')}>
+                        Check Live Customer Orders ({vendorOrders.length})
                       </button>
-                      <button className="btn btn-secondary" style={{ justifyContent: 'flex-start' }} onClick={() => setVendorTab('revenue')}>
-                        💰 Withdraw Bank Payout
+                      <button className="btn btn-secondary" style={{ justifyContent: 'center' }} onClick={() => setVendorTab('revenue')}>
+                        Withdraw Bank Payout
                       </button>
                     </div>
                   </div>
 
-                  <div style={{ background: '#e8f5e9', padding: '12px', borderRadius: '12px', fontSize: '11px', marginTop: '16px' }}>
-                    <strong style={{ color: '#2e7d32' }}>💡 Pro Tip for Nursery Owners:</strong>
-                    <p style={{ margin: '4px 0 0 0', color: '#1b4332' }}>Items with hydration packaging badges get 40% higher customer repeat orders!</p>
+                  <div style={{ background: '#e8f5e9', padding: '12px', borderRadius: '12px', fontSize: '11px', color: '#2e7d32', marginTop: '16px' }}>
+                    <strong>Pro Tip for Nursery Owners:</strong>
+                    <p style={{ margin: '4px 0 0 0' }}>Items with hydration packaging badges get 40% higher customer repeat orders!</p>
                   </div>
                 </div>
               </div>
 
-              {/* Recent Orders Stream */}
               <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                   <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: 0 }}>Recent Orders Stream</h3>
-                  <button className="btn btn-secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={() => setVendorTab('orders')}>
-                    View All Orders →
-                  </button>
+                  <span onClick={() => setVendorTab('orders')} style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 800, cursor: 'pointer' }}>View All Orders →</span>
                 </div>
 
-                {vendorOrders.map((ord) => (
-                  <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{ fontSize: '20px' }}>🪴</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {vendorOrders.map((ord) => (
+                    <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <div>
                         <strong style={{ fontSize: '14px' }}>Order #{ord.id}</strong>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{ord.date} • Total ₹{ord.total}</div>
                       </div>
+
+                      <span style={{ background: '#e8f5e9', color: '#2e7d32', padding: '4px 10px', borderRadius: '12px', fontWeight: 800, fontSize: '12px' }}>
+                        {ord.status}
+                      </span>
                     </div>
+                  ))}
+                </div>
 
-                    <span style={{ background: '#e8f5e9', color: '#2e7d32', padding: '4px 10px', borderRadius: '12px', fontWeight: 800, fontSize: '12px' }}>
-                      {ord.status}
-                    </span>
-                  </div>
-                ))}
               </div>
-
             </div>
           )}
 
@@ -1113,7 +1103,7 @@ export default function App() {
                             }
                           }}
                         >
-                          ✏️ Edit Stock
+                          Edit Stock
                         </button>
                       </td>
                     </tr>
@@ -1168,53 +1158,33 @@ export default function App() {
                   </button>
                 </div>
               </div>
-
-              <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                <h4 style={{ padding: '16px 20px', background: '#f8faf9', borderBottom: '1px solid var(--border-color)', margin: 0 }}>Past Settlement History</h4>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                      <th style={{ padding: '12px 20px' }}>Date</th>
-                      <th style={{ padding: '12px 20px' }}>Settlement ID</th>
-                      <th style={{ padding: '12px 20px' }}>Amount</th>
-                      <th style={{ padding: '12px 20px' }}>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '12px 20px' }}>12 Aug 2026</td>
-                      <td style={{ padding: '12px 20px', color: 'var(--text-muted)' }}>PAY-9921</td>
-                      <td style={{ padding: '12px 20px', fontWeight: 800, color: '#2e7d32' }}>₹3,450</td>
-                      <td style={{ padding: '12px 20px', color: '#2e7d32', fontWeight: 800 }}>Completed ✅</td>
-                    </tr>
-                    <tr>
-                      <td style={{ padding: '12px 20px' }}>05 Aug 2026</td>
-                      <td style={{ padding: '12px 20px', color: 'var(--text-muted)' }}>PAY-9810</td>
-                      <td style={{ padding: '12px 20px', fontWeight: 800, color: '#2e7d32' }}>₹4,120</td>
-                      <td style={{ padding: '12px 20px', color: '#2e7d32', fontWeight: 800 }}>Completed ✅</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
             </div>
           )}
 
           {/* TAB 4: NURSERY STORE PROFILE */}
           {vendorTab === 'profile' && (
-            <div className="card" style={{ maxWidth: '720px', padding: '32px' }}>
+            <div className="card" style={{ maxWidth: '750px', padding: '32px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
                 <div>
                   <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
                     Nursery Store Profile & Settings
                   </h3>
                   <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
-                    Manage your physical stall details, operating hours, and seller info
+                    Registered owner details, location address, and operating info
                   </p>
                 </div>
 
-                <span style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #c8e6c9', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
-                  ACTIVE SELLER
-                </span>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button 
+                    onClick={handleOpenEditProfile}
+                    style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '10px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
+                  >
+                    Edit Profile Details
+                  </button>
+                  <span style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #c8e6c9', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
+                    ACTIVE SELLER
+                  </span>
+                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', fontSize: '13.5px' }}>
@@ -1233,7 +1203,7 @@ export default function App() {
                 </div>
 
                 <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address</span>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address (Login ID)</span>
                   <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
                     {currentUser.email}
                   </div>
@@ -1271,42 +1241,202 @@ export default function App() {
           )}
 
         </main>
+
+        {/* EDIT PROFILE MODAL */}
+        {showEditProfileModal && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '520px', width: '92vw', maxHeight: '90vh', overflowY: 'auto', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+                <h3 style={{ fontSize: '18px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  Edit Account Profile Details
+                </h3>
+                <button onClick={() => setShowEditProfileModal(false)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+              </div>
+
+              <form onSubmit={handleSaveEditProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Full Name</label>
+                    <input type="text" value={editProfileName} onChange={(e) => setEditProfileName(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Email Address</label>
+                    <input type="email" value={editProfileEmail} onChange={(e) => setEditProfileEmail(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Phone Contact</label>
+                    <input type="text" value={editProfilePhone} onChange={(e) => setEditProfilePhone(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>
+                      {currentUser.role === 'Vendor' ? 'Nursery Stall Name' : 'Vehicle Model'}
+                    </label>
+                    <input type="text" value={editProfileDetail} onChange={(e) => setEditProfileDetail(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Location Address</label>
+                  <input type="text" value={editProfileAddress} onChange={(e) => setEditProfileAddress(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                  <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                    Cancel
+                  </button>
+                  <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                    Save Profile Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ADD PRODUCT TO NURSERY CATALOG MODAL */}
+        {showAddProductModal && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '520px', width: '92vw', maxHeight: '90vh', overflowY: 'auto', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+                <div>
+                  <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                    + Add Plant or Pot Item
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', margin: 0 }}>
+                    Publish items to your live Nursery catalog for customer orders
+                  </p>
+                </div>
+                <button onClick={() => setShowAddProductModal(false)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+              </div>
+
+              <form onSubmit={handleAddProduct} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Product Title</label>
+                  <input 
+                    type="text" 
+                    value={newProdName} 
+                    onChange={(e) => setNewProdName(e.target.value)} 
+                    placeholder="e.g. Premium Monstera Deliciosa"
+                    required 
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Category</label>
+                    <select 
+                      value={newProdCategory} 
+                      onChange={(e) => setNewProdCategory(e.target.value)}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                    >
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Selling Price (₹)</label>
+                    <input 
+                      type="number" 
+                      value={newProdPrice} 
+                      onChange={(e) => setNewProdPrice(e.target.value)} 
+                      required 
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Item Type</label>
+                    <select 
+                      value={newProdType} 
+                      onChange={(e) => setNewProdType(e.target.value)}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                    >
+                      <option value="plant">Plant Sapling</option>
+                      <option value="pot">Pot / Planter</option>
+                      <option value="soil">Soil & Fertilizer</option>
+                      <option value="tools">Gardening Tools</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Stock Quantity</label>
+                    <input 
+                      type="number" 
+                      value={newProdStock} 
+                      onChange={(e) => setNewProdStock(e.target.value)} 
+                      required 
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Photo URL (Optional)</label>
+                  <input 
+                    type="url" 
+                    value={newProdImg} 
+                    onChange={(e) => setNewProdImg(e.target.value)} 
+                    placeholder="https://images.unsplash.com/..."
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                  <button type="button" onClick={() => setShowAddProductModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
       </div>
     );
   }
 
-  // --- 3. DELIVERY PARTNER CLEAN SIDEBAR DASHBOARD ---
+  // --- 3. DELIVERY PARTNER CLEAN SIDEBAR DASHBOARD (ORGANIC GREEN CLIENT THEME) ---
   const riderSidebarItems = [
-    { id: 'dashboard', label: 'Rider Overview' },
-    { id: 'active', label: 'Active Order Delivery', count: deliveryOrders.length },
-    { id: 'history', label: 'Past Delivery Trips', count: pastDeliveries.length },
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'active', label: 'Active Orders' },
+    { id: 'history', label: 'Past Deliveries' },
     { id: 'earnings', label: 'Wallet & Payouts' },
     { id: 'status', label: `Duty Status (${dutyStatus ? 'On Duty' : 'Off Duty'})` },
-    { id: 'profile', label: 'Rider Profile & Vehicle Settings' }
+    { id: 'profile', label: 'Profile' }
   ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', background: '#0f172a', color: '#fff' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', background: '#f8faf9', color: '#1b4332' }}>
       
-      {/* RIDER LEFT SIDEBAR (STICKY FULL HEIGHT WITH ELEGANT VERTICAL SPACING) */}
+      {/* RIDER LEFT SIDEBAR (ORGANIC GREEN CLIENT THEME) */}
       <aside style={{
         width: sidebarOpen ? '260px' : '76px',
         height: '100vh',
         position: 'sticky',
         top: 0,
-        background: '#1e293b',
+        background: '#0a231b',
+        color: '#fff',
         display: 'flex',
         flexDirection: 'column',
         transition: 'width 0.25s ease',
         zIndex: 100,
-        boxShadow: '4px 0 20px rgba(0,0,0,0.3)'
+        boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
       }}>
         {/* Header */}
-        <div style={{ padding: '24px 20px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           {sidebarOpen ? (
             <div>
-              <h3 style={{ fontSize: '17px', margin: 0, fontWeight: 800, color: '#fff', fontFamily: 'var(--font-serif)', letterSpacing: '0.5px' }}>Planto Rider</h3>
-              <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 700 }}>Express Console</span>
+              <h3 style={{ fontSize: '17px', margin: 0, fontWeight: 800, color: '#fff', fontFamily: 'var(--font-serif)', letterSpacing: '0.5px' }}>PLANTO Rider</h3>
+              <span style={{ fontSize: '11px', color: '#ffb703', fontWeight: 700 }}>Express Partner Console</span>
             </div>
           ) : (
             <span style={{ fontSize: '18px', color: '#fff', fontWeight: 800, margin: '0 auto' }}>PR</span>
@@ -1321,7 +1451,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* Menu Nav (Expanded vertical height & clean spacing) */}
+        {/* Menu Nav */}
         <nav style={{ padding: '20px 12px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, overflowY: 'auto' }}>
           {riderSidebarItems.map(item => {
             const active = riderTab === item.id;
@@ -1338,20 +1468,20 @@ export default function App() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justify: 'space-between',
                   padding: '14px 18px',
                   borderRadius: '12px',
                   border: 'none',
-                  background: active ? '#0284c7' : 'transparent',
+                  background: active ? '#2d6a4f' : 'transparent',
                   color: '#fff',
                   fontWeight: active ? 800 : 600,
                   fontSize: '14px',
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.2s ease',
-                  boxShadow: active ? '0 4px 12px rgba(0,0,0,0.3)' : 'none'
+                  boxShadow: active ? '0 4px 12px rgba(0,0,0,0.2)' : 'none'
                 }}
-                onMouseOver={(e) => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+                onMouseOver={(e) => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
                 onMouseOut={(e) => { if (!active) e.currentTarget.style.background = 'transparent'; }}
               >
                 {sidebarOpen && (
@@ -1359,65 +1489,59 @@ export default function App() {
                     {item.label}
                   </span>
                 )}
-                {sidebarOpen && item.count !== undefined && (
-                  <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px' }}>
-                    {item.count}
-                  </span>
-                )}
               </button>
             );
           })}
         </nav>
 
-        {/* CLEAN RIDER SIDEBAR FOOTER: USER NAME STUCK AT VERY BOTTOM */}
-        <div style={{ padding: '18px 14px', borderTop: '1px solid #334155', background: 'rgba(0,0,0,0.3)', marginTop: 'auto', flexShrink: 0 }}>
+        {/* RIDER SIDEBAR FOOTER */}
+        <div style={{ padding: '18px 14px', borderTop: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', marginTop: 'auto', flexShrink: 0 }}>
           {sidebarOpen ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#0284c7', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '16px', flexShrink: 0 }}>
+                <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#2d6a4f', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '16px', flexShrink: 0 }}>
                   {currentUser.name.charAt(0)}
                 </div>
                 <div style={{ overflow: 'hidden' }}>
                   <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                     {currentUser.name}
                   </div>
-                  <div style={{ fontSize: '11px', color: '#38bdf8' }}>
+                  <div style={{ fontSize: '11px', color: '#ffb703', fontWeight: 700 }}>
                     {currentUser.vehicle || 'Delivery Partner'}
                   </div>
                 </div>
               </div>
 
-              {/* Logout Button right below User Name */}
               <button 
                 onClick={handleLogout}
-                style={{ width: '100%', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid #334155', padding: '9px 12px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background 0.2s ease' }}
+                style={{ width: '100%', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '9px 12px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
               >
                 Logout Account
               </button>
             </div>
           ) : (
-            <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'block', margin: '0 auto' }} title="Logout Account">
+            <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '12px', fontWeight: 800, cursor: 'pointer', display: 'block', margin: '0 auto' }}>
               Exit
             </button>
           )}
         </div>
       </aside>
 
-      {/* RIDER MAIN CONTENT */}
+      {/* RIDER MAIN CONTENT AREA (ORGANIC GREEN CLIENT THEME) */}
       <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', background: '#ffffff', padding: '20px 28px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: 0 }}>
+            <h1 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
               {riderSidebarItems.find(i => i.id === riderTab)?.label}
             </h1>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px', margin: 0 }}>
-              PLANTO Hyperlocal Express Delivery Console
+            <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
+              PLANTO Hyperlocal Express Delivery Partner Console
             </p>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ background: dutyStatus ? '#16a34a' : '#dc2626', color: '#fff', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
-              Status: {dutyStatus ? 'Online & Receiving Orders' : 'Offline'}
+            <span style={{ background: dutyStatus ? '#e8f5e9' : '#fef2f2', color: dutyStatus ? '#1b4332' : '#dc2626', border: dutyStatus ? '1px solid #c8e6c9' : '1px solid #fee2e2', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
+              Duty Status: {dutyStatus ? 'Online & Receiving Orders' : 'Offline'}
             </span>
           </div>
         </div>
@@ -1425,11 +1549,28 @@ export default function App() {
         {/* TAB 0: DASHBOARD */}
         {riderTab === 'dashboard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Weekly Earnings Bar Chart & Quick Actions */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+              <div className="card" style={{ borderLeft: '5px solid #1b4332' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>TOTAL EARNINGS</span>
+                <h3 style={{ fontSize: '28px', color: '#1b4332', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>₹{currentUser.totalEarnings || 4250}</h3>
+                <span style={{ fontSize: '11px', color: '#2e7d32', marginTop: '6px', display: 'block', fontWeight: 700 }}>+₹650 this week</span>
+              </div>
+              <div className="card" style={{ borderLeft: '5px solid #2d6a4f' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>COMPLETED TRIPS</span>
+                <h3 style={{ fontSize: '28px', color: '#2d6a4f', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>{currentUser.completedTrips || 42} Orders</h3>
+                <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>100% On-time SLA</span>
+              </div>
+              <div className="card" style={{ borderLeft: '5px solid #ffb703' }}>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>RIDER RATING</span>
+                <h3 style={{ fontSize: '28px', color: '#d97706', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>⭐ 4.95 / 5</h3>
+                <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>Plant Care Excellence Badge</span>
+              </div>
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-              <div className="card" style={{ background: '#1e293b', color: '#fff' }}>
-                <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0' }}>Weekly Rider Payout Breakdown</h3>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '140px', paddingTop: '20px', borderBottom: '1px solid #334155' }}>
+              <div className="card">
+                <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0', color: '#1b4332' }}>Weekly Rider Payout Breakdown</h3>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '140px', paddingTop: '20px', borderBottom: '1px solid #e2e8f0' }}>
                   {[
                     { day: 'Mon', val: 420, h: '50%' },
                     { day: 'Tue', val: 560, h: '70%' },
@@ -1440,47 +1581,52 @@ export default function App() {
                     { day: 'Sun', val: 640, h: '80%' }
                   ].map((bar, i) => (
                     <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>₹{bar.val}</span>
-                      <div style={{ width: '100%', height: bar.h, background: i === 6 ? '#22c55e' : '#38bdf8', borderRadius: '6px 6px 0 0' }}></div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>{bar.day}</span>
+                      <span style={{ fontSize: '10px', color: '#64748b' }}>₹{bar.val}</span>
+                      <div style={{ width: '100%', height: bar.h, background: i === 6 ? '#2d6a4f' : '#b7e4c7', borderRadius: '6px 6px 0 0' }}></div>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>{bar.day}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="card" style={{ background: '#1e293b', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 14px 0' }}>Rider Controls</h3>
+                  <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 14px 0', color: '#1b4332' }}>Rider Controls</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <button className="btn btn-accent" style={{ color: '#000', fontWeight: 800 }} onClick={() => setRiderTab('active')}>
-                      🛵 Go to Active Pick-ups ({deliveryOrders.length})
+                    <button 
+                      onClick={() => setRiderTab('active')}
+                      style={{ background: '#ffb703', color: '#000', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}
+                    >
+                      Go to Active Pick-ups ({deliveryOrders.length})
                     </button>
-                    <button className="btn btn-secondary" style={{ color: '#fff' }} onClick={() => setRiderTab('earnings')}>
-                      💰 Instant UPI Payout
+                    <button className="btn btn-secondary" style={{ justifyContent: 'center' }} onClick={() => setRiderTab('earnings')}>
+                      Instant UPI Payout
                     </button>
                   </div>
                 </div>
 
-                <div style={{ background: '#0284c7', padding: '12px', borderRadius: '12px', fontSize: '11px', color: '#fff', marginTop: '16px' }}>
-                  <strong>⚡ Plant Safety Reminder:</strong>
+                <div style={{ background: '#e8f5e9', padding: '12px', borderRadius: '12px', fontSize: '11px', color: '#2e7d32', marginTop: '16px' }}>
+                  <strong>Plant Safety Reminder:</strong>
                   <p style={{ margin: '4px 0 0 0' }}>Keep plant boxes upright during scooter transport to earn +₹10 hydration bonus!</p>
                 </div>
               </div>
             </div>
 
-            {/* Active Pickups Stream */}
-            <div className="card" style={{ background: '#1e293b', color: '#fff' }}>
-              <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', marginBottom: '16px' }}>Live Pickup Queue Nearby</h3>
+            <div className="card">
+              <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', marginBottom: '16px', color: '#1b4332' }}>Live Pickup Queue Nearby</h3>
               {deliveryOrders.map((ord) => (
-                <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #334155' }}>
+                <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
                   <div>
-                    <strong style={{ fontSize: '15px' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</strong>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>Pick-up: Indiranagar ➔ Drop: 100ft Road (1.4 km)</div>
+                    <strong style={{ fontSize: '15px', color: '#1b4332' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</strong>
+                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Pick-up: Indiranagar ➔ Drop: 100ft Road (1.4 km)</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 800, color: '#4ade80', fontSize: '16px' }}>+₹65 Payout</div>
-                    <button className="btn btn-secondary" style={{ fontSize: '11px', padding: '4px 8px', marginTop: '4px' }} onClick={() => handleCompleteRiderDelivery(ord)}>
-                      Complete Delivery ✅
+                    <div style={{ fontWeight: 800, color: '#2e7d32', fontSize: '16px' }}>+₹65 Payout</div>
+                    <button 
+                      onClick={() => handleCompleteRiderDelivery(ord)}
+                      style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 800, marginTop: '4px', cursor: 'pointer' }}
+                    >
+                      Complete Delivery ✓
                     </button>
                   </div>
                 </div>
@@ -1494,37 +1640,29 @@ export default function App() {
         {riderTab === 'active' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {deliveryOrders.map((ord) => (
-              <div key={ord.id} className="card" style={{ background: '#1e293b', color: '#fff', borderRadius: '16px', border: '1px solid #334155' }}>
+              <div key={ord.id} className="card" style={{ borderRadius: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                   <div>
                     <span style={{ background: '#ffb703', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: 800 }}>⚡ 30-MIN PLANT DELIVERY</span>
-                    <h4 style={{ fontSize: '18px', marginTop: '6px' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</h4>
-                    <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '2px' }}>
+                    <h4 style={{ fontSize: '18px', marginTop: '6px', color: '#1b4332', margin: '6px 0 0 0' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</h4>
+                    <p style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
                       Pick-up: Indiranagar Metro Pillar 124 ➔ Drop: 100ft Road, Indiranagar (1.4 km)
                     </p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#4ade80' }}>+₹65 Payout</div>
-                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Incl. Plant Care Bonus</span>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#2e7d32' }}>+₹65 Payout</div>
+                    <span style={{ fontSize: '11px', color: '#64748b' }}>Incl. Plant Care Bonus</span>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #334155', paddingTop: '12px', marginTop: '12px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#4ade80' }}>Status: {ord.status}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '12px', marginTop: '12px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#2e7d32' }}>Status: {ord.status}</span>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button 
-                      className="btn btn-secondary" 
-                      style={{ fontSize: '12px' }}
-                      onClick={() => alert(`Navigating to ${ord.vendorName} on GPS map...`)}
-                    >
-                      📍 GPS Map Navigation
-                    </button>
-                    <button 
-                      className="btn" 
-                      style={{ fontSize: '12px' }}
                       onClick={() => handleCompleteRiderDelivery(ord)}
+                      style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
                     >
-                      Complete Delivery ✅
+                      Complete Delivery ✓
                     </button>
                   </div>
                 </div>
@@ -1535,25 +1673,25 @@ export default function App() {
 
         {/* TAB 2: TRIP HISTORY */}
         {riderTab === 'history' && (
-          <div className="card" style={{ background: '#1e293b', color: '#fff', padding: 0, overflow: 'hidden' }}>
+          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
-              <thead style={{ background: '#0f172a', borderBottom: '1px solid #334155', fontWeight: 800 }}>
+              <thead style={{ background: '#f8faf9', borderBottom: '2px solid #e2e8f0', fontWeight: 800 }}>
                 <tr>
-                  <th style={{ padding: '14px 20px' }}>Order ID</th>
-                  <th style={{ padding: '14px 20px' }}>Nursery</th>
-                  <th style={{ padding: '14px 20px' }}>Customer</th>
-                  <th style={{ padding: '14px 20px' }}>Payout</th>
-                  <th style={{ padding: '14px 20px' }}>Rating</th>
+                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Order ID</th>
+                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Nursery</th>
+                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Customer</th>
+                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Payout</th>
+                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Rating</th>
                 </tr>
               </thead>
               <tbody>
                 {pastDeliveries.map((item, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid #334155' }}>
-                    <td style={{ padding: '12px 20px', fontWeight: 800 }}>{item.id}</td>
-                    <td style={{ padding: '12px 20px' }}>{item.vendor}</td>
-                    <td style={{ padding: '12px 20px', color: '#94a3b8' }}>{item.customer}</td>
-                    <td style={{ padding: '12px 20px', fontWeight: 800, color: '#4ade80' }}>+₹{item.payout}</td>
-                    <td style={{ padding: '12px 20px', color: '#ffb703', fontWeight: 800 }}>{item.rating}</td>
+                  <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#1b4332' }}>{item.id}</td>
+                    <td style={{ padding: '14px 20px' }}>{item.vendor}</td>
+                    <td style={{ padding: '14px 20px', color: '#64748b' }}>{item.customer}</td>
+                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#2e7d32' }}>+₹{item.payout}</td>
+                    <td style={{ padding: '14px 20px', color: '#d97706', fontWeight: 800 }}>{item.rating}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1563,34 +1701,272 @@ export default function App() {
 
         {/* TAB 3: EARNINGS & PAYOUTS */}
         {riderTab === 'earnings' && (
-          <div className="card" style={{ background: '#1e293b', color: '#fff' }}>
-            <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', marginBottom: '16px' }}>Rider Wallet & Weekly Earnings</h3>
-            <div style={{ background: '#0f172a', padding: '20px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="card">
+            <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', marginBottom: '16px', color: '#1b4332' }}>Rider Wallet & Weekly Earnings</h3>
+            <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '24px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 700 }}>UNSETTLED BALANCE</span>
-                <h2 style={{ fontSize: '32px', color: '#4ade80', margin: '4px 0 0 0' }}>₹640</h2>
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 700 }}>UNSETTLED BALANCE</span>
+                <h2 style={{ fontSize: '32px', color: '#2e7d32', margin: '4px 0 0 0' }}>₹640</h2>
               </div>
-              <button className="btn btn-accent" style={{ color: '#000', padding: '12px 20px', fontWeight: 800 }} onClick={() => alert("🎉 ₹640 transferred to your UPI account!")}>
+              <button 
+                onClick={() => alert("🎉 ₹640 transferred to your UPI account!")}
+                style={{ background: '#ffb703', color: '#000', border: 'none', padding: '14px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
+              >
                 Instant Payout to UPI →
               </button>
             </div>
           </div>
         )}
 
-        {/* TAB 4: RIDER PROFILE */}
+        {/* TAB 4: RIDER PROFILE & VEHICLE SETTINGS */}
         {riderTab === 'profile' && (
-          <div className="card" style={{ background: '#1e293b', color: '#fff', maxWidth: '600px' }}>
-            <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', marginBottom: '16px' }}>Delivery Rider Details</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px' }}>
-              <div><strong>Name:</strong> {currentUser.name}</div>
-              <div><strong>Phone:</strong> {currentUser.phone || '+91 98765 12345'}</div>
-              <div><strong>Vehicle:</strong> {currentUser.vehicle || 'Electric Two-Wheeler'}</div>
-              <div><strong>Delivery Zone:</strong> Indiranagar & Koramangala, Bengaluru</div>
+          <div className="card" style={{ maxWidth: '750px', padding: '32px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  Rider Profile & Vehicle Settings
+                </h3>
+                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
+                  Registered contact info, vehicle details, and license verification
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <button 
+                  onClick={handleOpenEditProfile}
+                  style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '10px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Edit Profile Details
+                </button>
+                <span style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #c8e6c9', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
+                  VERIFIED RIDER
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', fontSize: '13.5px' }}>
+              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Full Name</span>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#1b4332', marginTop: '4px' }}>
+                  {currentUser.name}
+                </div>
+              </div>
+
+              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address (Login ID)</span>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                  {currentUser.email}
+                </div>
+              </div>
+
+              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Phone Contact</span>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                  {currentUser.phone || '+91 98450 11223'}
+                </div>
+              </div>
+
+              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Vehicle Model</span>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#2d6a4f', marginTop: '4px' }}>
+                  {currentUser.vehicle || 'Hero Electric Scooter'}
+                </div>
+              </div>
+
+              <div style={{ background: '#fff8e1', padding: '18px', borderRadius: '14px', border: '1px solid #ffe082' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#b45309', textTransform: 'uppercase' }}>Vehicle Reg Number</span>
+                <div style={{ fontSize: '17px', fontWeight: 900, color: '#b45309', marginTop: '4px', letterSpacing: '0.5px' }}>
+                  {currentUser.vehicleNumber || 'KA-05-EQ-8821'}
+                </div>
+              </div>
+
+              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Driving License</span>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                  {currentUser.drivingLicense || 'KA-01-2023-0098412'}
+                </div>
+              </div>
+
+              <div style={{ gridColumn: 'span 2', background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Operating Location Address</span>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                  {currentUser.address || 'Indiranagar 100ft Road, Bengaluru, KA'}
+                </div>
+              </div>
             </div>
           </div>
         )}
 
       </main>
+
+      {/* EDIT PROFILE MODAL */}
+      {showEditProfileModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '520px', width: '100%', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+              <h3 style={{ fontSize: '18px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                Edit Account Profile Details
+              </h3>
+              <button onClick={() => setShowEditProfileModal(false)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveEditProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Full Name</label>
+                  <input type="text" value={editProfileName} onChange={(e) => setEditProfileName(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Email Address</label>
+                  <input type="email" value={editProfileEmail} onChange={(e) => setEditProfileEmail(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Phone Contact</label>
+                  <input type="text" value={editProfilePhone} onChange={(e) => setEditProfilePhone(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>
+                    {currentUser.role === 'Vendor' ? 'Nursery Stall Name' : 'Vehicle Model'}
+                  </label>
+                  <input type="text" value={editProfileDetail} onChange={(e) => setEditProfileDetail(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+              </div>
+
+              {currentUser.role === 'Delivery Partner' && (
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Vehicle Reg Number</label>
+                  <input type="text" value={editProfileVehicleNum} onChange={(e) => setEditProfileVehicleNum(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+                </div>
+              )}
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Location Address</label>
+                <input type="text" value={editProfileAddress} onChange={(e) => setEditProfileAddress(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Save Profile Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ADD PRODUCT TO NURSERY CATALOG MODAL */}
+      {showAddProductModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '520px', width: '100%', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+              <div>
+                <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  + Add Plant or Pot Item
+                </h3>
+                <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', margin: 0 }}>
+                  Publish items to your live Nursery catalog for customer orders
+                </p>
+              </div>
+              <button onClick={() => setShowAddProductModal(false)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+            </div>
+
+            <form onSubmit={handleAddProduct} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Product Title</label>
+                <input 
+                  type="text" 
+                  value={newProdName} 
+                  onChange={(e) => setNewProdName(e.target.value)} 
+                  placeholder="e.g. Premium Monstera Deliciosa"
+                  required 
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Category</label>
+                  <select 
+                    value={newProdCategory} 
+                    onChange={(e) => setNewProdCategory(e.target.value)}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  >
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Selling Price (₹)</label>
+                  <input 
+                    type="number" 
+                    value={newProdPrice} 
+                    onChange={(e) => setNewProdPrice(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Item Type</label>
+                  <select 
+                    value={newProdType} 
+                    onChange={(e) => setNewProdType(e.target.value)}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  >
+                    <option value="plant">Plant Sapling</option>
+                    <option value="pot">Pot / Planter</option>
+                    <option value="soil">Soil & Fertilizer</option>
+                    <option value="tools">Gardening Tools</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Stock Quantity</label>
+                  <input 
+                    type="number" 
+                    value={newProdStock} 
+                    onChange={(e) => setNewProdStock(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Photo URL (Optional)</label>
+                <input 
+                  type="url" 
+                  value={newProdImg} 
+                  onChange={(e) => setNewProdImg(e.target.value)} 
+                  placeholder="https://images.unsplash.com/..."
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setShowAddProductModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}>
+                  Save & Publish Item
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

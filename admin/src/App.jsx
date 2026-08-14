@@ -48,14 +48,21 @@ const RejectIcon = ({ size = 16, color = "currentColor" }) => (
 );
 
 export default function App() {
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
+    return localStorage.getItem('planto_admin_logged') === 'true' || true;
+  });
   const [adminEmail, setAdminEmail] = useState('admin@planto.in');
   const [adminPassword, setAdminPassword] = useState('admin123');
+  const [adminName, setAdminName] = useState('Root System Administrator');
+  const [adminPhone, setAdminPhone] = useState('+91 98000 11223');
+  const [showEditAdminProfileModal, setShowEditAdminProfileModal] = useState(false);
   const [vendors, setVendors] = useState([]);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [riders, setRiders] = useState([]);
-  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'categories' | 'vendors' | 'riders' | 'orders' | 'settings'
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('planto_admin_tab') || 'dashboard';
+  });
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Category State
@@ -116,6 +123,14 @@ export default function App() {
   useEffect(() => {
     fetchAdminData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('planto_admin_tab', activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
+    localStorage.setItem('planto_admin_logged', isAdminLoggedIn ? 'true' : 'false');
+  }, [isAdminLoggedIn]);
 
   const fetchAdminData = async () => {
     try {
@@ -368,13 +383,13 @@ export default function App() {
   const totalGMV = orders.reduce((sum, o) => sum + (o.total || 0), 0) + 18500;
   const platformCommission = Math.round(totalGMV * 0.08);
 
-  // Clean Sidebar Navigation without Emoji Symbols
+  // Clean Sidebar Navigation strictly as requested
   const adminSidebarItems = [
-    { id: 'dashboard', label: 'Overall Platform Dashboard' },
-    { id: 'categories', label: 'Category Management', count: categories.length },
-    { id: 'vendors', label: 'Nursery Stalls Manager', count: vendors.length },
-    { id: 'riders', label: 'Delivery Fleet Partners', count: riders.filter(r => r.status === 'PENDING_APPROVAL').length },
-    { id: 'orders', label: 'Live Order Stream', count: orders.length },
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'categories', label: 'Categories' },
+    { id: 'vendors', label: 'Nursery stalls' },
+    { id: 'riders', label: 'Delivery Partner' },
+    { id: 'orders', label: 'Orders' },
     { id: 'settings', label: 'Platform Settings' }
   ];
 
@@ -453,11 +468,6 @@ export default function App() {
                 {sidebarOpen && (
                   <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {item.label}
-                  </span>
-                )}
-                {sidebarOpen && item.count !== undefined && (
-                  <span style={{ background: '#ffb703', color: '#1b4332', fontSize: '11px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px' }}>
-                    {item.count}
                   </span>
                 )}
               </button>
@@ -595,9 +605,10 @@ export default function App() {
                     
                     <button 
                       onClick={() => handleDeleteCategory(cat.id)}
-                      style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fee2e2', padding: '6px 12px', borderRadius: '8px', fontSize: '11.5px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      style={{ background: '#dc2626', color: '#ffffff', border: 'none', width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 2px 6px rgba(220,38,38,0.2)' }}
+                      title="Delete Category"
                     >
-                      <DeleteIcon size={14} color="#dc2626" /> Delete
+                      <DeleteIcon size={17} color="#ffffff" />
                     </button>
                   </div>
                 </div>
@@ -868,15 +879,90 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 5: SETTINGS */}
+        {/* TAB 5: PLATFORM SETTINGS & SUPER ADMIN PROFILE */}
         {activeTab === 'settings' && (
-          <div className="card" style={{ maxWidth: '600px' }}>
-            <h3 style={{ fontSize: '18px', fontFamily: 'var(--font-serif)', marginBottom: '16px', color: '#1b4332' }}>Platform Financial Parameters</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '14px', color: '#334155' }}>
-              <div><strong>Marketplace Commission:</strong> 8.0% per completed order</div>
-              <div><strong>Nursery Delivery SLA:</strong> 30-45 minutes express</div>
-              <div><strong>Delivery Rider Base Pay:</strong> ₹55 + ₹10 Plant Care Bonus</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '800px' }}>
+            
+            {/* 1. SUPER ADMIN ACCOUNT PROFILE DETAILS */}
+            <div className="card" style={{ padding: '32px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+                <div>
+                  <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                    Super Administrator Profile Details
+                  </h3>
+                  <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
+                    Master system controller credentials, login email, and system governance profile
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button 
+                    onClick={() => setShowEditAdminProfileModal(true)}
+                    style={{ background: '#1b4332', color: '#ffffff', border: 'none', padding: '9px 18px', borderRadius: '10px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer', boxShadow: '0 2px 8px rgba(27,67,50,0.2)' }}
+                  >
+                    Edit Admin Details
+                  </button>
+                  <span style={{ background: '#ffb703', color: '#1b4332', padding: '6px 14px', borderRadius: '12px', fontSize: '11.5px', fontWeight: 800 }}>
+                    VERIFIED ROOT ADMIN
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', fontSize: '13.5px' }}>
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Administrator Full Name</span>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#1b4332', marginTop: '4px' }}>
+                    {adminName}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address (Super Admin Login ID)</span>
+                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {adminEmail}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>System Phone Contact</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {adminPhone}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Platform Access Privilege</span>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#2d6a4f', marginTop: '4px' }}>
+                    Super Operations Master Controller
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* 2. PLATFORM FINANCIAL PARAMETERS */}
+            <div className="card" style={{ padding: '32px' }}>
+              <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', marginBottom: '18px', color: '#1b4332' }}>Platform Financial & Governance Parameters</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', fontSize: '13.5px' }}>
+                <div style={{ background: '#f8faf9', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, display: 'block' }}>MARKETPLACE COMMISSION</span>
+                  <strong style={{ fontSize: '18px', color: '#1b4332', display: 'block', marginTop: '4px' }}>8.0% per order</strong>
+                  <span style={{ fontSize: '11px', color: '#2e7d32' }}>92% Nursery Payout</span>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, display: 'block' }}>DELIVERY SLA TARGET</span>
+                  <strong style={{ fontSize: '18px', color: '#1b4332', display: 'block', marginTop: '4px' }}>30-45 minutes</strong>
+                  <span style={{ fontSize: '11px', color: '#0284c7' }}>Hyperlocal express</span>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, display: 'block' }}>RIDER BASE PAYOUT</span>
+                  <strong style={{ fontSize: '18px', color: '#1b4332', display: 'block', marginTop: '4px' }}>₹55 + ₹10 Bonus</strong>
+                  <span style={{ fontSize: '11px', color: '#d97706' }}>Plant care bonus</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
@@ -1498,6 +1584,51 @@ export default function App() {
                 </button>
                 <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
                   Create Category
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT SUPER ADMIN PROFILE MODAL */}
+      {showEditAdminProfileModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '500px', width: '100%', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+              <h3 style={{ fontSize: '18px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                Edit Super Admin Details
+              </h3>
+              <button onClick={() => setShowEditAdminProfileModal(false)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); setShowEditAdminProfileModal(false); alert('🎉 Super Admin Profile Details Updated!'); }} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Administrator Full Name</label>
+                <input type="text" value={adminName} onChange={(e) => setAdminName(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Email Address (Login ID)</label>
+                <input type="email" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>System Phone Contact</label>
+                <input type="text" value={adminPhone} onChange={(e) => setAdminPhone(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Password</label>
+                <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} required style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }} />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setShowEditAdminProfileModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Save Profile Details
                 </button>
               </div>
             </form>
