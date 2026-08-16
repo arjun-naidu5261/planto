@@ -1,0 +1,6 @@
+[
+  { "id": "cat_seasonal_1", "name": "Spring Bloom", "description": "Fresh flowering saplings & bio-fertilizer (March - May)", "seasonMonths": "March - May", "itemCount": 14, "status": "Active" },
+  { "id": "cat_seasonal_2", "name": "Summer Oasis", "description": "Heat-tolerant succulents, palms & shade pots (June - August)", "seasonMonths": "June - August", "itemCount": 18, "status": "Active" },
+  { "id": "cat_seasonal_3", "name": "Monsoon Magic", "description": "Rainy-day planters, herbs & vermicompost (Sept - Nov)", "seasonMonths": "Sept - Nov", "itemCount": 12, "status": "Active" },
+  { "id": "cat_seasonal_4", "name": "Winter Wonders", "description": "Petunias, Marigolds & root food (Dec - Feb)", "seasonMonths": "Dec - Feb", "itemCount": 15, "status": "Active" }
+]

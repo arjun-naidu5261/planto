@@ -52,6 +52,9 @@ export const db = {
   getCategories: () => readJSON('categories.json'),
   saveCategories: (data) => writeJSON('categories.json', data),
   
+  getItemTypes: () => readJSON('itemTypes.json'),
+  saveItemTypes: (data) => writeJSON('itemTypes.json', data),
+  
   getRiders: () => readJSON('riders.json'),
   saveRiders: (data) => writeJSON('riders.json', data),
   

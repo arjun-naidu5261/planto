@@ -5,7 +5,7 @@ import VendorCard from '../components/VendorCard';
 import ProductCard from '../components/ProductCard';
 
 export default function HomePage() {
-  const { vendors, products, setSelectedCategoryName, setShowCategoryModal, setLoginPresetEmail, setShowLogin } = useApp();
+  const { vendors, products, categories: apiCategories, itemTypes, setSelectedCategoryName, setShowCategoryModal, setLoginPresetEmail, setShowLogin } = useApp();
   const [searchVal, setSearchVal] = useState('');
   const [gpsStatus, setGpsStatus] = useState('📍 Detecting Live Location...');
   const [showAllVendors, setShowAllVendors] = useState(false);
@@ -14,56 +14,30 @@ export default function HomePage() {
 
   const requestLiveLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
       setGpsStatus('📍 Indiranagar, Bengaluru (30-45 mins)');
       return;
     }
-
-    setGpsStatus('📍 Requesting Location Permission...');
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        
         try {
-          // Reverse Geocode with high detail level (zoom=18 & addressdetails=1)
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
           const data = await res.json();
-          
           const road = data.address?.road || data.address?.pedestrian || data.address?.street || '';
-          const locality = data.address?.suburb || data.address?.neighbourhood || data.address?.residential || data.address?.village || data.address?.quarter || data.address?.hamlet || '';
-          const city = data.address?.city || data.address?.town || data.address?.county || data.address?.state_district || data.address?.district || '';
-
-          const parts = data.display_name ? data.display_name.split(',').map(s => s.trim()) : [];
-
-          let exactAddress = '';
-          if (road && locality) {
-            exactAddress = `${road}, ${locality}`;
-          } else if (locality && city) {
-            exactAddress = `${locality}, ${city}`;
-          } else if (road && city) {
-            exactAddress = `${road}, ${city}`;
-          } else if (parts.length >= 2) {
-            exactAddress = `${parts[0]}, ${parts[1]}`;
-          } else {
-            exactAddress = city || 'Live Location';
-          }
-
+          const locality = data.address?.suburb || data.address?.neighbourhood || data.address?.residential || '';
+          const city = data.address?.city || data.address?.town || data.address?.district || '';
+          const exactAddress = (road && locality) ? `${road}, ${locality}` : (locality && city) ? `${locality}, ${city}` : city || 'Live Location';
           setGpsStatus(`📍 ${exactAddress} (Same-Day Delivery within 5 Hrs)`);
         } catch (err) {
-          setGpsStatus(`📍 GPS (${lat.toFixed(2)}, ${lng.toFixed(2)}) • 5 Hrs Delivery`);
+          setGpsStatus(`📍 Indiranagar, Bengaluru (Same-Day Delivery)`);
         }
       },
       (error) => {
-        console.warn("Geolocation permission result:", error);
-        if (error.code === error.PERMISSION_DENIED) {
-          setGpsStatus('📍 Klef Road, Tadepalle (Tap to allow location)');
-        } else {
-          setGpsStatus('📍 Klef Road, Tadepalle (Same-Day Delivery within 5 Hrs)');
-        }
+        setGpsStatus('📍 Indiranagar, Bengaluru (Same-Day Delivery within 5 Hrs)');
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
   };
 
@@ -71,17 +45,73 @@ export default function HomePage() {
     requestLiveLocation();
   }, []);
 
-  const categories = [
+  const categoryPresetMap = {
+    "indoor plants": { icon: "🪴", badge: "Air Purifiers", color: "#e8f5e9" },
+    "outdoor & flowering plants": { icon: "🌸", badge: "Sun Lovers", color: "#fff3e0" },
+    "outdoor plants": { icon: "🌸", badge: "Sun Lovers", color: "#fff3e0" },
+    "pots & terracotta planters": { icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
+    "pots & planters": { icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
+    "seeds & organic soil": { icon: "🌱", badge: "High Yield & Soil", color: "#f3e5f5" },
+    "fresh flower bouquets": { icon: "💐", badge: "Fresh Floral Gifts", color: "#fce4ec" },
+    "bouquets & flowers": { icon: "💐", badge: "Fresh Floral Gifts", color: "#fce4ec" },
+    "gardening tools": { icon: "✂️", badge: "Pruners & Sprays", color: "#e0f2f1" },
+    "plant sapling": { icon: "🌿", badge: "Live Potted Saplings", color: "#e8f5e9" },
+    "pot / planter": { icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
+    "hydroponics equipment": { icon: "💧", badge: "Soil-less Kits", color: "#e0f2f1" }
+  };
+
+  const defaultItemTypes = [
     { name: "Indoor Plants", icon: "🪴", badge: "Air Purifiers", color: "#e8f5e9" },
-    { name: "Outdoor Plants", icon: "🌸", badge: "Sun Lovers", color: "#fff3e0" },
-    { name: "Pots & Planters", icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
-    { name: "Bouquets & Flowers", icon: "💐", badge: "Fresh Floral Gifts", color: "#fce4ec" },
-    { name: "Soil & Manure", icon: "🌿", badge: "100% Organic", color: "#e8f5e9" },
-    { name: "Seeds Collection", icon: "🌱", badge: "High Yield", color: "#f3e5f5" },
-    { name: "Tools & Care", icon: "✂️", badge: "Pruners & Sprays", color: "#e0f2f1" }
+    { name: "Outdoor & Flowering Plants", icon: "🌸", badge: "Sun Lovers", color: "#fff3e0" },
+    { name: "Pots & Terracotta Planters", icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
+    { name: "Seeds & Organic Soil", icon: "🌱", badge: "High Yield & Soil", color: "#f3e5f5" },
+    { name: "Fresh Flower Bouquets", icon: "💐", badge: "Fresh Floral Gifts", color: "#fce4ec" },
+    { name: "Gardening Tools", icon: "✂️", badge: "Pruners & Sprays", color: "#e0f2f1" },
+    { name: "Plant Sapling", icon: "🌿", badge: "Live Potted Saplings", color: "#e8f5e9" },
+    { name: "Pot / Planter", icon: "🏺", badge: "Ceramic & Terracotta", color: "#efebe9" },
+    { name: "Hydroponics Equipment", icon: "💧", badge: "Soil-less Kits", color: "#e0f2f1" }
   ];
 
-  const seasonalItems = [
+  const displayItemTypes = (itemTypes && itemTypes.length > 0) ? itemTypes : defaultItemTypes;
+
+  const categories = displayItemTypes.map(it => {
+    const key = it.name.toLowerCase();
+    const matched = categoryPresetMap[key] || { icon: "🌿", badge: it.description || "Live Classification", color: "#e8f5e9" };
+    return {
+      name: it.name,
+      icon: matched.icon || it.icon || "🌿",
+      badge: matched.badge || it.badge || "Classification",
+      color: matched.color || it.color || "#e8f5e9"
+    };
+  });
+
+  const seasonalPresetImages = {
+    "spring bloom": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=500&q=80",
+    "summer oasis": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=80",
+    "monsoon magic": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=500&q=80",
+    "winter wonders": "https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?auto=format&fit=crop&w=500&q=80"
+  };
+
+  const seasonalPresetEmojis = {
+    "spring bloom": "🌸",
+    "summer oasis": "☀️",
+    "monsoon magic": "🌧️",
+    "winter wonders": "❄️"
+  };
+
+  const seasonalCategoriesFromApi = apiCategories.filter(c => 
+    c.seasonMonths || c.name.toLowerCase().includes('bloom') || c.name.toLowerCase().includes('oasis') || c.name.toLowerCase().includes('magic') || c.name.toLowerCase().includes('wonder') || c.name.toLowerCase().includes('spring') || c.name.toLowerCase().includes('summer') || c.name.toLowerCase().includes('monsoon') || c.name.toLowerCase().includes('winter') || c.name.toLowerCase().includes('autumn') || c.name.toLowerCase().includes('fall')
+  );
+
+  const seasonalItems = (seasonalCategoriesFromApi && seasonalCategoriesFromApi.length > 0) ? seasonalCategoriesFromApi.map(c => {
+    const key = c.name.toLowerCase();
+    return {
+      name: c.name,
+      emoji: seasonalPresetEmojis[key] || "🌿",
+      desc: c.description || "Fresh botanical seasonal collection",
+      img: seasonalPresetImages[key] || "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=500&q=80"
+    };
+  }) : [
     { name: "Spring Bloom", emoji: "🌸", desc: "Fresh flowering saplings & bio-fertilizer", img: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=500&q=80" },
     { name: "Summer Oasis", emoji: "☀️", desc: "Heat-tolerant succulents, palms & shade pots", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=80" },
     { name: "Monsoon Magic", emoji: "🌧️", desc: "Rainy-day planters, herbs & vermicompost", img: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=500&q=80" },

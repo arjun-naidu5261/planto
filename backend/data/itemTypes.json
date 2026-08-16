@@ -1,0 +1,11 @@
+[
+  { "id": "it_1", "name": "Indoor Plants", "description": "Air-purifying foliage, shade lovers & succulents", "status": "Active" },
+  { "id": "it_2", "name": "Outdoor & Flowering Plants", "description": "Sun-loving flowering garden shrubs & climbers", "status": "Active" },
+  { "id": "it_3", "name": "Pots & Terracotta Planters", "description": "Handcrafted ceramic, terracotta & eco planters", "status": "Active" },
+  { "id": "it_4", "name": "Seeds & Organic Soil", "description": "Hybrid flower seeds, potting mix & bio fertilizers", "status": "Active" },
+  { "id": "it_5", "name": "Fresh Flower Bouquets", "description": "Hand-picked floral arrangements & gift hampers", "status": "Active" },
+  { "id": "it_6", "name": "Gardening Tools", "description": "Pruners, watering cans, sprayers & shears", "status": "Active" },
+  { "id": "it_7", "name": "Plant Sapling", "description": "Live indoor & outdoor potted plant saplings", "status": "Active" },
+  { "id": "it_8", "name": "Pot / Planter", "description": "Ceramic, terracotta, plastic & fabric planters", "status": "Active" },
+  { "id": "it_9", "name": "Hydroponics Equipment", "description": "Soil-less farming kits & nutrient solutions", "status": "Active" }
+]

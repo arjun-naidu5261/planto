@@ -6,7 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 5002;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 // --- AUTHENTICATION ---
 app.post('/api/auth/login', (req, res) => {
@@ -78,6 +79,37 @@ app.post('/api/auth/login', (req, res) => {
 // --- VENDORS ---
 app.get('/api/vendors', (req, res) => {
   res.json(db.getVendors());
+});
+
+app.post('/api/vendors/register', (req, res) => {
+  const vendors = db.getVendors();
+  const { name, email, password, phone, address, nurseryName, hours } = req.body;
+
+  const newVendor = {
+    id: 'v_' + Date.now(),
+    name: nurseryName || `${name}'s Nursery Stall`,
+    owner: name || 'Nursery Owner',
+    email: email || '',
+    password: password || '',
+    type: 'Roadside Seller',
+    distance: '1.0 km',
+    rating: 5.0,
+    reviewsCount: 0,
+    isOpen: true,
+    phone: phone || '+91 98480 22334',
+    hours: hours || '7:00 AM - 7:30 PM',
+    coords: { x: 50, y: 50 },
+    lat: 12.9716,
+    lng: 77.5946,
+    address: address || 'Bengaluru, KA',
+    googleMapsUrl: 'https://maps.google.com',
+    photos: ['https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80'],
+    reviews: []
+  };
+
+  vendors.push(newVendor);
+  db.saveVendors(vendors);
+  res.json({ success: true, vendor: newVendor });
 });
 
 app.post('/api/vendors', (req, res) => {
@@ -295,7 +327,7 @@ app.delete('/api/reminders/:id', (req, res) => {
   res.json({ success: true });
 });
 
-// --- CATEGORIES ---
+// --- CATEGORIES & SEASONAL COLLECTIONS ---
 app.get('/api/categories', (req, res) => {
   res.json(db.getCategories());
 });
@@ -305,7 +337,8 @@ app.post('/api/categories', (req, res) => {
   const newCat = {
     id: 'cat_' + Date.now(),
     name: req.body.name,
-    description: req.body.description || 'Custom plant category',
+    description: req.body.description || 'Custom botanical / seasonal collection',
+    seasonMonths: req.body.seasonMonths || 'All Seasons',
     itemCount: 0,
     status: 'Active'
   };
@@ -321,7 +354,47 @@ app.delete('/api/categories/:id', (req, res) => {
   res.json({ success: true, message: 'Category deleted successfully' });
 });
 
+// --- ITEM TYPES (PLATFORM PRODUCT CLASSIFICATIONS) ---
+app.get('/api/item-types', (req, res) => {
+  res.json(db.getItemTypes());
+});
+
+app.post('/api/item-types', (req, res) => {
+  const itemTypes = db.getItemTypes();
+  const newItemType = {
+    id: 'it_' + Date.now(),
+    name: req.body.name,
+    description: req.body.description || 'Custom product classification',
+    status: 'Active'
+  };
+  itemTypes.push(newItemType);
+  db.saveItemTypes(itemTypes);
+  res.json(newItemType);
+});
+
+app.delete('/api/item-types/:id', (req, res) => {
+  const itemTypes = db.getItemTypes();
+  const filtered = itemTypes.filter(it => it.id !== req.params.id);
+  db.saveItemTypes(filtered);
+  res.json({ success: true, message: 'Item Type deleted successfully' });
+});
+
 // --- AUTH LOGIN ---
+app.get('/api/auth/status', (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.json({ active: true });
+
+  const riders = db.getRiders();
+  const rider = riders.find(r => r.email && r.email.toLowerCase() === email.toLowerCase());
+  if (rider) {
+    if (rider.status === 'DISABLED' || rider.status === 'BLOCKED' || rider.status === 'REJECTED') {
+      return res.json({ active: false, status: rider.status, message: 'You are blocked by the Admin. Please contact the Admin.' });
+    }
+    return res.json({ active: true, rider });
+  }
+  res.json({ active: true });
+});
+
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email is required.' });
@@ -338,6 +411,9 @@ app.post('/api/auth/login', (req, res) => {
     }
     if (rider.status === 'REJECTED') {
       return res.status(403).json({ success: false, message: 'Your application was not approved by Super Admin.' });
+    }
+    if (rider.status === 'DISABLED' || rider.status === 'BLOCKED') {
+      return res.status(403).json({ success: false, message: 'You are blocked by the Admin. Please contact the Admin.' });
     }
     return res.json({
       success: true,
@@ -424,7 +500,7 @@ app.post('/api/riders/register', (req, res) => {
 });
 
 app.put('/api/riders/:id/approval', (req, res) => {
-  const { status } = req.body; // 'APPROVED' or 'REJECTED'
+  const { status } = req.body; // 'APPROVED', 'DISABLED', 'BLOCKED', 'REJECTED'
   const riders = db.getRiders();
   const index = riders.findIndex(r => r.id === req.params.id);
   if (index === -1) return res.status(404).json({ message: 'Rider not found' });
@@ -432,6 +508,23 @@ app.put('/api/riders/:id/approval', (req, res) => {
   riders[index].status = status;
   db.saveRiders(riders);
   res.json({ success: true, rider: riders[index] });
+});
+
+app.put('/api/riders/:id', (req, res) => {
+  const riders = db.getRiders();
+  const index = riders.findIndex(r => r.id === req.params.id);
+  if (index === -1) return res.status(404).json({ success: false, message: 'Rider not found' });
+
+  riders[index] = { ...riders[index], ...req.body };
+  db.saveRiders(riders);
+  res.json({ success: true, rider: riders[index] });
+});
+
+app.delete('/api/riders/:id', (req, res) => {
+  const riders = db.getRiders();
+  const filtered = riders.filter(r => r.id !== req.params.id);
+  db.saveRiders(filtered);
+  res.json({ success: true, message: 'Rider account deleted successfully' });
 });
 
 // --- WALLET ---

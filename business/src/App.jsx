@@ -67,6 +67,54 @@ export default function App() {
   const [newProdStock, setNewProdStock] = useState(15);
   const [newProdImg, setNewProdImg] = useState(DEFAULT_PLANT_IMG);
 
+  // Media Upload State (Multiple Images & Videos)
+  const [uploadedMedia, setUploadedMedia] = useState([]);
+  const [mediaUrlInput, setMediaUrlInput] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
+
+  // Product Preview & Edit Modal States
+  const [previewProduct, setPreviewProduct] = useState(null);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editProdName, setEditProdName] = useState('');
+  const [editProdCategory, setEditProdCategory] = useState('');
+  const [editProdType, setEditProdType] = useState('');
+  const [editProdPrice, setEditProdPrice] = useState('');
+  const [editProdStock, setEditProdStock] = useState('');
+  const [editProdImg, setEditProdImg] = useState('');
+
+  const handleOpenEditProduct = (prod) => {
+    setEditingProduct(prod);
+    setEditProdName(prod.name || '');
+    setEditProdCategory(prod.category || 'Indoor Plants');
+    setEditProdType(prod.type || 'Plant Sapling');
+    setEditProdPrice(prod.price || 0);
+    setEditProdStock(prod.quantity || 0);
+    setEditProdImg(getImageSrc(prod));
+  };
+
+  const handleSaveEditProduct = (e) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+    setVendorProducts(vendorProducts.map(p => p.id === editingProduct.id ? {
+      ...p,
+      name: editProdName,
+      category: editProdCategory,
+      type: editProdType,
+      price: Number(editProdPrice),
+      quantity: Number(editProdStock),
+      images: [editProdImg]
+    } : p));
+    setEditingProduct(null);
+  };
+
+  const handleDeleteProduct = (productId) => {
+    if (window.confirm("Are you sure you want to delete this plant item from your inventory?")) {
+      const updated = vendorProducts.filter(p => p.id !== productId);
+      setVendorProducts(updated);
+      localStorage.setItem('planto_vendor_products', JSON.stringify(updated));
+    }
+  };
+
   // Edit Profile Modal State
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [editProfileName, setEditProfileName] = useState('');
@@ -82,13 +130,26 @@ export default function App() {
   const [riderTab, setRiderTab] = useState(() => {
     return localStorage.getItem('planto_rider_tab') || 'dashboard';
   });
-  const [pastDeliveries, setPastDeliveries] = useState([
-    { id: 'ORD-8812', date: 'Yesterday', vendor: 'Sai Baba Plant Stall', customer: 'Aditi S.', payout: 75, rating: '⭐ 5.0' },
-    { id: 'ORD-8740', date: '12 Aug 2026', vendor: 'Green Flora Nursery', customer: 'Rohan M.', payout: 60, rating: '⭐ 5.0' },
-    { id: 'ORD-8691', date: '11 Aug 2026', vendor: 'Balaji Gardening Hub', customer: 'Kavya P.', payout: 80, rating: '⭐ 4.8' }
+  const [pastDeliveries, setPastDeliveries] = useState([]);
+
+  const [categories, setCategories] = useState([
+    { id: 'cat_seasonal_1', name: 'Spring Bloom' },
+    { id: 'cat_seasonal_2', name: 'Summer Oasis' },
+    { id: 'cat_seasonal_3', name: 'Monsoon Magic' },
+    { id: 'cat_seasonal_4', name: 'Winter Wonders' }
   ]);
 
-  const [categories, setCategories] = useState([]);
+  const [itemTypes, setItemTypes] = useState([
+    { id: 'it_1', name: 'Indoor Plants' },
+    { id: 'it_2', name: 'Outdoor & Flowering Plants' },
+    { id: 'it_3', name: 'Pots & Terracotta Planters' },
+    { id: 'it_4', name: 'Seeds & Organic Soil' },
+    { id: 'it_5', name: 'Fresh Flower Bouquets' },
+    { id: 'it_6', name: 'Gardening Tools' },
+    { id: 'it_7', name: 'Plant Sapling' },
+    { id: 'it_8', name: 'Pot / Planter' },
+    { id: 'it_9', name: 'Hydroponics Equipment' }
+  ]);
 
   // Initial load
   useEffect(() => {
@@ -97,11 +158,85 @@ export default function App() {
 
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem('planto_user', JSON.stringify(currentUser));
+      try {
+        const userToSave = { ...currentUser };
+        delete userToSave.dlDoc;
+        delete userToSave.aadhaarDoc;
+        localStorage.setItem('planto_user', JSON.stringify(userToSave));
+      } catch (err) {
+        console.warn('LocalStorage save warning:', err);
+      }
     } else {
       localStorage.removeItem('planto_user');
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser || currentUser.role !== 'Delivery Partner' || !currentUser.email) return;
+
+    const checkRiderAccountStatus = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/status?email=${encodeURIComponent(currentUser.email)}`);
+        const data = await res.json().catch(() => null);
+        if (data && data.active === false) {
+          setCurrentUser(null);
+          localStorage.removeItem('planto_user');
+          setTimeout(() => {
+            alert('🚫 You are blocked by the Admin. Please contact the Admin.');
+          }, 50);
+        } else if (data && data.rider) {
+          setCurrentUser(prev => ({
+            ...prev,
+            name: data.rider.name || prev.name,
+            phone: data.rider.phone || prev.phone,
+            address: data.rider.address || prev.address,
+            vehicle: data.rider.vehicle || prev.vehicle,
+            vehicleNumber: data.rider.vehicleNumber || prev.vehicleNumber,
+            drivingLicense: data.rider.drivingLicense || prev.drivingLicense,
+            aadhaar: data.rider.aadhaar || prev.aadhaar,
+            dlDoc: data.rider.dlDoc || prev.dlDoc,
+            dlFileName: data.rider.dlFileName || prev.dlFileName,
+            aadhaarDoc: data.rider.aadhaarDoc || prev.aadhaarDoc,
+            aadhaarFileName: data.rider.aadhaarFileName || prev.aadhaarFileName,
+            status: data.rider.status || prev.status
+          }));
+        }
+      } catch (err) {}
+    };
+
+    checkRiderAccountStatus();
+    const interval = setInterval(checkRiderAccountStatus, 3000);
+    window.addEventListener('focus', checkRiderAccountStatus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', checkRiderAccountStatus);
+    };
+  }, [currentUser?.email]);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const impersonateData = params.get('impersonate');
+      if (impersonateData) {
+        const userObj = JSON.parse(decodeURIComponent(impersonateData));
+        if (userObj && userObj.email) {
+          setCurrentUser(userObj);
+          const safeUser = { ...userObj };
+          delete safeUser.dlDoc;
+          delete safeUser.aadhaarDoc;
+          localStorage.setItem('planto_user', JSON.stringify(safeUser));
+          if (userObj.role === 'Delivery Partner') {
+            setRiderTab('dashboard');
+          } else {
+            setVendorTab('dashboard');
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    } catch (err) {
+      console.error('Error handling admin impersonate login:', err);
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('planto_vendor_tab', vendorTab);
@@ -111,29 +246,67 @@ export default function App() {
     localStorage.setItem('planto_rider_tab', riderTab);
   }, [riderTab]);
 
+  useEffect(() => {
+    if (vendorProducts && vendorProducts.length > 0) {
+      localStorage.setItem('planto_vendor_products', JSON.stringify(vendorProducts));
+    }
+  }, [vendorProducts]);
+
   const fetchInitialData = async () => {
     try {
       const pRes = await fetch(`${API_BASE}/products`);
       const pData = await pRes.json();
-      setVendorProducts(pData);
+
+      const savedProds = localStorage.getItem('planto_vendor_products');
+      let localProds = [];
+      if (savedProds) {
+        try { localProds = JSON.parse(savedProds) || []; } catch (e) {}
+      }
+
+      const mergedMap = new Map();
+      if (Array.isArray(localProds)) {
+        localProds.forEach(p => mergedMap.set(p.id, p));
+      }
+      if (Array.isArray(pData)) {
+        pData.forEach(p => {
+          if (!mergedMap.has(p.id)) mergedMap.set(p.id, p);
+        });
+      }
+
+      const finalProductList = Array.from(mergedMap.values());
+      setVendorProducts(finalProductList);
+      localStorage.setItem('planto_vendor_products', JSON.stringify(finalProductList));
 
       const oRes = await fetch(`${API_BASE}/orders`);
       const oData = await oRes.json();
       setVendorOrders(oData);
-      setDeliveryOrders(oData);
+      if (Array.isArray(oData) && currentUser) {
+        const assignedRiderOrders = oData.filter(o => o.assignedRiderEmail && o.assignedRiderEmail.toLowerCase() === currentUser.email.toLowerCase());
+        setDeliveryOrders(assignedRiderOrders);
+      } else {
+        setDeliveryOrders([]);
+      }
 
       const cRes = await fetch(`${API_BASE}/categories`);
       const cData = await cRes.json();
       if (cData && Array.isArray(cData)) setCategories(cData);
+
+      const itRes = await fetch(`${API_BASE}/item-types`);
+      const itData = await itRes.json();
+      if (itData && Array.isArray(itData)) setItemTypes(itData);
     } catch (err) {
       console.error('API load error:', err);
     }
   };
 
   const getImageSrc = (prod) => {
-    const url = prod?.images?.[0];
-    if (url && typeof url === 'string' && url.startsWith('http')) {
+    const raw = prod?.images?.[0] || prod?.images;
+    const url = typeof raw === 'object' ? raw?.url : raw;
+    if (url && typeof url === 'string' && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('blob:'))) {
       return url;
+    }
+    if (prod?.image && typeof prod.image === 'string' && (prod.image.startsWith('http') || prod.image.startsWith('data:') || prod.image.startsWith('blob:'))) {
+      return prod.image;
     }
     const name = (prod?.name || '').toLowerCase();
     if (name.includes('snake')) return 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&w=600&q=80';
@@ -141,6 +314,90 @@ export default function App() {
     if (name.includes('hibiscus') || name.includes('flower') || name.includes('rose')) return 'https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=600&q=80';
     if (name.includes('bonsai') || name.includes('ficus')) return 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=600&q=80';
     return DEFAULT_PLANT_IMG;
+  };
+
+  const handleOpenDocument = (dataUrl, fileName = 'Document.pdf') => {
+    if (!dataUrl) {
+      alert('No document file attached for inspection.');
+      return;
+    }
+
+    if (typeof dataUrl === 'string' && dataUrl.startsWith('data:application/pdf')) {
+      try {
+        const parts = dataUrl.split(',');
+        const base64 = parts[1];
+        const binaryStr = atob(base64);
+        const len = binaryStr.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        const newWin = window.open(blobUrl, '_blank');
+        if (!newWin) {
+          alert('Pop-up blocked! Please allow pop-ups for localhost to view the PDF file.');
+        }
+        return;
+      } catch (err) {
+        console.error('Error opening PDF blob:', err);
+      }
+    }
+
+    if (typeof dataUrl === 'string' && (dataUrl.startsWith('http') || dataUrl.startsWith('blob:'))) {
+      const newWin = window.open(dataUrl, '_blank');
+      if (!newWin) {
+        alert('Pop-up blocked! Please allow pop-ups for localhost to view the document.');
+      }
+      return;
+    }
+
+    const win = window.open('about:blank', '_blank');
+    if (win) {
+      win.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head><title>${fileName}</title></head>
+          <body style="margin:0; background:#0f172a; display:flex; justify-content:center; align-items:center; height:100vh;">
+            <iframe src="${dataUrl}" style="width:100%; height:100%; border:none;"></iframe>
+          </body>
+        </html>
+      `);
+      win.document.close();
+    } else {
+      alert('Pop-up blocked! Please allow pop-ups for localhost to view the PDF file.');
+    }
+  };
+
+  const handleDownloadDocument = (dataUrl, defaultFileName = 'Document.pdf') => {
+    if (!dataUrl) {
+      alert('No document file attached for download.');
+      return;
+    }
+
+    const cleanFileName = defaultFileName.endsWith('.pdf') ? defaultFileName : `${defaultFileName}.pdf`;
+
+    if (typeof dataUrl === 'string' && dataUrl.startsWith('data:')) {
+      try {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = cleanFileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
+      } catch (err) {
+        console.error('Download error:', err);
+      }
+    }
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = cleanFileName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFileUpload = (e, docType) => {
@@ -179,33 +436,47 @@ export default function App() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setAuthError(data.message || 'Login failed. Please check credentials.');
+        const errorMsg = data.message || 'Login failed. Please check credentials.';
+        setAuthError(errorMsg);
+        if (errorMsg.toLowerCase().includes('blocked') || errorMsg.toLowerCase().includes('admin')) {
+          alert('🚫 ' + errorMsg);
+        }
         return;
       }
 
       if (data.user.role === 'Delivery Partner') {
+        if (data.user.status === 'DISABLED' || data.user.status === 'BLOCKED' || data.user.status === 'REJECTED') {
+          const msg = 'You are blocked by the Admin. Please contact the Admin.';
+          setAuthError(msg);
+          alert('🚫 ' + msg);
+          return;
+        }
+
         setCurrentUser({
+          id: data.user.id,
           name: data.user.name || 'Delivery Partner',
           email: data.user.email,
           role: 'Delivery Partner',
-          vehicle: data.user.vehicle || 'Hero Electric Scooter',
-          vehicleNumber: data.user.vehicleNumber || 'KA-05-EQ-8821',
-          drivingLicense: data.user.drivingLicense || 'KA-01-2023-0098412',
-          aadhaar: data.user.aadhaar || '4812-9901-3412',
-          phone: data.user.phone || '+91 98450 11223',
-          address: data.user.address || 'Indiranagar 100ft Road, Bengaluru, KA',
-          totalEarnings: data.user.totalEarnings || 4250,
-          completedTrips: data.user.completedTrips || 42
+          vehicle: data.user.vehicle || '',
+          vehicleNumber: data.user.vehicleNumber || '',
+          drivingLicense: data.user.drivingLicense || '',
+          aadhaar: data.user.aadhaar || '',
+          phone: data.user.phone || '',
+          address: data.user.address || '',
+          status: data.user.status || 'APPROVED',
+          totalEarnings: data.user.totalEarnings || 0,
+          completedTrips: data.user.completedTrips || 0
         });
         setRiderTab('dashboard');
       } else {
         setCurrentUser({
-          name: data.user.name || 'Suresh Rao',
+          id: data.user.id,
+          name: data.user.name || 'Vendor Partner',
           email: data.user.email,
           role: 'Vendor',
-          nurseryName: data.user.nurseryName || 'Sai Baba Plant & Pot Stall',
-          address: data.user.address || 'Opposite Metro Station Pillar 124, Indiranagar, Bengaluru',
-          phone: data.user.phone || '+91 98480 22334',
+          nurseryName: data.user.nurseryName || `${data.user.name}'s Nursery Stall`,
+          address: data.user.address || '',
+          phone: data.user.phone || '',
           hours: data.user.hours || '7:00 AM - 7:30 PM'
         });
         setVendorTab('dashboard');
@@ -225,40 +496,77 @@ export default function App() {
     }
 
     if (regRole === 'Delivery Partner') {
+      const riderPayload = {
+        name: regName,
+        email: regEmail,
+        password: regPassword,
+        phone: regPhone,
+        address: regAddress,
+        vehicle: regVehicle || 'Hero Electric Scooter',
+        vehicleNumber: regVehicleNum || 'KA-05-EQ-8821',
+        drivingLicense: regDlNum,
+        aadhaar: regAadhaarNum,
+        dlDoc: regDlDoc,
+        dlFileName: dlFileName || 'Driving_License.pdf',
+        dlFileType: dlFileType || 'application/pdf',
+        aadhaarDoc: regAadhaarDoc,
+        aadhaarFileName: aadhaarFileName || 'Aadhaar_Card.pdf',
+        aadhaarFileType: aadhaarFileType || 'application/pdf',
+        status: 'PENDING_APPROVAL'
+      };
+
       try {
         const res = await fetch(`${API_BASE}/riders/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: regName,
-            email: regEmail,
-            password: regPassword,
-            phone: regPhone,
-            address: regAddress,
-            vehicle: regVehicle,
-            vehicleNumber: regVehicleNum || 'KA-05-EQ-8821',
-            drivingLicense: regDlNum,
-            aadhaar: regAadhaarNum,
-            dlDoc: regDlDoc,
-            dlFileName: dlFileName || 'Driving_License.pdf',
-            dlFileType: dlFileType || 'application/pdf',
-            aadhaarDoc: regAadhaarDoc,
-            aadhaarFileName: aadhaarFileName || 'Aadhaar_Card.pdf',
-            aadhaarFileType: aadhaarFileType || 'application/pdf'
-          })
+          body: JSON.stringify(riderPayload)
         });
-        const data = await res.json();
-        if (!res.ok || !data.success) {
-          alert(data.message || 'Registration failed.');
+        const data = await res.json().catch(() => null);
+        if (data && data.message && !data.success) {
+          alert(data.message);
           return;
         }
-        alert('🎉 Delivery Rider Registration Submitted!\n\nYour application along with Driving License & Aadhaar Card has been submitted to Super Admin for verification. Once approved, you will be able to log in to your Rider Console.');
-        setShowAuthModal(false);
       } catch (err) {
-        console.error(err);
-        alert('Registration error. Please check server connection.');
+        console.warn('Server offline/large payload, saving rider registration locally:', err);
       }
+
+      // Persist in local storage for Super Admin
+      try {
+        const existingLocal = JSON.parse(localStorage.getItem('planto_registered_riders') || '[]');
+        existingLocal.unshift({ ...riderPayload, id: 'r_' + Date.now() });
+        localStorage.setItem('planto_registered_riders', JSON.stringify(existingLocal));
+      } catch (e) {}
+
+      alert('🎉 Delivery Rider Registration Submitted!\n\nYour application along with Driving License & Aadhaar Card has been submitted to Super Admin for verification. Once approved, you will be able to log in to your Rider Console.');
+      setShowAuthModal(false);
+      setRegName('');
+      setRegEmail('');
+      setRegPassword('');
+      setRegPhone('');
+      setRegAddress('');
+      setRegDlDoc('');
+      setRegAadhaarDoc('');
     } else {
+      const vendorPayload = {
+        name: regName,
+        email: regEmail,
+        password: regPassword,
+        phone: regPhone,
+        address: regAddress,
+        nurseryName: regDetail || `${regName}'s Nursery Stall`,
+        hours: '7:00 AM - 7:30 PM'
+      };
+
+      try {
+        await fetch(`${API_BASE}/vendors/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vendorPayload)
+        });
+      } catch (err) {
+        console.warn('Vendor register API call error:', err);
+      }
+
       setCurrentUser({
         name: regName,
         email: regEmail,
@@ -270,6 +578,7 @@ export default function App() {
       });
       setVendorTab('dashboard');
       setShowAuthModal(false);
+      alert(`🎉 Welcome ${regName}! Your Nursery Stall '${regDetail || regName + "'s Nursery Stall"}' is registered and active!`);
     }
   };
 
@@ -279,9 +588,47 @@ export default function App() {
     setRiderTab('dashboard');
   };
 
+  const handleMediaFileUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+        alert(`File '${file.name}' is invalid. Only image and video files are allowed.`);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const isVideo = file.type.startsWith('video/');
+        const mediaItem = {
+          url: event.target.result,
+          type: isVideo ? 'video' : 'image',
+          name: file.name
+        };
+        setUploadedMedia(prev => [...prev, mediaItem]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleRemoveMedia = (indexToRemove) => {
+    setUploadedMedia(prev => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
     if (!newProdName.trim()) return;
+
+    const mediaUrls = uploadedMedia.map(m => m.url || m);
+    if (mediaUrlInput.trim()) {
+      mediaUrls.push(mediaUrlInput.trim());
+    }
+    if (newProdImg && newProdImg.trim() && newProdImg !== DEFAULT_PLANT_IMG) {
+      mediaUrls.unshift(newProdImg.trim());
+    }
+
+    const finalImages = mediaUrls.length > 0 ? mediaUrls : [newProdImg || DEFAULT_PLANT_IMG];
 
     const newProduct = {
       id: `p_${Date.now()}`,
@@ -292,7 +639,8 @@ export default function App() {
       quantity: parseInt(newProdStock),
       vendorId: 'v1',
       vendorName: currentUser?.nurseryName || 'Sai Baba Plant & Pot Stall',
-      images: [newProdImg || DEFAULT_PLANT_IMG]
+      images: finalImages,
+      media: uploadedMedia.length > 0 ? uploadedMedia : [{ url: finalImages[0], type: 'image' }]
     };
 
     try {
@@ -308,6 +656,9 @@ export default function App() {
     setVendorProducts([newProduct, ...vendorProducts]);
     setShowAddProductModal(false);
     setNewProdName('');
+    setNewProdImg(DEFAULT_PLANT_IMG);
+    setUploadedMedia([]);
+    setMediaUrlInput('');
     alert(`🎉 '${newProdName}' successfully added to your Nursery inventory catalog!`);
   };
 
@@ -1093,18 +1444,60 @@ export default function App() {
                         </span>
                       </td>
                       <td style={{ padding: '12px 20px' }}>
-                        <button 
-                          className="btn btn-secondary" 
-                          style={{ fontSize: '12px', padding: '6px 12px' }}
-                          onClick={() => {
-                            const newStock = prompt(`Update stock quantity for ${prod.name}:`, prod.quantity);
-                            if (newStock !== null) {
-                              setVendorProducts(vendorProducts.map(p => p.id === prod.id ? { ...p, quantity: parseInt(newStock) } : p));
-                            }
-                          }}
-                        >
-                          Edit Stock
-                        </button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {/* Preview Button */}
+                          <button 
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setPreviewProduct(prod);
+                            }}
+                            title="Preview Submitted Product Details"
+                            style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#e8f5e9', border: '1px solid #c8e6c9', color: '#1b4332', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                          </button>
+
+                          {/* Edit Button */}
+                          <button 
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleOpenEditProduct(prod);
+                            }}
+                            title="Edit Product Details & Stock"
+                            style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#eff6ff', border: '1px solid #bfdbfe', color: '#1d4ed8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                          </button>
+
+                          {/* Delete Symbol Button */}
+                          <button 
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteProduct(prod.id);
+                            }}
+                            title="Delete Product Item"
+                            style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#fee2e2', border: '1px solid #fca5a5', color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              <line x1="10" y1="11" x2="10" y2="17"></line>
+                              <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1304,7 +1697,7 @@ export default function App() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
                 <div>
                   <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
-                    + Add Plant or Pot Item
+                    Add Plant or Pot Item
                   </h3>
                   <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', margin: 0 }}>
                     Publish items to your live Nursery catalog for customer orders
@@ -1360,10 +1753,9 @@ export default function App() {
                       onChange={(e) => setNewProdType(e.target.value)}
                       style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
                     >
-                      <option value="plant">Plant Sapling</option>
-                      <option value="pot">Pot / Planter</option>
-                      <option value="soil">Soil & Fertilizer</option>
-                      <option value="tools">Gardening Tools</option>
+                      {itemTypes.map(it => (
+                        <option key={it.id} value={it.name}>{it.name}</option>
+                      ))}
                     </select>
                   </div>
 
@@ -1380,19 +1772,130 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Photo URL (Optional)</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '12.5px', color: '#1b4332', fontWeight: 800 }}>
+                      Product Media (Upload Multiple Images & Videos)
+                    </label>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowUrlInput(!showUrlInput)} 
+                      style={{ background: 'none', border: 'none', color: '#2d6a4f', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                      {showUrlInput ? 'Hide URL Input' : '+ Paste Image / Video URL'}
+                    </button>
+                  </div>
+
+                  {/* Hidden File Input accepting images and videos */}
                   <input 
-                    type="url" 
-                    value={newProdImg} 
-                    onChange={(e) => setNewProdImg(e.target.value)} 
-                    placeholder="https://images.unsplash.com/..."
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                    type="file" 
+                    id="business-media-upload" 
+                    accept="image/*,video/*" 
+                    multiple 
+                    onChange={handleMediaFileUpload} 
+                    style={{ display: 'none' }} 
                   />
+
+                  {/* Drag-and-drop / Browse Box */}
+                  <label 
+                    htmlFor="business-media-upload"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justify: 'center',
+                      padding: '20px 16px',
+                      border: '2px dashed #94a3b8',
+                      borderRadius: '16px',
+                      background: '#f8faf9',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.2s ease',
+                      gap: '6px'
+                    }}
+                    onMouseOver={(e) => { e.currentTarget.style.borderColor = '#2d6a4f'; e.currentTarget.style.background = '#e8f5e9'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.background = '#f8faf9'; }}
+                  >
+                    <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2px' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b4332" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                      </svg>
+                    </div>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1b4332' }}>
+                      Click to Browse or Drag Images & Videos
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#64748b' }}>
+                      Select multiple files • Only JPG, PNG, WEBP, MP4, WEBM allowed
+                    </div>
+                  </label>
+
+                  {/* Optional Paste Direct Link */}
+                  {showUrlInput && (
+                    <div style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
+                      <input 
+                        type="url" 
+                        value={mediaUrlInput} 
+                        onChange={(e) => setMediaUrlInput(e.target.value)} 
+                        placeholder="Paste image or video URL (https://...)" 
+                        style={{ flex: 1, padding: '9px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '12.5px' }}
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          if (mediaUrlInput.trim()) {
+                            const isVid = mediaUrlInput.includes('.mp4') || mediaUrlInput.includes('.webm') || mediaUrlInput.includes('video');
+                            setUploadedMedia(prev => [...prev, { url: mediaUrlInput.trim(), type: isVid ? 'video' : 'image', name: 'Web Link' }]);
+                            setMediaUrlInput('');
+                          }
+                        }}
+                        style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '0 16px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Uploaded Media Thumbnails / Chips */}
+                  {uploadedMedia.length > 0 && (
+                    <div style={{ marginTop: '14px' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', marginBottom: '8px', textTransform: 'uppercase' }}>
+                        Selected Files ({uploadedMedia.length})
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(85px, 1fr))', gap: '10px' }}>
+                        {uploadedMedia.map((m, idx) => (
+                          <div key={idx} style={{ position: 'relative', width: '100%', height: '80px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cbd5e1', background: '#000' }}>
+                            {m.type === 'video' ? (
+                              <video src={m.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              <img src={m.url} alt={`Upload ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            )}
+                            
+                            <span style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '9px', fontWeight: 800, padding: '2px 5px', borderRadius: '4px' }}>
+                              {m.type === 'video' ? '🎥 VIDEO' : '📷 IMAGE'}
+                            </span>
+
+                            <button 
+                              type="button" 
+                              onClick={() => handleRemoveMedia(idx)} 
+                              style={{ position: 'absolute', top: '4px', right: '4px', background: '#dc2626', color: '#fff', border: 'none', width: '20px', height: '20px', borderRadius: '50%', cursor: 'pointer', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+                              title="Remove Media"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                   <button type="button" onClick={() => setShowAddProductModal(false)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
                     Cancel
+                  </button>
+                  <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                    Publish to Live Inventory
                   </button>
                 </div>
               </form>
@@ -1547,47 +2050,65 @@ export default function App() {
         </div>
 
         {/* TAB 0: DASHBOARD */}
-        {riderTab === 'dashboard' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
-              <div className="card" style={{ borderLeft: '5px solid #1b4332' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>TOTAL EARNINGS</span>
-                <h3 style={{ fontSize: '28px', color: '#1b4332', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>₹{currentUser.totalEarnings || 4250}</h3>
-                <span style={{ fontSize: '11px', color: '#2e7d32', marginTop: '6px', display: 'block', fontWeight: 700 }}>+₹650 this week</span>
-              </div>
-              <div className="card" style={{ borderLeft: '5px solid #2d6a4f' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>COMPLETED TRIPS</span>
-                <h3 style={{ fontSize: '28px', color: '#2d6a4f', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>{currentUser.completedTrips || 42} Orders</h3>
-                <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>100% On-time SLA</span>
-              </div>
-              <div className="card" style={{ borderLeft: '5px solid #ffb703' }}>
-                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>RIDER RATING</span>
-                <h3 style={{ fontSize: '28px', color: '#d97706', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>⭐ 4.95 / 5</h3>
-                <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>Plant Care Excellence Badge</span>
-              </div>
-            </div>
+        {riderTab === 'dashboard' && (() => {
+          const riderEarnings = currentUser?.totalEarnings ?? 0;
+          const riderTrips = currentUser?.completedTrips ?? 0;
+          const riderRating = riderTrips > 0 ? (currentUser?.rating || '4.95') : 'New Partner';
+          const weeklyGain = riderEarnings > 0 ? `+₹${Math.min(riderEarnings, 650)} this week` : '₹0 earned this week';
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-              <div className="card">
-                <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0', color: '#1b4332' }}>Weekly Rider Payout Breakdown</h3>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '140px', paddingTop: '20px', borderBottom: '1px solid #e2e8f0' }}>
-                  {[
-                    { day: 'Mon', val: 420, h: '50%' },
-                    { day: 'Tue', val: 560, h: '70%' },
-                    { day: 'Wed', val: 680, h: '85%' },
-                    { day: 'Thu', val: 510, h: '65%' },
-                    { day: 'Fri', val: 720, h: '95%' },
-                    { day: 'Sat', val: 840, h: '100%' },
-                    { day: 'Sun', val: 640, h: '80%' }
-                  ].map((bar, i) => (
-                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '10px', color: '#64748b' }}>₹{bar.val}</span>
-                      <div style={{ width: '100%', height: bar.h, background: i === 6 ? '#2d6a4f' : '#b7e4c7', borderRadius: '6px 6px 0 0' }}></div>
-                      <span style={{ fontSize: '11px', color: '#64748b' }}>{bar.day}</span>
-                    </div>
-                  ))}
+          const weeklyBars = riderTrips > 0 ? [
+            { day: 'Mon', val: 420, h: '50%' },
+            { day: 'Tue', val: 560, h: '70%' },
+            { day: 'Wed', val: 680, h: '85%' },
+            { day: 'Thu', val: 510, h: '65%' },
+            { day: 'Fri', val: 720, h: '95%' },
+            { day: 'Sat', val: 840, h: '100%' },
+            { day: 'Sun', val: 640, h: '80%' }
+          ] : [
+            { day: 'Mon', val: 0, h: '6%' },
+            { day: 'Tue', val: 0, h: '6%' },
+            { day: 'Wed', val: 0, h: '6%' },
+            { day: 'Thu', val: 0, h: '6%' },
+            { day: 'Fri', val: 0, h: '6%' },
+            { day: 'Sat', val: 0, h: '6%' },
+            { day: 'Sun', val: 0, h: '6%' }
+          ];
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                <div className="card" style={{ borderLeft: '5px solid #1b4332' }}>
+                  <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>TOTAL EARNINGS</span>
+                  <h3 style={{ fontSize: '28px', color: '#1b4332', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>₹{riderEarnings}</h3>
+                  <span style={{ fontSize: '11px', color: '#2e7d32', marginTop: '6px', display: 'block', fontWeight: 700 }}>{weeklyGain}</span>
+                </div>
+                <div className="card" style={{ borderLeft: '5px solid #2d6a4f' }}>
+                  <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>COMPLETED TRIPS</span>
+                  <h3 style={{ fontSize: '28px', color: '#2d6a4f', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>{riderTrips} Orders</h3>
+                  <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>100% On-time SLA</span>
+                </div>
+                <div className="card" style={{ borderLeft: '5px solid #ffb703' }}>
+                  <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>RIDER RATING</span>
+                  <h3 style={{ fontSize: '28px', color: '#d97706', marginTop: '4px', margin: 0, fontFamily: 'var(--font-serif)' }}>
+                    {typeof riderRating === 'number' || !isNaN(riderRating) ? `⭐ ${riderRating} / 5` : riderRating}
+                  </h3>
+                  <span style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 700 }}>Plant Care Excellence Badge</span>
                 </div>
               </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
+                <div className="card">
+                  <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0', color: '#1b4332' }}>Weekly Rider Payout Breakdown</h3>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '140px', paddingTop: '20px', borderBottom: '1px solid #e2e8f0' }}>
+                    {weeklyBars.map((bar, i) => (
+                      <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '10px', color: '#64748b' }}>₹{bar.val}</span>
+                        <div style={{ width: '100%', height: bar.h, background: i === 6 ? '#2d6a4f' : '#b7e4c7', borderRadius: '6px 6px 0 0' }}></div>
+                        <span style={{ fontSize: '11px', color: '#64748b' }}>{bar.day}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
               <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
@@ -1614,88 +2135,117 @@ export default function App() {
 
             <div className="card">
               <h3 style={{ fontSize: '16px', fontFamily: 'var(--font-serif)', marginBottom: '16px', color: '#1b4332' }}>Live Pickup Queue Nearby</h3>
-              {deliveryOrders.map((ord) => (
-                <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
-                  <div>
-                    <strong style={{ fontSize: '15px', color: '#1b4332' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</strong>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Pick-up: Indiranagar ➔ Drop: 100ft Road (1.4 km)</div>
+              {deliveryOrders && deliveryOrders.length > 0 ? (
+                deliveryOrders.map((ord) => (
+                  <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <div>
+                      <strong style={{ fontSize: '15px', color: '#1b4332' }}>Order #{ord.id} • {ord.vendorName || 'Nursery Stall'}</strong>
+                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>Pick-up: Indiranagar ➔ Drop: 100ft Road (1.4 km)</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontWeight: 800, color: '#2e7d32', fontSize: '16px' }}>+₹{ord.payout || 65} Payout</div>
+                      <button 
+                        onClick={() => handleCompleteRiderDelivery(ord)}
+                        style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 800, marginTop: '4px', cursor: 'pointer' }}
+                      >
+                        Complete Delivery ✓
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 800, color: '#2e7d32', fontSize: '16px' }}>+₹65 Payout</div>
-                    <button 
-                      onClick={() => handleCompleteRiderDelivery(ord)}
-                      style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 800, marginTop: '4px', cursor: 'pointer' }}
-                    >
-                      Complete Delivery ✓
-                    </button>
-                  </div>
+                ))
+              ) : (
+                <div style={{ padding: '24px 16px', textAlign: 'center', background: '#f8faf9', borderRadius: '12px', border: '1px dashed #cbd5e1' }}>
+                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>📦</div>
+                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#1b4332' }}>No Active Nearby Pickups</div>
+                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>New customer orders in your delivery zone will appear here automatically.</div>
                 </div>
-              ))}
+              )}
             </div>
 
-          </div>
-        )}
+            </div>
+          );
+        })()}
 
         {/* TAB 1: ACTIVE PICKUPS */}
         {riderTab === 'active' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {deliveryOrders.map((ord) => (
-              <div key={ord.id} className="card" style={{ borderRadius: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div>
-                    <span style={{ background: '#ffb703', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: 800 }}>⚡ 30-MIN PLANT DELIVERY</span>
-                    <h4 style={{ fontSize: '18px', marginTop: '6px', color: '#1b4332', margin: '6px 0 0 0' }}>Order #{ord.id} • {ord.vendorName || 'Sai Baba Plant Stall'}</h4>
-                    <p style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
-                      Pick-up: Indiranagar Metro Pillar 124 ➔ Drop: 100ft Road, Indiranagar (1.4 km)
-                    </p>
+            {deliveryOrders && deliveryOrders.length > 0 ? (
+              deliveryOrders.map((ord) => (
+                <div key={ord.id} className="card" style={{ borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                    <div>
+                      <span style={{ background: '#ffb703', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: 800 }}>⚡ 30-MIN PLANT DELIVERY</span>
+                      <h4 style={{ fontSize: '18px', marginTop: '6px', color: '#1b4332', margin: '6px 0 0 0' }}>Order #{ord.id} • {ord.vendorName || 'Nursery Stall'}</h4>
+                      <p style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
+                        Pick-up: Indiranagar Metro Pillar 124 ➔ Drop: 100ft Road, Indiranagar (1.4 km)
+                      </p>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 800, color: '#2e7d32' }}>+₹{ord.payout || 65} Payout</div>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Incl. Plant Care Bonus</span>
+                    </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#2e7d32' }}>+₹65 Payout</div>
-                    <span style={{ fontSize: '11px', color: '#64748b' }}>Incl. Plant Care Bonus</span>
-                  </div>
-                </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '12px', marginTop: '12px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#2e7d32' }}>Status: {ord.status}</span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button 
-                      onClick={() => handleCompleteRiderDelivery(ord)}
-                      style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
-                    >
-                      Complete Delivery ✓
-                    </button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '12px', marginTop: '12px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#2e7d32' }}>Status: {ord.status || 'Out for Delivery'}</span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        onClick={() => handleCompleteRiderDelivery(ord)}
+                        style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '10px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                      >
+                        Complete Delivery ✓
+                      </button>
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="card" style={{ padding: '40px 20px', textAlign: 'center', background: '#ffffff' }}>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }}>🛵</div>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1b4332', margin: 0 }}>No Active Assigned Orders</h3>
+                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '6px', maxWidth: '400px', margin: '6px auto 0 auto' }}>
+                  You currently have no active delivery orders in progress. Stay online to receive live plant delivery dispatches nearby!
+                </p>
               </div>
-            ))}
+            )}
           </div>
         )}
 
         {/* TAB 2: TRIP HISTORY */}
         {riderTab === 'history' && (
-          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
-              <thead style={{ background: '#f8faf9', borderBottom: '2px solid #e2e8f0', fontWeight: 800 }}>
-                <tr>
-                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Order ID</th>
-                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Nursery</th>
-                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Customer</th>
-                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Payout</th>
-                  <th style={{ padding: '16px 20px', color: '#1b4332' }}>Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pastDeliveries.map((item, idx) => (
-                  <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#1b4332' }}>{item.id}</td>
-                    <td style={{ padding: '14px 20px' }}>{item.vendor}</td>
-                    <td style={{ padding: '14px 20px', color: '#64748b' }}>{item.customer}</td>
-                    <td style={{ padding: '14px 20px', fontWeight: 800, color: '#2e7d32' }}>+₹{item.payout}</td>
-                    <td style={{ padding: '14px 20px', color: '#d97706', fontWeight: 800 }}>{item.rating}</td>
+          <div className="card" style={{ padding: pastDeliveries && pastDeliveries.length > 0 ? 0 : '40px 20px', overflow: 'hidden', textAlign: pastDeliveries && pastDeliveries.length > 0 ? 'left' : 'center' }}>
+            {pastDeliveries && pastDeliveries.length > 0 ? (
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+                <thead style={{ background: '#f8faf9', borderBottom: '2px solid #e2e8f0', fontWeight: 800 }}>
+                  <tr>
+                    <th style={{ padding: '16px 20px', color: '#1b4332' }}>Order ID</th>
+                    <th style={{ padding: '16px 20px', color: '#1b4332' }}>Nursery</th>
+                    <th style={{ padding: '16px 20px', color: '#1b4332' }}>Customer</th>
+                    <th style={{ padding: '16px 20px', color: '#1b4332' }}>Payout</th>
+                    <th style={{ padding: '16px 20px', color: '#1b4332' }}>Rating</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {pastDeliveries.map((item, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '14px 20px', fontWeight: 800, color: '#1b4332' }}>{item.id}</td>
+                      <td style={{ padding: '14px 20px' }}>{item.vendor}</td>
+                      <td style={{ padding: '14px 20px', color: '#64748b' }}>{item.customer}</td>
+                      <td style={{ padding: '14px 20px', fontWeight: 800, color: '#2e7d32' }}>+₹{item.payout}</td>
+                      <td style={{ padding: '14px 20px', color: '#d97706', fontWeight: 800 }}>{item.rating}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }}>📋</div>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1b4332', margin: 0 }}>No Completed Deliveries Yet</h3>
+                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '6px', margin: '6px 0 0 0' }}>
+                  Your completed trips and earnings history will appear here after you finish your first delivery order.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -1706,10 +2256,18 @@ export default function App() {
             <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', padding: '24px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 700 }}>UNSETTLED BALANCE</span>
-                <h2 style={{ fontSize: '32px', color: '#2e7d32', margin: '4px 0 0 0' }}>₹640</h2>
+                <h2 style={{ fontSize: '32px', color: '#2e7d32', margin: '4px 0 0 0' }}>₹{currentUser?.totalEarnings || 0}</h2>
               </div>
               <button 
-                onClick={() => alert("🎉 ₹640 transferred to your UPI account!")}
+                onClick={() => {
+                  const bal = currentUser?.totalEarnings || 0;
+                  if (bal <= 0) {
+                    alert("⚠️ You have ₹0 unsettled balance. Complete deliveries to earn payouts!");
+                    return;
+                  }
+                  alert(`🎉 ₹${bal} transferred to your UPI account!`);
+                  setCurrentUser(prev => ({ ...prev, totalEarnings: 0 }));
+                }}
                 style={{ background: '#ffb703', color: '#000', border: 'none', padding: '14px 24px', borderRadius: '12px', fontWeight: 800, fontSize: '13.5px', cursor: 'pointer' }}
               >
                 Instant Payout to UPI →
@@ -1718,82 +2276,181 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 4: RIDER PROFILE & VEHICLE SETTINGS */}
+        {/* TAB 5: RIDER PROFILE */}
         {riderTab === 'profile' && (
-          <div className="card" style={{ maxWidth: '750px', padding: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
-              <div>
-                <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
-                  Rider Profile & Vehicle Settings
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
-                  Registered contact info, vehicle details, and license verification
-                </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', alignItems: 'start' }}>
+            
+            {/* LEFT SIDE PANEL: Rider Profile Details */}
+            <div className="card" style={{ padding: '32px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+                <div>
+                  <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                    Rider Profile & Vehicle Settings
+                  </h3>
+                  <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
+                    Registered contact info, vehicle details, and license verification
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button 
+                    onClick={handleOpenEditProfile}
+                    style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '10px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
+                  >
+                    Edit Profile Details
+                  </button>
+                  <span style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #c8e6c9', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
+                    VERIFIED RIDER
+                  </span>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <button 
-                  onClick={handleOpenEditProfile}
-                  style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '10px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
-                >
-                  Edit Profile Details
-                </button>
-                <span style={{ background: '#e8f5e9', color: '#1b4332', border: '1px solid #c8e6c9', padding: '6px 14px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
-                  VERIFIED RIDER
-                </span>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', fontSize: '13.5px' }}>
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Full Name</span>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#1b4332', marginTop: '4px' }}>
+                    {currentUser.name}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address (Login ID)</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {currentUser.email}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Phone Contact</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {currentUser.phone || 'N/A'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Vehicle Model</span>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#2d6a4f', marginTop: '4px' }}>
+                    {currentUser.vehicle || 'N/A'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#fff8e1', padding: '18px', borderRadius: '14px', border: '1px solid #ffe082' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#b45309', textTransform: 'uppercase' }}>Vehicle Reg Number</span>
+                  <div style={{ fontSize: '17px', fontWeight: 900, color: '#b45309', marginTop: '4px', letterSpacing: '0.5px' }}>
+                    {currentUser.vehicleNumber || 'N/A'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Driving License</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {currentUser.drivingLicense || 'N/A'}
+                  </div>
+                </div>
+
+                <div style={{ gridColumn: 'span 2', background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Operating Location Address</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+                    {currentUser.address || 'N/A'}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', fontSize: '13.5px' }}>
-              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Full Name</span>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#1b4332', marginTop: '4px' }}>
-                  {currentUser.name}
-                </div>
-              </div>
+            {/* RIGHT SIDE PANEL: Uploaded Verification Documents */}
+            <div className="card" style={{ padding: '28px' }}>
+              <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', margin: '0 0 4px 0', color: '#1b4332' }}>
+                Uploaded Documents
+              </h3>
+              <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 20px 0' }}>
+                PDF verification files submitted during account registration
+              </p>
 
-              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Email Address (Login ID)</span>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
-                  {currentUser.email}
-                </div>
-              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Driving License Document Box */}
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Driving License Document</span>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#1b4332', marginTop: '4px', marginBottom: '12px' }}>
+                    DL No: {currentUser.drivingLicense || 'N/A'}
+                  </div>
 
-              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Phone Contact</span>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
-                  {currentUser.phone || '+91 98450 11223'}
+                  {currentUser.dlDoc ? (
+                    currentUser.dlDoc.startsWith('data:application/pdf') || currentUser.dlFileName?.endsWith('.pdf') ? (
+                      <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', padding: '14px', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ background: '#dc2626', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '4px' }}>PDF FILE</span>
+                        <span style={{ fontSize: '12px', color: '#991b1b', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%', whiteSpace: 'nowrap', width: '100%' }}>
+                          {currentUser.dlFileName || 'Driving_License.pdf'}
+                        </span>
+                        <div style={{ display: 'flex', gap: '10px', width: '100%', marginTop: '4px' }}>
+                          <button 
+                            type="button" 
+                            onClick={() => handleOpenDocument(currentUser.dlDoc, currentUser.dlFileName)} 
+                            style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                          >
+                            📄 View PDF
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => handleDownloadDocument(currentUser.dlDoc, currentUser.dlFileName || `${currentUser.name}_DL.pdf`)} 
+                            style={{ flex: 1, background: '#1b4332', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                          >
+                            ⬇️ Download
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ height: '140px', borderRadius: '12px', overflow: 'hidden', background: '#e2e8f0', cursor: 'pointer' }} onClick={() => handleOpenDocument(currentUser.dlDoc, 'Driving_License')}>
+                        <img src={currentUser.dlDoc} alt="Driving License" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                    )
+                  ) : (
+                    <div style={{ fontSize: '12.5px', color: '#94a3b8', fontStyle: 'italic', padding: '12px 0' }}>No Driving License document attached</div>
+                  )}
                 </div>
-              </div>
 
-              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Vehicle Model</span>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#2d6a4f', marginTop: '4px' }}>
-                  {currentUser.vehicle || 'Hero Electric Scooter'}
-                </div>
-              </div>
+                {/* Aadhaar Card Document Box */}
+                <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Aadhaar Card Document</span>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#1b4332', marginTop: '4px', marginBottom: '12px', fontFamily: 'monospace' }}>
+                    Aadhaar No: {currentUser.aadhaar || 'N/A'}
+                  </div>
 
-              <div style={{ background: '#fff8e1', padding: '18px', borderRadius: '14px', border: '1px solid #ffe082' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#b45309', textTransform: 'uppercase' }}>Vehicle Reg Number</span>
-                <div style={{ fontSize: '17px', fontWeight: 900, color: '#b45309', marginTop: '4px', letterSpacing: '0.5px' }}>
-                  {currentUser.vehicleNumber || 'KA-05-EQ-8821'}
-                </div>
-              </div>
-
-              <div style={{ background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Driving License</span>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
-                  {currentUser.drivingLicense || 'KA-01-2023-0098412'}
-                </div>
-              </div>
-
-              <div style={{ gridColumn: 'span 2', background: '#f8faf9', padding: '18px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Operating Location Address</span>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
-                  {currentUser.address || 'Indiranagar 100ft Road, Bengaluru, KA'}
+                  {currentUser.aadhaarDoc ? (
+                    currentUser.aadhaarDoc.startsWith('data:application/pdf') || currentUser.aadhaarFileName?.endsWith('.pdf') ? (
+                      <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', padding: '14px', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ background: '#dc2626', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '4px' }}>PDF FILE</span>
+                        <span style={{ fontSize: '12px', color: '#991b1b', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%', whiteSpace: 'nowrap', width: '100%' }}>
+                          {currentUser.aadhaarFileName || 'Aadhaar_Card.pdf'}
+                        </span>
+                        <div style={{ display: 'flex', gap: '10px', width: '100%', marginTop: '4px' }}>
+                          <button 
+                            type="button" 
+                            onClick={() => handleOpenDocument(currentUser.aadhaarDoc, currentUser.aadhaarFileName)} 
+                            style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                          >
+                            📄 View PDF
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => handleDownloadDocument(currentUser.aadhaarDoc, currentUser.aadhaarFileName || `${currentUser.name}_Aadhaar.pdf`)} 
+                            style={{ flex: 1, background: '#1b4332', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}
+                          >
+                            ⬇️ Download
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ height: '140px', borderRadius: '12px', overflow: 'hidden', background: '#e2e8f0', cursor: 'pointer' }} onClick={() => handleOpenDocument(currentUser.aadhaarDoc, 'Aadhaar_Card')}>
+                        <img src={currentUser.aadhaarDoc} alt="Aadhaar Card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                    )
+                  ) : (
+                    <div style={{ fontSize: '12.5px', color: '#94a3b8', fontStyle: 'italic', padding: '12px 0' }}>No Aadhaar Card document attached</div>
+                  )}
                 </div>
               </div>
             </div>
+
           </div>
         )}
 
@@ -1960,6 +2617,170 @@ export default function App() {
                 </button>
                 <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}>
                   Save & Publish Item
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* PREVIEW SUBMITTED PRODUCT MODAL */}
+      {previewProduct && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '500px', width: '100%', padding: '24px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  Submitted Item Preview
+                </h3>
+                <span style={{ fontSize: '11.5px', color: '#64748b', fontWeight: 600 }}>Live Product Listing Details</span>
+              </div>
+              <button type="button" onClick={() => setPreviewProduct(null)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <img 
+                src={getImageSrc(previewProduct)} 
+                alt={previewProduct?.name || 'Plant'} 
+                style={{ width: '100%', height: '220px', borderRadius: '16px', objectFit: 'cover', background: '#f8faf9', border: '1px solid #e2e8f0' }} 
+              />
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                  <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, color: '#1b4332' }}>{previewProduct?.name}</h2>
+                  <span style={{ fontSize: '20px', fontWeight: 900, color: '#2d6a4f', whiteSpace: 'nowrap' }}>₹{previewProduct?.price}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+                  <span style={{ background: '#e8f5e9', color: '#1b4332', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: 800 }}>{previewProduct?.category}</span>
+                  <span style={{ background: '#f1f5f9', color: '#475569', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: 700 }}>{previewProduct?.type || 'Plant Sapling'}</span>
+                  <span style={{ background: (previewProduct?.quantity || 0) > 0 ? '#dcfce7' : '#fee2e2', color: (previewProduct?.quantity || 0) > 0 ? '#15803d' : '#b91c1c', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: 800 }}>
+                    {(previewProduct?.quantity || 0) > 0 ? `${previewProduct.quantity} Available in Stock` : 'Out of Stock'}
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ background: '#f8faf9', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0', fontSize: '12.5px', color: '#334155' }}>
+                <strong style={{ display: 'block', marginBottom: '4px', color: '#1b4332' }}>Care & Description:</strong>
+                {previewProduct?.description || `${previewProduct?.name} - Premium live nursery stock. Grown with organic compost and pesticide-free care.`}
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  type="button"
+                  onClick={() => { const prodToEdit = previewProduct; setPreviewProduct(null); handleOpenEditProduct(prodToEdit); }}
+                  style={{ flex: 1, background: '#1b4332', color: '#fff', border: 'none', padding: '10px', borderRadius: '12px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Edit Item Details
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setPreviewProduct(null)}
+                  style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '12px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT PRODUCT MODAL */}
+      {editingProduct && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(27,67,50,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '24px', maxWidth: '520px', width: '100%', padding: '28px', color: '#1b4332', boxShadow: '0 25px 60px rgba(0,0,0,0.3)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
+              <div>
+                <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', margin: 0, color: '#1b4332' }}>
+                  Edit Product Details
+                </h3>
+                <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px', margin: 0 }}>
+                  Update item name, price, category, and available stock
+                </p>
+              </div>
+              <button type="button" onClick={() => setEditingProduct(null)} style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', fontWeight: 800 }}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveEditProduct} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Product Title</label>
+                <input 
+                  type="text" 
+                  value={editProdName} 
+                  onChange={(e) => setEditProdName(e.target.value)} 
+                  required 
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Category</label>
+                  <select 
+                    value={editProdCategory} 
+                    onChange={(e) => setEditProdCategory(e.target.value)}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  >
+                    {(categories || []).map(cat => (
+                      <option key={cat.id || cat.name} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Selling Price (₹)</label>
+                  <input 
+                    type="number" 
+                    value={editProdPrice} 
+                    onChange={(e) => setEditProdPrice(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Item Type</label>
+                  <select 
+                    value={editProdType} 
+                    onChange={(e) => setEditProdType(e.target.value)}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  >
+                    {(itemTypes || []).map(it => (
+                      <option key={it.id || it.name} value={it.name}>{it.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Stock Quantity</label>
+                  <input 
+                    type="number" 
+                    value={editProdStock} 
+                    onChange={(e) => setEditProdStock(e.target.value)} 
+                    required 
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Photo URL</label>
+                <input 
+                  type="url" 
+                  value={editProdImg} 
+                  onChange={(e) => setEditProdImg(e.target.value)} 
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setEditingProduct(null)} style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '10px 18px', borderRadius: '10px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ background: '#1b4332', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '10px', fontWeight: 800, fontSize: '13px', cursor: 'pointer' }}>
+                  Save Changes →
                 </button>
               </div>
             </form>

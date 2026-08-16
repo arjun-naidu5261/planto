@@ -183,5 +183,25 @@ export const api = {
       method: 'DELETE'
     });
     return handleResponse(res);
+  },
+
+  // Item Types (Platform Product Classifications)
+  getItemTypes: async () => {
+    const res = await fetch(`${API_BASE}/item-types`);
+    return handleResponse(res);
+  },
+  addItemType: async (itemTypeData) => {
+    const res = await fetch(`${API_BASE}/item-types`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(itemTypeData)
+    });
+    return handleResponse(res);
+  },
+  deleteItemType: async (id) => {
+    const res = await fetch(`${API_BASE}/item-types/${id}`, {
+      method: 'DELETE'
+    });
+    return handleResponse(res);
   }
 };

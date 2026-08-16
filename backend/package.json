@@ -1,5 +1,5 @@
 {
-  "name": "planto-server",
+  "name": "planto-backend",
   "version": "1.0.0",
   "description": "PLANTO Backend Server",
   "main": "index.js",
