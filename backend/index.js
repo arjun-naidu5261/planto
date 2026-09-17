@@ -545,3 +545,132 @@ app.listen(PORT, () => {
 });
 // Trigger reload 4
 
+
+
+// Nursery Stories Endpoint
+app.get("/api/stories", (req, res) => {
+  res.json([
+    {
+      id: "story-1",
+      stallName: "Green Thumb Nursery",
+      title: "Fresh Monsteras Restock",
+      tag: "Fresh Today",
+      image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=400",
+      featuredProductId: "p1"
+    },
+    {
+      id: "story-2",
+      stallName: "Urban Botanist",
+      title: "Rare Collector Succulents",
+      tag: "Limited Stock",
+      image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400",
+      featuredProductId: "p3"
+    },
+    {
+      id: "story-3",
+      stallName: "Flora Sanctuary",
+      title: "Organic Neem Soil Mix",
+      tag: "Express 15-Min",
+      image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+      featuredProductId: "p4"
+    }
+  ]);
+});
+
+// Care Subscriptions Endpoint
+app.post("/api/subscriptions", (req, res) => {
+  const { productId, intervalDays } = req.body;
+  res.json({
+    success: true,
+    subscriptionId: "SUB-" + Math.floor(Math.random() * 90000 + 10000),
+    message: `Auto-refill active! Delivery every ${intervalDays || 30} days with 15% discount.`
+  });
+});
+
+
+// Auth Endpoints
+app.post("/api/auth/send-otp", (req, res) => {
+  const { phone } = req.body;
+  res.json({
+    success: true,
+    message: `OTP sent successfully to ${phone || "+91 88856 00899"}`,
+    otpDemo: "1234"
+  });
+});
+
+app.post("/api/auth/verify-otp", (req, res) => {
+  const { phone, otp } = req.body;
+  if (otp === "1234" || otp === "9999" || otp) {
+    res.json({
+      success: true,
+      token: "jwt-plantme-token-" + Date.now(),
+      user: {
+        phone: phone || "+91 88856 00899",
+        name: "Future Forbes Member",
+        walletBalance: 1250.00,
+        plantCoins: 150,
+        address: "Indiranagar 100ft Rd, 12th Main, Bengaluru"
+      }
+    });
+  } else {
+    res.status(400).json({ success: false, message: "Invalid OTP code" });
+  }
+});
+
+app.get("/api/auth/profile", (req, res) => {
+  res.json({
+    phone: "+91 88856 00899",
+    name: "Future Forbes Member",
+    email: "info@futureforbes.in",
+    walletBalance: 1250.00,
+    plantCoins: 150,
+    address: "Indiranagar 100ft Rd, 12th Main, Bengaluru"
+  });
+});
+
+
+// My Garden Tracker API
+app.get("/api/user/garden", (req, res) => {
+  res.json([
+    {
+      id: "g1",
+      plantName: "Golden Pothos",
+      lastWatered: "2 days ago",
+      nextWatering: "Today",
+      needsWater: true,
+      category: "Indoor"
+    },
+    {
+      id: "g2",
+      plantName: "Areca Palm",
+      lastWatered: "Yesterday",
+      nextWatering: "In 3 days",
+      needsWater: false,
+      category: "Indoor"
+    }
+  ]);
+});
+
+app.post("/api/user/garden/water", (req, res) => {
+  const { plantId } = req.body;
+  res.json({ success: true, message: "Marked as watered today! 💧", plantId });
+});
+
+// Eco-Gifting API
+app.post("/api/gifting", (req, res) => {
+  const { recipientName, recipientPhone, giftMessage, productId } = req.body;
+  res.json({
+    success: true,
+    giftId: "GIFT-" + Math.floor(Math.random() * 90000 + 10000),
+    message: `Gift order generated for ${recipientName || "Friend"}! Express 10-Min Gift Delivery active.`
+  });
+});
+
+// Driver Tipping API
+app.post("/api/tips", (req, res) => {
+  const { orderId, tipAmount } = req.body;
+  res.json({
+    success: true,
+    message: `₹${tipAmount} tip added! 100% of tips go directly to Ramesh Kumar.`
+  });
+});
