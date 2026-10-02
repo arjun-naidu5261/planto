@@ -1872,7 +1872,7 @@ export default function App() {
                             )}
                             
                             <span style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '9px', fontWeight: 800, padding: '2px 5px', borderRadius: '4px' }}>
-                              {m.type === 'video' ? '🎥 VIDEO' : '📷 IMAGE'}
+                              {m.type === 'video' ? 'VIDEO' : 'IMAGE'}
                             </span>
 
                             <button 

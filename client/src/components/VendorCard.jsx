@@ -32,7 +32,7 @@ export default function VendorCard({ vendor }) {
           
           {/* Same-Day Delivery Badge */}
           <div style={{ position: 'absolute', top: '8px', left: '8px', background: 'rgba(0,0,0,0.75)', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '3px 8px', borderRadius: '12px' }}>
-            🚚 Same-Day (3-5 hrs)
+            Delivery in 20-30 mins
           </div>
 
           {/* Open Status */}
@@ -59,7 +59,7 @@ export default function VendorCard({ vendor }) {
             </h4>
 
             <div style={{ fontSize: '11px', color: '#666', fontWeight: 600 }}>
-              {vendor.type || 'Verified Nursery'} • 📍 {vendor.distance}
+              {vendor.type || 'Verified Nursery'} • {vendor.distance}
             </div>
           </div>
 

@@ -18,7 +18,9 @@ export default function QRDownloadModal() {
         <p style={{ fontSize: '13px', color: '#666', marginBottom: '24px' }}>Print and paste this card at your physical nursery stall. Customer scans this to view live inventory.</p>
         
         <div id="qr-print-card" style={{ background: 'white', border: '1px solid #ccc', padding: '24px', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)', display: 'inline-block' }}>
-          <div style={{ fontFamily: 'var(--font-main)', fontWeight: 800, fontSize: '20px', color: 'var(--primary-green)', marginBottom: '6px' }}>PLANTO</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
+            <img src="/logo.png" alt="PlantMe" style={{ height: '32px', width: 'auto' }} />
+          </div>
           <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: '#666', marginBottom: '16px' }}>Scan to Shop Live Inventory</div>
           
           <div id="qr-visual-placeholder" style={{ margin: '0 auto 16px', width: '120px', height: '120px', backgroundColor: '#f0f0f0', border: '2px dashed var(--primary-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px' }}>
@@ -30,7 +32,7 @@ export default function QRDownloadModal() {
         </div>
         
         <button className="btn" style={{ marginTop: '24px', width: '100%', justifyContent: 'center' }} onClick={() => window.print()}>
-          🖨️ Print Poster
+          Print Poster
         </button>
       </div>
     </div>

@@ -3,7 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 export default function MobileBottomNav() {
-  const { isLoggedIn, currentUser, setShowLogin, setShowProfileModal } = useApp();
+  const { isLoggedIn, currentUser, setShowLogin, setShowProfileModal, cart } = useApp();
+  const totalCartCount = cart ? cart.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
 
   const handleProfileClick = (e) => {
     if (!isLoggedIn) {
@@ -24,19 +25,28 @@ export default function MobileBottomNav() {
   return (
     <div className="mobile-bottom-nav">
       <NavLink to="/" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
-        <svg width="20" height="20"><use href="#icon-leaf"></use></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Home
       </NavLink>
 
       {(!isLoggedIn || currentUser?.role === 'Customer') && (
         <>
-          <NavLink to="/map" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
-            <svg width="20" height="20"><use href="#icon-map"></use></svg>
-            Stalls Map
+          <NavLink to="/garden" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M8 8a4 4 0 1 1 8 0"/></svg>
+            Garden
           </NavLink>
           <NavLink to="/ai" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
             <svg width="20" height="20"><use href="#icon-ai"></use></svg>
-            AI Diagnostic
+            AI Doctor
+          </NavLink>
+          <NavLink to="/cart" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"} style={{ position: 'relative' }}>
+            <svg width="20" height="20"><use href="#icon-cart"></use></svg>
+            {totalCartCount > 0 && (
+              <span style={{ position: 'absolute', top: '-4px', right: '12px', background: 'var(--primary-green)', color: '#fff', fontSize: '9px', fontWeight: 800, minWidth: '16px', height: '16px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+                {totalCartCount}
+              </span>
+            )}
+            Cart
           </NavLink>
         </>
       )}

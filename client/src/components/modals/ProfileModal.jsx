@@ -148,7 +148,7 @@ export default function ProfileModal() {
             <div>
               <h3 style={{ fontSize: '18px', fontWeight: 800 }}>{currentUser.name}</h3>
               <span style={{ fontSize: '11px', background: 'var(--light-green)', color: 'var(--primary-green)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-                🌟 PREMIUM CUSTOMER
+                PREMIUM CUSTOMER
               </span>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function ProfileModal() {
         {/* Address Manager section */}
         <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '16px', marginBottom: '24px' }}>
           <h4 style={{ fontSize: '14px', marginBottom: '12px', fontWeight: 700 }}>
-            📍 Delivery Addresses
+            Delivery Addresses
           </h4>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
@@ -407,7 +407,7 @@ export default function ProfileModal() {
         {/* Wallet recharge simulator */}
         <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '16px', marginBottom: '24px' }}>
           <h4 style={{ fontSize: '14px', color: 'var(--earth-brown)', marginBottom: '4px', fontWeight: 600 }}>
-            PLANTO Green Wallet
+            PlantMe Green Wallet
           </h4>
           <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--primary-green)', marginBottom: '12px' }}>
             ₹{Math.round(wallet)}

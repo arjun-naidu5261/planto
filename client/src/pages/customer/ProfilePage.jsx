@@ -279,7 +279,7 @@ export default function ProfilePage() {
     { id: 'orders', label: 'My Orders', icon: '🛍️' },
     { id: 'track', label: 'Track Packages', icon: '🚚' },
     { id: 'wishlist', label: 'My Wishlist', icon: '❤️' },
-    { id: 'addresses', label: 'My Addresses', icon: '📍' },
+    { id: 'addresses', label: 'My Addresses', icon: '🏡' },
     { id: 'wallet', label: 'My Wallet', icon: '💳' },
     { id: 'reminders', label: 'Plant Care Reminders', icon: '🌿' },
     { id: 'reviews', label: 'My Reviews', icon: '⭐' },
@@ -872,7 +872,7 @@ export default function ProfilePage() {
         {activeTab === 'track' && (
           <div style={{ background: '#ffffff', padding: '24px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '18px', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-              🚚 Package Dispatch Tracker
+              Package Dispatch Tracker
             </h3>
             {activeOrder ? (
               <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px 0' }}>
@@ -922,7 +922,7 @@ export default function ProfilePage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--dark)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                  <span style={{ color: '#e53e3e' }}>❤️</span> My Wishlist
+                  My Wishlist
                 </h2>
                 <p style={{ fontSize: '13px', color: '#718096', marginTop: '4px', marginBottom: 0 }}>Your favorite plants and products, all in one place.</p>
               </div>
@@ -950,7 +950,7 @@ export default function ProfilePage() {
                   onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-green)'}
                   onMouseOut={(e) => e.currentTarget.style.borderColor = '#cbd5e0'}
                 >
-                  📤 Share Wishlist
+                  Share Wishlist
                 </button>
                 
                 <button 
@@ -972,7 +972,7 @@ export default function ProfilePage() {
                   onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
                   onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
                 >
-                  🛒 Move All to Cart
+                  Move All to Cart
                 </button>
               </div>
             </div>
@@ -1137,7 +1137,11 @@ export default function ProfilePage() {
 
             {/* Footer lock label */}
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#a0aec0', marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '16px' }}>
-              <span>🔒</span> <strong>Secure & Private</strong> Your wishlist is only visible to you.
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <strong>Secure & Private</strong> Your wishlist is only visible to you.
             </div>
 
           </div>
@@ -1148,7 +1152,7 @@ export default function ProfilePage() {
           <div style={{ maxWidth: '600px' }}>
             <div className="stall-hours-box">
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                📍 Manage Delivery Addresses
+                Manage Delivery Addresses
               </h3>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
@@ -1285,7 +1289,7 @@ export default function ProfilePage() {
           <div style={{ maxWidth: '600px' }}>
             <div className="stall-hours-box" style={{ marginBottom: '24px' }}>
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                📅 Scheduled Plant Watering & Care
+                Scheduled Plant Watering & Care
               </h3>
               
               <form onSubmit={handleAddReminderSubmit} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -1358,7 +1362,7 @@ export default function ProfilePage() {
         {/* Tab 8: Reviews placeholder */}
         {activeTab === 'reviews' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>⭐ My Reviews</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>My Reviews</h3>
             <p style={{ fontSize: '13px', color: '#666' }}>You have not written any vendor reviews yet. Scan vendor QRs to purchase plants and review them!</p>
           </div>
         )}
@@ -1366,7 +1370,7 @@ export default function ProfilePage() {
         {/* Tab 9: Coupons placeholder */}
         {activeTab === 'coupons' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>🏷️ My Coupons</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>My Coupons</h3>
             <p style={{ fontSize: '13px', color: '#666' }}>No active discount coupons at this time. Keep checkouts high to win coins and unlock stall discount vouchers!</p>
           </div>
         )}
@@ -1374,7 +1378,7 @@ export default function ProfilePage() {
         {/* Tab 10: Refer placeholder */}
         {activeTab === 'refer' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>👥 Refer & Earn</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>Refer & Earn</h3>
             <p style={{ fontSize: '13px', color: '#666' }}>Share the green life! Invite a plant vendor to sign up on Planto and earn 100 wallet coins when they register their stall.</p>
           </div>
         )}
@@ -1384,7 +1388,7 @@ export default function ProfilePage() {
           <div style={{ maxWidth: '480px' }}>
             <div className="stall-hours-box">
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                ⚙️ Account Settings
+                Account Settings
               </h3>
               
               <form onSubmit={handleSaveProfile}>
@@ -1419,7 +1423,7 @@ export default function ProfilePage() {
         {/* Tab 12: Help placeholder */}
         {activeTab === 'help' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>💬 Help & Support</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>Help & Support</h3>
             <p style={{ fontSize: '13px', color: '#666' }}>Got questions? Email us directly at **support@planto.in** or tap our AI diagnostician for help with plant health conditions.</p>
           </div>
         )}

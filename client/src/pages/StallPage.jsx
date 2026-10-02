@@ -92,16 +92,16 @@ export default function StallPage() {
             </p>
             
             <div style={{ display: 'flex', gap: '16px', marginTop: '14px', fontSize: '13px', fontWeight: 700, color: '#d8f3dc' }}>
-              <span>⭐ {vendor.rating} ({vendor.reviewsCount} customer reviews)</span>
-              <span>📍 {vendor.distance} away</span>
-              <span>🚚 Same-Day Delivery within 3-5 Hours</span>
+              <span>{vendor.rating} ★ ({vendor.reviewsCount} customer reviews)</span>
+              <span>{vendor.distance} away</span>
+              <span>Delivery in 20-30 Mins</span>
             </div>
           </div>
 
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <a href={`tel:${vendor.phone}`} className="btn" style={{ background: '#ffffff', color: '#1b4332', border: 'none', fontWeight: 800 }}>📞 Call Nursery</a>
-            <a href={vendor.googleMapsUrl} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)' }}>📍 Map Directions</a>
-            <button className="btn" style={{ background: '#ffb703', color: '#000', border: 'none', fontWeight: 800 }} onClick={handleReserveClick}>🛒 Reserve & Collect</button>
+            <a href={`tel:${vendor.phone}`} className="btn" style={{ background: '#ffffff', color: '#1b4332', border: 'none', fontWeight: 800 }}>Call Nursery</a>
+            <a href={vendor.googleMapsUrl} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.4)' }}>Map Directions</a>
+            <button className="btn" style={{ background: '#ffb703', color: '#000', border: 'none', fontWeight: 800 }} onClick={handleReserveClick}>Reserve & Collect</button>
           </div>
         </div>
       </div>
@@ -130,10 +130,10 @@ export default function StallPage() {
           
           <div className="inventory-filters" style={{ marginBottom: '20px' }}>
             <button className={`inventory-filter-btn ${activeFilter === 'all' ? 'active' : ''}`} onClick={() => setActiveFilter('all')}>All Items</button>
-            <button className={`inventory-filter-btn ${activeFilter === 'plant' ? 'active' : ''}`} onClick={() => setActiveFilter('plant')}>🪴 Plants</button>
-            <button className={`inventory-filter-btn ${activeFilter === 'pot' ? 'active' : ''}`} onClick={() => setActiveFilter('pot')}>🏺 Pots & Planters</button>
-            <button className={`inventory-filter-btn ${activeFilter === 'soil' ? 'active' : ''}`} onClick={() => setActiveFilter('soil')}>🌿 Soil & Manure</button>
-            <button className={`inventory-filter-btn ${activeFilter === 'seed' ? 'active' : ''}`} onClick={() => setActiveFilter('seed')}>🌱 Seeds</button>
+            <button className={`inventory-filter-btn ${activeFilter === 'plant' ? 'active' : ''}`} onClick={() => setActiveFilter('plant')}>Plants</button>
+            <button className={`inventory-filter-btn ${activeFilter === 'pot' ? 'active' : ''}`} onClick={() => setActiveFilter('pot')}>Pots & Planters</button>
+            <button className={`inventory-filter-btn ${activeFilter === 'soil' ? 'active' : ''}`} onClick={() => setActiveFilter('soil')}>Soil & Manure</button>
+            <button className={`inventory-filter-btn ${activeFilter === 'seed' ? 'active' : ''}`} onClick={() => setActiveFilter('seed')}>Seeds</button>
           </div>
           
           <div className="products-grid" id="stall-inventory-grid">
@@ -169,10 +169,10 @@ export default function StallPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
-                <span style={{ fontSize: '18px' }}>🛵</span>
+                <svg width="18" height="18" style={{ color: 'var(--primary-green)', flexShrink: 0 }}><use href="#icon-leaf"></use></svg>
                 <div>
                   <strong>Delivery SLA</strong>
-                  <div style={{ color: '#555' }}>30-45 min express delivery or reserve for direct counter pickup</div>
+                  <div style={{ color: '#555' }}>20-30 min express delivery or reserve for direct counter pickup</div>
                 </div>
               </div>
             </div>

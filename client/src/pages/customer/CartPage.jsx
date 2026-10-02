@@ -105,7 +105,7 @@ export default function CartPage() {
               Order Confirmed & Preparing!
             </h3>
             <p style={{ fontSize: '13px', color: '#555', marginBottom: '24px' }}>
-              Estimated Delivery: <strong>30-40 Mins</strong> • Local Nursery Express
+              Estimated Delivery: <strong>20-30 Mins</strong> • PlantMe Express
             </p>
 
             {/* Progress Stepper */}
@@ -130,7 +130,7 @@ export default function CartPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', opacity: trackerStage >= 3 ? 1 : 0.4 }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: trackerStage >= 3 ? '#2e7d32' : '#ccc', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800 }}>{trackerStage >= 3 ? '✓' : '3'}</div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '14px' }}>3. Out for Express Delivery 🛵</div>
+                  <div style={{ fontWeight: 800, fontSize: '14px' }}>3. Out for Express Delivery</div>
                   <div style={{ fontSize: '11px', color: '#666' }}>Ramu (Planto Rider) picked up your plant order</div>
                 </div>
               </div>
@@ -233,9 +233,9 @@ export default function CartPage() {
               onChange={(e) => setDeliveryType(e.target.value)}
               style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ccc', fontWeight: 600, fontSize: '13px' }}
             >
-              <option value="Express Nursery Delivery">⚡ Express Nursery Delivery (30-45 Mins) - ₹30</option>
-              <option value="Reserve & Collect">🏪 Reserve & Pickup at Nursery Counter - Free</option>
-              <option value="Standard Courier">📦 Standard Shipping (1-2 Days) - ₹15</option>
+              <option value="Express Nursery Delivery">Express Nursery Delivery (20-30 Mins) - ₹30</option>
+              <option value="Reserve & Collect">Reserve & Pickup at Nursery Counter - Free</option>
+              <option value="Standard Courier">Standard Shipping (1-2 Days) - ₹15</option>
             </select>
           </div>
 

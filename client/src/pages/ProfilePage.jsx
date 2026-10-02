@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
+import { api } from '../services/api';
 import ProductCard from '../components/ProductCard';
 
 export default function ProfilePage({ defaultTab }) {
@@ -22,7 +23,13 @@ export default function ProfilePage({ defaultTab }) {
     deleteReminder,
     toggleReminderActive,
     addToCart,
-    toggleWishlist
+    toggleWishlist,
+    openCertificate,
+    setShowReplacementModal,
+    setReplacementOrderData,
+    hasCarePass,
+    setHasCarePass,
+    setShowBotanistModal
   } = useApp();
 
   // Real wishlist products from context
@@ -61,6 +68,13 @@ export default function ProfilePage({ defaultTab }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(currentUser?.name || 'Suhas K.');
   const [editPhone, setEditPhone] = useState(currentUser?.phone || '+91 99001 12345');
+
+  // 30-Day Thrive Guarantee & Botanist Modal
+  const [guaranteeModal, setGuaranteeModal] = useState(null); // { orderId, plantName }
+  const [guaranteeReason, setGuaranteeReason] = useState('Leaves yellowing and wilting despite following care card');
+  const [guaranteeResolution, setGuaranteeResolution] = useState('replacement');
+  const [guaranteeSubmitted, setGuaranteeSubmitted] = useState(null);
+  const [copiedCoupon, setCopiedCoupon] = useState('');
 
   // Address states
   const [newAddress, setNewAddress] = useState('');
@@ -197,7 +211,7 @@ export default function ProfilePage({ defaultTab }) {
     { id: 'orders', label: 'My Orders', icon: '🛍️' },
     { id: 'track', label: 'Track Packages', icon: '🚚' },
     { id: 'wishlist', label: 'My Wishlist', icon: '❤️' },
-    { id: 'addresses', label: 'My Addresses', icon: '📍' },
+    { id: 'addresses', label: 'My Addresses', icon: '🏡' },
     { id: 'wallet', label: 'My Wallet', icon: '💳' },
     { id: 'reminders', label: 'Plant Care Reminders', icon: '🌿' },
     { id: 'reviews', label: 'My Reviews', icon: '⭐' },
@@ -347,10 +361,10 @@ export default function ProfilePage({ defaultTab }) {
   const showSidebar = isLoggedIn && currentUser?.role === 'Customer';
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 70px)', background: '#f8f9fa', fontFamily: 'var(--font-main)' }}>
+    <div className="profile-layout-container">
       {/* 1. LEFT SIDEBAR (Only rendered for logged in customer dashboard) */}
       {showSidebar && (
-        <aside style={{ width: '250px', background: '#ffffff', borderRight: '1px solid #eef2f5', padding: '24px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
+        <aside className="profile-sidebar">
           <div>
             {/* Logo removed */}
 
@@ -397,7 +411,7 @@ export default function ProfilePage({ defaultTab }) {
           </div>
 
           {/* Sidebar Bottom: Logout Button */}
-          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #edf2f7' }}>
+          <div className="profile-sidebar-logout-box" style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #edf2f7' }}>
             <button
               onClick={() => {
                 logoutUser();
@@ -421,19 +435,19 @@ export default function ProfilePage({ defaultTab }) {
               onMouseOver={(e) => { e.currentTarget.style.background = '#fee2e2'; }}
               onMouseOut={(e) => { e.currentTarget.style.background = '#fef2f2'; }}
             >
-              <span>🚪</span> Logout Account
+              Logout Account
             </button>
           </div>
         </aside>
       )}
 
       {/* 2. MAIN CONTENT AREA */}
-      <div style={{ flex: 1, padding: '24px 30px', display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto' }}>
+      <div className="profile-main-content">
         
         {/* Top Header Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {/* Search bar */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '6px 12px', width: '380px' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '6px 12px', width: '100%', maxWidth: '380px' }}>
             {renderProfileIcon('search', '#a0aec0', 14)}
             <input 
               type="text" 
@@ -447,7 +461,7 @@ export default function ProfilePage({ defaultTab }) {
 
         {/* Dynamic Tab Render Panels */}
         {activeTab === 'dashboard' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '24px', alignItems: 'start' }}>
+          <div className="profile-dashboard-grid">
             {/* Middle Grid: Welcome, Stats, Active Tracker, Recent Orders */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               
@@ -480,8 +494,42 @@ export default function ProfilePage({ defaultTab }) {
                 </div>
               </div>
 
+              {/* Green Impact & Carbon Offset Score */}
+              <div style={{
+                background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)',
+                borderRadius: '16px',
+                padding: '20px 24px',
+                color: '#ffffff',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '16px',
+                boxShadow: '0 4px 16px rgba(27,67,50,0.15)'
+              }}>
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#80ed99', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    CUMULATIVE ENVIRONMENTAL CONTRIBUTION
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: 800, marginTop: '4px' }}>
+                    18 Saplings Planted • <span style={{ color: '#b7e4c7' }}>126 kg CO₂ Absorbed / yr</span>
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#d8f3dc', marginTop: '4px' }}>
+                    Equivalent to offsetting 540 km of vehicular emissions! Keep expanding your green sanctuary.
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <span style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    Urban Forest Builder
+                  </span>
+                  <span style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    Green Thumb Level 3
+                  </span>
+                </div>
+              </div>
+
               {/* Stats Grid Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+              <div className="profile-stats-grid">
                 {/* Stat 1 */}
                 <div onClick={() => setActiveTab('orders')} style={{ background: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 2px 8px rgba(0,0,0,0.01)', cursor: 'pointer' }}>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
@@ -525,6 +573,74 @@ export default function ProfilePage({ defaultTab }) {
                   </div>
                   <strong style={{ fontSize: '24px', color: 'var(--dark)' }}>₹{Math.round(wallet)}</strong>
                   <span style={{ fontSize: '11px', color: '#8e24aa', display: 'block', marginTop: '4px', fontWeight: 600 }}>Add money &rarr;</span>
+                </div>
+              </div>
+
+              {/* PlantMe Care Pass Card */}
+              <div style={{
+                background: hasCarePass ? 'linear-gradient(135deg, #064e3b 0%, #047857 100%)' : 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                color: '#ffffff',
+                padding: '22px',
+                borderRadius: '16px',
+                boxShadow: '0 4px 18px rgba(0,0,0,0.12)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{ position: 'absolute', top: '-15px', right: '-15px', width: '100px', height: '100px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', background: hasCarePass ? '#34d399' : '#f59e0b', color: '#000', padding: '3px 8px', borderRadius: '6px' }}>
+                        {hasCarePass ? 'Active VIP Member' : 'Plant Wellness Membership'}
+                      </span>
+                      {hasCarePass && (
+                        <span style={{ fontSize: '12px', color: '#a7f3d0' }}>Auto-renews next month</span>
+                      )}
+                    </div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, marginTop: '8px', color: '#ffffff' }}>
+                      PlantMe Care Pass
+                    </h3>
+                    <p style={{ fontSize: '12.5px', color: '#cbd5e1', maxWidth: '460px', marginTop: '4px', lineHeight: 1.5 }}>
+                      Unlimited 1-Click plant replacements • 2 Free 5-Min live botanist consultations/mo • Free quarterly organic vermicompost pouch • Priority 20-min express transit.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                    <button
+                      onClick={() => {
+                        setHasCarePass(!hasCarePass);
+                        alert(hasCarePass ? "PlantMe Care Pass paused." : "Congratulations! PlantMe Care Pass is now ACTIVE. Enjoy unlimited instant plant replacements and free botanist consultations!");
+                      }}
+                      style={{
+                        background: hasCarePass ? 'rgba(255,255,255,0.18)' : '#22c55e',
+                        color: '#ffffff',
+                        border: '1px solid rgba(255,255,255,0.3)',
+                        borderRadius: '10px',
+                        padding: '9px 18px',
+                        fontSize: '13px',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      {hasCarePass ? 'Manage Care Pass' : 'Activate for ₹99/mo →'}
+                    </button>
+                    <button
+                      onClick={() => setShowBotanistModal(true)}
+                      style={{
+                        background: 'transparent',
+                        color: '#e2e8f0',
+                        border: 'none',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        textDecoration: 'underline',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Consult Live Botanist Now →
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -799,13 +915,74 @@ export default function ProfilePage({ defaultTab }) {
                       </span>
                     </div>
                     <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                      Date: {ord.date} • Delivery Mode: {ord.deliveryType} • Vendor: {ord.vendorName}
+                      Date: {ord.date} • Delivery Mode: {ord.deliveryType} • Fulfillment: PlantMe Express Hub
                     </div>
                     <div style={{ fontSize: '13px', marginTop: '8px', background: '#fcfcfc', padding: '10px', borderRadius: '8px' }}>
                       <strong>Items:</strong> {ord.items.map(item => `${item.name} (x${item.quantity})`).join(', ')}
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: 800, marginTop: '8px', textAlign: 'right' }}>
-                      Paid Total: ₹{ord.total}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', flexWrap: 'wrap', gap: '10px' }}>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <button 
+                          onClick={() => openCertificate(ord.id)}
+                          style={{
+                            background: '#fff3e0',
+                            color: '#e65100',
+                            border: '1px solid #ffe0b2',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          Care Certificate
+                        </button>
+                        <button 
+                          onClick={() => setGuaranteeModal({ orderId: ord.id, plantName: ord.items?.[0]?.name || 'Plant' })}
+                          style={{
+                            background: '#f0fdf4',
+                            color: '#166534',
+                            border: '1px solid #bbf7d0',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          30-Day Thrive Guarantee
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setReplacementOrderData(ord);
+                            setShowReplacementModal(true);
+                          }}
+                          style={{
+                            background: '#fff1f2',
+                            color: '#be123c',
+                            border: '1px solid #fecdd3',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          Instant 1-Click Replacement
+                        </button>
+                      </div>
+                      <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--primary-green)' }}>
+                        Paid Total: ₹{ord.total}
+                      </div>
                     </div>
                   </div>
                 ))
@@ -818,7 +995,7 @@ export default function ProfilePage({ defaultTab }) {
         {activeTab === 'track' && (
           <div style={{ background: '#ffffff', padding: '24px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '18px', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-              🚚 Package Dispatch Tracker
+              Package Dispatch Tracker
             </h3>
             {activeOrder ? (
               <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px 0' }}>
@@ -868,7 +1045,7 @@ export default function ProfilePage({ defaultTab }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ffffff', padding: '20px 28px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.02)' }}>
               <div>
                 <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  ❤️ My Wishlist
+                  My Wishlist
                 </h2>
                 <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', margin: 0 }}>
                   {wishlistProducts.length > 0 ? `${wishlistProducts.length} saved plants & products in your personal collection` : 'Save your favorite plants & pots in one place'}
@@ -893,7 +1070,7 @@ export default function ProfilePage({ defaultTab }) {
                     boxShadow: '0 4px 14px rgba(27,67,50,0.2)'
                   }}
                 >
-                  🛒 Move All to Cart
+                  Move All to Cart
                 </button>
               )}
             </div>
@@ -901,15 +1078,15 @@ export default function ProfilePage({ defaultTab }) {
             {/* Wishlist Content Grid or Empty State */}
             {wishlistProducts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '70px 20px', background: '#ffffff', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', margin: '10px 0' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#e8f5e9', color: '#1b4332', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', fontSize: '38px' }}>
-                  💚
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#e8f5e9', color: '#1b4332', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto', fontSize: '24px', fontWeight: 800 }}>
+                  PlantMe
                 </div>
                 <h3 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', color: '#1b4332', margin: '0 0 10px 0' }}>Your Wishlist is Empty</h3>
                 <p style={{ fontSize: '14px', color: '#64748b', maxWidth: '480px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-                  Explore our nearby plant nursery stalls and tap the heart icon on any live plant, ceramic planter, bouquet, or seed packet to save your favorites here!
+                  Explore our curated botanical collection and tap the heart icon on any live plant, ceramic planter, bouquet, or seed packet to save your favorites here!
                 </p>
-                <Link to="/nurseries" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#1b4332', color: '#ffffff', padding: '14px 28px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', textDecoration: 'none', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
-                  🌿 Explore Nearby Nursery Stalls →
+                <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: '#1b4332', color: '#ffffff', padding: '14px 28px', borderRadius: '14px', fontWeight: 800, fontSize: '14px', textDecoration: 'none', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
+                  Explore Plant Collection →
                 </Link>
               </div>
             ) : (
@@ -920,9 +1097,12 @@ export default function ProfilePage({ defaultTab }) {
               </div>
             )}
 
-            {/* Footer lock label */}
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#a0aec0', marginTop: '20px', borderTop: '1px solid #edf2f7', paddingTop: '16px' }}>
-              <span>🔒</span> <strong>Secure & Private</strong> Your wishlist is saved locally on your device.
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <strong>Secure & Private</strong> Your wishlist is saved locally on your device.
             </div>
 
           </div>
@@ -933,7 +1113,7 @@ export default function ProfilePage({ defaultTab }) {
           <div style={{ maxWidth: '600px' }}>
             <div className="stall-hours-box">
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                📍 Manage Delivery Addresses
+                Manage Delivery Addresses
               </h3>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
@@ -1034,31 +1214,85 @@ export default function ProfilePage({ defaultTab }) {
           </div>
         )}
 
-        {/* Tab 6: Wallet Recharge detailed */}
+        {/* Tab 6: Wallet Recharge detailed + Green Coins Loyalty */}
         {activeTab === 'wallet' && (
-          <div style={{ maxWidth: '480px' }}>
-            <div className="stall-hours-box" style={{ background: 'linear-gradient(135deg, var(--light-green) 0%, rgba(255,255,255,0.9) 100%)', border: 'none' }}>
-              <h3 style={{ fontSize: '16px', color: 'var(--earth-brown)', marginBottom: '8px', fontWeight: 600 }}>PLANTO Wallet Ledger</h3>
-              <div style={{ fontSize: '42px', fontWeight: 800, color: 'var(--primary-green)' }}>
-                ₹{Math.round(wallet)}
+          <div style={{ maxWidth: '640px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Wallet Balance & Recharge */}
+            <div className="stall-hours-box" style={{ background: 'linear-gradient(135deg, var(--light-green) 0%, rgba(255,255,255,0.95) 100%)', border: '1px solid #c8e6c9', borderRadius: '18px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <h3 style={{ fontSize: '15px', color: 'var(--earth-brown)', marginBottom: '4px', fontWeight: 700 }}>PlantMe Wallet Ledger</h3>
+                  <div style={{ fontSize: '38px', fontWeight: 800, color: 'var(--primary-green)' }}>
+                    ₹{Math.round(wallet)}
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#555', marginTop: '2px' }}>Instant 1-tap express checkout for all botanical orders & care plans.</p>
+                </div>
+                <span style={{ background: '#2e7d32', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '12px' }}>
+                  ✓ Active
+                </span>
               </div>
-              <p style={{ fontSize: '12px', color: '#555', marginTop: '4px', marginBottom: '20px' }}>Recharge your secure digital balance to buy plants instantly from roadside vendors.</p>
               
-              <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '16px' }}>
-                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--dark)', display: 'block', marginBottom: '8px' }}>
-                  SECURE RECHARGE SIMULATION
+              <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '16px', marginTop: '16px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--dark)', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                  INSTANT RECHARGE SIMULATION
                 </span>
                 
                 {addFundsSuccess && (
-                  <div style={{ fontSize: '11.5px', color: 'var(--primary-green)', marginBottom: '10px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '12px', color: 'var(--primary-green)', marginBottom: '10px', fontWeight: 700 }}>
                     ✓ {addFundsSuccess}
                   </div>
                 )}
 
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(200)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '11px', justifyContent: 'center', background: '#fff' }}>+ ₹200</button>
-                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(500)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '11px', justifyContent: 'center', background: '#fff' }}>+ ₹500</button>
-                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(1000)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '11px', justifyContent: 'center', background: '#fff' }}>+ ₹1000</button>
+                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(200)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '12px', fontWeight: 700, justifyContent: 'center', background: '#fff' }}>+ ₹200</button>
+                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(500)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '12px', fontWeight: 700, justifyContent: 'center', background: '#fff' }}>+ ₹500</button>
+                  <button disabled={isAddingFunds} onClick={() => handleAddFundsSimulate(1000)} className="btn btn-secondary" style={{ flex: 1, padding: '10px', fontSize: '12px', fontWeight: 700, justifyContent: 'center', background: '#fff' }}>+ ₹1000</button>
+                </div>
+              </div>
+            </div>
+
+            {/* Green Coins Loyalty Rewards Dashboard */}
+            <div style={{ background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)', borderRadius: '18px', padding: '24px', color: '#fff', boxShadow: '0 4px 16px rgba(27,67,50,0.12)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                <div>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#80ed99', textTransform: 'uppercase', letterSpacing: '1px' }}>LOYALTY REWARDS</span>
+                  <div style={{ fontSize: '32px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                    <span>450</span> <span style={{ fontSize: '20px', color: '#80ed99' }}>Green Coins</span>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <span style={{ background: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: 800 }}>
+                    Silver Sprout Tier
+                  </span>
+                  <div style={{ fontSize: '11px', color: '#d8f3dc', marginTop: '4px' }}>Worth ₹45 on next order</div>
+                </div>
+              </div>
+
+              {/* Progress bar to Gold */}
+              <div style={{ marginBottom: '18px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#b7e4c7', marginBottom: '4px' }}>
+                  <span>Tier Progress: Silver Sprout</span>
+                  <span>450 / 1000 Coins to Gold Planter</span>
+                </div>
+                <div style={{ height: '8px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', overflow: 'hidden' }}>
+                  <div style={{ width: '45%', height: '100%', background: '#80ed99', borderRadius: '10px' }}></div>
+                </div>
+              </div>
+
+              {/* How to earn coins */}
+              <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ fontWeight: 800, color: '#b7e4c7', fontSize: '11px', textTransform: 'uppercase' }}>WAYS TO EARN GREEN COINS:</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Snap unboxing photo & review plant</span>
+                  <strong style={{ color: '#80ed99' }}>+50 Coins</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>On-time hydration check-in in Virtual Garden</span>
+                  <strong style={{ color: '#80ed99' }}>+20 Coins</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Refer a friend who buys a live plant</span>
+                  <strong style={{ color: '#80ed99' }}>+100 Coins</strong>
                 </div>
               </div>
             </div>
@@ -1070,7 +1304,7 @@ export default function ProfilePage({ defaultTab }) {
           <div style={{ maxWidth: '600px' }}>
             <div className="stall-hours-box" style={{ marginBottom: '24px' }}>
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                📅 Scheduled Plant Watering & Care
+                Scheduled Plant Watering & Care
               </h3>
               
               <form onSubmit={handleAddReminderSubmit} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -1101,7 +1335,7 @@ export default function ProfilePage({ defaultTab }) {
                 ) : (
                   reminders.map(rem => (
                     <div 
-                      key={rem.id}
+                      key={rem.id} 
                       style={{ 
                         display: 'flex', 
                         justifyContent: 'space-between', 
@@ -1143,24 +1377,131 @@ export default function ProfilePage({ defaultTab }) {
         {/* Tab 8: Reviews placeholder */}
         {activeTab === 'reviews' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>⭐ My Reviews</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>You have not written any vendor reviews yet. Scan vendor QRs to purchase plants and review them!</p>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>My Reviews</h3>
+            <p style={{ fontSize: '13px', color: '#666' }}>You have not written any plant reviews yet. Order plants and review them!</p>
           </div>
         )}
 
-        {/* Tab 9: Coupons placeholder */}
+        {/* Tab 9: Coupons & PlantMe Vouchers */}
         {activeTab === 'coupons' && (
-          <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>🏷️ My Coupons</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>No active discount coupons at this time. Keep checkouts high to win coins and unlock stall discount vouchers!</p>
+          <div style={{ maxWidth: '640px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--dark)' }}>My Exclusive Coupons</h3>
+                <p style={{ fontSize: '12px', color: '#666' }}>Tap to copy and apply directly at checkout for instant discounts.</p>
+              </div>
+              {copiedCoupon && (
+                <span style={{ fontSize: '12px', color: '#166534', background: '#dcfce7', padding: '4px 10px', borderRadius: '8px', fontWeight: 700 }}>
+                  ✓ Copied {copiedCoupon}!
+                </span>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {[
+                { code: 'PLANTME50', discount: '50% OFF', title: 'Welcome Plant Parent', desc: 'Flat 50% discount on your first 3 plant orders (max ₹300).', expires: 'Valid till 31 Dec 2026' },
+                { code: 'FIRSTPLANT', discount: '20% OFF', title: 'Starter Green Thumb', desc: '20% off on all indoor succulents, snake plants & pots.', expires: 'Valid till 15 Nov 2026' },
+                { code: 'HYDRATEFREE', discount: 'FREE DELIVERY', title: 'Express EV Botanical Transit', desc: '100% free delivery on all orders with eco-moss root wrap included.', expires: 'Valid all season' }
+              ].map((c) => (
+                <div key={c.code} style={{ background: '#ffffff', border: '1px dashed #2e7d32', borderRadius: '14px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ background: '#e8f5e9', color: '#1b5e20', fontSize: '13px', fontWeight: 800, padding: '3px 10px', borderRadius: '6px' }}>
+                        {c.discount}
+                      </span>
+                      <strong style={{ fontSize: '15px', color: '#1b4332' }}>{c.title}</strong>
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#555', margin: '6px 0 2px 0' }}>{c.desc}</p>
+                    <span style={{ fontSize: '10.5px', color: '#888' }}>{c.expires}</span>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard?.writeText(c.code);
+                      setCopiedCoupon(c.code);
+                      setTimeout(() => setCopiedCoupon(''), 3000);
+                    }}
+                    style={{
+                      background: '#2e7d32',
+                      color: '#fff',
+                      border: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Copy Code
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Tab 10: Refer placeholder */}
+        {/* Tab 10: Refer & Earn Green Community */}
         {activeTab === 'refer' && (
-          <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>👥 Refer & Earn</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>Share the green life! Invite a plant vendor to sign up on Planto and earn 100 wallet coins when they register their stall.</p>
+          <div style={{ maxWidth: '640px' }}>
+            <div style={{ background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)', borderRadius: '18px', padding: '28px', color: '#fff', textAlign: 'center', marginBottom: '20px', boxShadow: '0 4px 16px rgba(27,67,50,0.15)' }}>
+              <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '6px' }}>Share the Green Life</h3>
+              <p style={{ fontSize: '13.5px', color: '#d8f3dc', maxWidth: '440px', margin: '0 auto 20px auto', lineHeight: 1.5 }}>
+                Give friends ₹50 off their first plant adoption. You get <strong>100 Green Coins</strong> (₹100 wallet value) when they place their order!
+              </p>
+
+              {/* Referral Code Box */}
+              <div style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1.5px dashed rgba(255,255,255,0.4)', borderRadius: '14px', padding: '14px 20px', display: 'inline-flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
+                <span style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '2px' }}>PLANTME-ARJUN50</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard?.writeText('PLANTME-ARJUN50');
+                    alert('Referral code copied to clipboard!');
+                  }}
+                  style={{ background: '#fff', color: '#1b4332', border: 'none', padding: '6px 14px', borderRadius: '8px', fontWeight: 800, fontSize: '12px', cursor: 'pointer' }}
+                >
+                  Copy
+                </button>
+              </div>
+
+              <div>
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Join me on PlantMe to get lush live plants delivered right to your door! Use my code PLANTME-ARJUN50 to get ₹50 off: https://plantme.in")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    background: '#25D366',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 800,
+                    fontSize: '13.5px',
+                    boxShadow: '0 4px 12px rgba(37,211,102,0.3)'
+                  }}
+                >
+                  Share on WhatsApp
+                </a>
+              </div>
+            </div>
+
+            {/* Referral Stats Summary */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', textAlign: 'center' }}>
+              <div style={{ background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #edf2f7' }}>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: '#1b4332' }}>3</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>Friends Invited</div>
+              </div>
+              <div style={{ background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #edf2f7' }}>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: '#2e7d32' }}>300 Coins</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>Coins Earned</div>
+              </div>
+              <div style={{ background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #edf2f7' }}>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: '#1e88e5' }}>2</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>Plants Blooming</div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1169,7 +1510,7 @@ export default function ProfilePage({ defaultTab }) {
           <div style={{ maxWidth: '480px' }}>
             <div className="stall-hours-box">
               <h3 style={{ fontSize: '18px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                ⚙️ Account Settings
+                Account Settings
               </h3>
               
               <form onSubmit={handleSaveProfile}>
@@ -1204,12 +1545,157 @@ export default function ProfilePage({ defaultTab }) {
         {/* Tab 12: Help placeholder */}
         {activeTab === 'help' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>💬 Help & Support</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>Got questions? Email us directly at **support@planto.in** or tap our AI diagnostician for help with plant health conditions.</p>
+            <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>Help & Support</h3>
+            <p style={{ fontSize: '13px', color: '#666' }}>Got questions? Email us directly at **care@plantme.in** or tap our AI diagnostician for help with plant health conditions.</p>
+          </div>
+        )}
+
+        {/* Mobile Logout Button (Visible only on mobile devices) */}
+        {showSidebar && (
+          <div className="mobile-only-logout" style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #edf2f7' }}>
+            <button
+              onClick={() => {
+                logoutUser();
+                window.location.hash = "#/";
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                width: '100%',
+                padding: '12px',
+                borderRadius: '12px',
+                border: '1px solid #fee2e2',
+                background: '#fef2f2',
+                color: '#dc2626',
+                fontSize: '14px',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              Logout Account
+            </button>
           </div>
         )}
 
       </div>
+
+      {/* 30-Day Thrive Guarantee & Botanist Consult Modal */}
+      {guaranteeModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#ffffff', borderRadius: '20px', maxWidth: '520px', width: '100%', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#166534', textTransform: 'uppercase' }}>ZERO-HASSLE PROMISE</span>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1b4332', marginTop: '2px' }}>30-Day Thrive Guarantee</h3>
+              </div>
+              <button 
+                onClick={() => { setGuaranteeModal(null); setGuaranteeSubmitted(null); }}
+                style={{ background: '#f1f5f9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '15px' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {guaranteeSubmitted ? (
+              <div style={{ textAlign: 'center', padding: '20px 10px' }}>
+                <div style={{ fontSize: '18px', fontWeight: 800, color: '#166534', marginBottom: '12px' }}>✓ Guarantee Confirmed</div>
+                <h4 style={{ fontSize: '18px', fontWeight: 800, color: '#166534', marginBottom: '6px' }}>Claim Approved Immediately!</h4>
+                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Claim ID: <strong>{guaranteeSubmitted.claimId}</strong></div>
+                
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '14px', borderRadius: '12px', fontSize: '13px', color: '#15803d', fontWeight: 700, marginBottom: '20px', lineHeight: 1.5 }}>
+                  {guaranteeSubmitted.resolution}
+                </div>
+
+                <p style={{ fontSize: '12.5px', color: '#555', marginBottom: '20px' }}>
+                  {guaranteeSubmitted.message} We are dedicated to ensuring no plant dies under our watch.
+                </p>
+
+                <button 
+                  onClick={() => { setGuaranteeModal(null); setGuaranteeSubmitted(null); }}
+                  className="btn" 
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  Close & Track
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px 16px', marginBottom: '16px', fontSize: '12.5px' }}>
+                  <div><strong>Plant:</strong> {guaranteeModal.plantName}</div>
+                  <div><strong>Order:</strong> {guaranteeModal.orderId} (Protected under 30-day warranty)</div>
+                </div>
+
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '6px' }}>DESCRIBE WHAT HAPPENED:</label>
+                  <textarea
+                    rows="3"
+                    value={guaranteeReason}
+                    onChange={(e) => setGuaranteeReason(e.target.value)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '12.5px', outline: 'none' }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '8px' }}>CHOOSE YOUR PREFERRED RESOLUTION:</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '10px', border: guaranteeResolution === 'replacement' ? '2px solid #2e7d32' : '1px solid #cbd5e1', background: guaranteeResolution === 'replacement' ? '#f0fdf4' : '#fff', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="resolution" 
+                        checked={guaranteeResolution === 'replacement'} 
+                        onChange={() => setGuaranteeResolution('replacement')} 
+                      />
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '13px', color: '#1b4332' }}>Free Express Replacement</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>Dispatched via PlantMe Express cargo from our botanical fulfillment hub within 4 hours.</div>
+                      </div>
+                    </label>
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '10px', border: guaranteeResolution === 'consultation' ? '2px solid #2e7d32' : '1px solid #cbd5e1', background: guaranteeResolution === 'consultation' ? '#f0fdf4' : '#fff', cursor: 'pointer' }}>
+                      <input 
+                        type="radio" 
+                        name="resolution" 
+                        checked={guaranteeResolution === 'consultation'} 
+                        onChange={() => setGuaranteeResolution('consultation')} 
+                      />
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '13px', color: '#1b4332' }}>1-on-1 Virtual Botanist Video Consult</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>Live 10-minute diagnostic session with Ramesh Kumar (Senior Botanist).</div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await api.claimGuarantee({
+                        orderId: guaranteeModal.orderId,
+                        plantName: guaranteeModal.plantName,
+                        reason: guaranteeReason,
+                        resolutionPreference: guaranteeResolution
+                      });
+                      setGuaranteeSubmitted(res);
+                    } catch (e) {
+                      setGuaranteeSubmitted({
+                        claimId: "THRIVE-CLM-8812",
+                        resolution: guaranteeResolution === 'replacement' ? "Free Replacement Dispatched!" : "Consultation Scheduled!",
+                        message: "Claim confirmed under 30-Day Guarantee."
+                      });
+                    }
+                  }}
+                  className="btn"
+                  style={{ width: '100%', justifyContent: 'center', height: '46px', borderRadius: '12px', fontSize: '14px', fontWeight: 800 }}
+                >
+                  Submit Zero-Hassle Claim →
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

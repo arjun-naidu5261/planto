@@ -33,7 +33,7 @@ export default function DeliveryDashboardPage() {
             className="btn" 
             style={{ width: '100%', justifyContent: 'center', height: '46px', borderRadius: '10px' }} 
             onClick={() => {
-              setLoginPresetEmail('delivery@planto.in');
+              setLoginPresetEmail('delivery@plantme.in');
               setShowLogin(true);
             }}
           >
@@ -235,7 +235,7 @@ export default function DeliveryDashboardPage() {
                           onClick={() => handleUpdateStatus(order.id, order.status)}
                           style={{ borderRadius: 'var(--radius-pill)', padding: '8px 20px', fontSize: '13px' }}
                         >
-                          {order.status === 'Confirmed' || order.status === 'Pending' ? '🚚 Mark Picked Up' : '✅ Mark Delivered'}
+                          {order.status === 'Confirmed' || order.status === 'Pending' ? 'Mark Picked Up' : 'Mark Delivered'}
                         </button>
                       </div>
                     </div>

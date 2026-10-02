@@ -4,7 +4,7 @@ import ChatBubble from '../components/ChatBubble';
 import ProductCard from '../components/ProductCard';
 
 export default function AIDiagnosticsPage() {
-  const { products } = useApp();
+  const { products, setShowBotanistModal } = useApp();
   const fileInputRef = useRef(null);
   const chatEndRef = useRef(null);
   
@@ -93,14 +93,61 @@ export default function AIDiagnosticsPage() {
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsTyping(false);
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        isBot: true,
-        text: `Thanks for your question: "${userMsg.text}". As an AI Plant Doctor, my text capabilities are currently simulated for this demo, but try uploading a photo of a plant to see my image recognition in action!`
-      }]);
-    }, 1500);
+      try {
+        const diag = await api.diagnosePlantAI({ symptoms: userMsg.text });
+        const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
+        const botReply = `<strong>Plant Doctor Diagnosis:</strong> ${diag.issue}<br/>
+        <strong>Confidence Score:</strong> ${diag.confidence} • <strong>Urgency:</strong> ${diag.urgency}<br/><br/>
+        <strong>Probable Cause:</strong> ${diag.cause}<br/><br/>
+        <strong>Recommended Care Action:</strong><br/>${remedyList}<br/><br/>
+        <em>Need supplies? Check our organic soil, neem sprays, and potting mix in the store!</em>`;
+
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          isBot: true,
+          text: botReply
+        }]);
+      } catch (err) {
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          isBot: true,
+          text: `Thanks for your question: "${userMsg.text}". For healthy plant growth, ensure adequate indirect sunlight and let the top 1-2 inches of soil dry out before your next watering.`
+        }]);
+      }
+    }, 1200);
+  };
+
+  const handleQuickSymptom = (symptomText) => {
+    const userMsg = {
+      id: Date.now(),
+      isBot: false,
+      text: symptomText
+    };
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+
+    setTimeout(async () => {
+      setIsTyping(false);
+      try {
+        const diag = await api.diagnosePlantAI({ symptoms: symptomText });
+        const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
+        const botReply = `<strong>AI Doctor Diagnosis:</strong> ${diag.issue}<br/>
+        <strong>Confidence:</strong> ${diag.confidence} • <strong>Urgency:</strong> ${diag.urgency}<br/><br/>
+        <strong>Probable Cause:</strong> ${diag.cause}<br/><br/>
+        <strong>Recommended Organic Treatment:</strong><br/>${remedyList}<br/><br/>
+        <em>Tip: You can also track this in your <strong>Virtual Garden</strong> for automated watering reminders!</em>`;
+
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          isBot: true,
+          text: botReply
+        }]);
+      } catch (e) {
+        // fallback
+      }
+    }, 1200);
   };
 
   return (
@@ -110,6 +157,47 @@ export default function AIDiagnosticsPage() {
           <h2 className="section-title">AI Plant Doctor</h2>
           <p className="section-subtitle">Chat with our AI for instant care advice and diagnosis.</p>
         </div>
+      </div>
+      
+      {/* Live Botanist Human Call-out Banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)',
+        color: '#ffffff',
+        borderRadius: '16px',
+        padding: '14px 20px',
+        marginBottom: '16px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        boxShadow: '0 4px 16px rgba(27,67,50,0.18)',
+        flexShrink: 0
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 10px #4ade80' }} />
+          <div>
+            <div style={{ fontSize: '13.5px', fontWeight: 800 }}>Need Expert Human Guidance?</div>
+            <div style={{ fontSize: '12px', color: '#bbf7d0' }}>Dr. Priya Nair (Senior Botanist) is online now for 5-minute video call triage.</div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowBotanistModal(true)}
+          style={{
+            background: '#ffffff',
+            color: '#1b4332',
+            border: 'none',
+            borderRadius: '10px',
+            padding: '8px 16px',
+            fontWeight: 800,
+            fontSize: '13px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}
+        >
+          Book 5-Min Video Call →
+        </button>
       </div>
 
       <div style={{
@@ -139,6 +227,38 @@ export default function AIDiagnosticsPage() {
             </div>
           )}
           <div ref={chatEndRef} />
+        </div>
+
+        {/* Quick Symptom Pills */}
+        <div style={{ padding: '10px 16px', background: '#f8faf9', borderTop: '1px solid #eef2f0', display: 'flex', gap: '8px', overflowX: 'auto', flexShrink: 0 }}>
+          <button 
+            type="button"
+            onClick={() => handleQuickSymptom("My plant has yellowing leaves and wilting lower stems")}
+            style={{ whiteSpace: 'nowrap', background: '#fff', border: '1px solid #fed7aa', color: '#9a3412', borderRadius: '16px', padding: '5px 12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            Yellowing Leaves
+          </button>
+          <button 
+            type="button"
+            onClick={() => handleQuickSymptom("Brown crispy dry leaf tips on indoor plant")}
+            style={{ whiteSpace: 'nowrap', background: '#fff', border: '1px solid #fecaca', color: '#991b1b', borderRadius: '16px', padding: '5px 12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            Brown Crispy Tips
+          </button>
+          <button 
+            type="button"
+            onClick={() => handleQuickSymptom("How often to water plants in hot sunny weather in Bengaluru?")}
+            style={{ whiteSpace: 'nowrap', background: '#fff', border: '1px solid #bae6fd', color: '#0369a1', borderRadius: '16px', padding: '5px 12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            Summer Watering Advice
+          </button>
+          <button 
+            type="button"
+            onClick={() => handleQuickSymptom("Which plants in PlantMe catalog are 100% non-toxic for cats and dogs?")}
+            style={{ whiteSpace: 'nowrap', background: '#fff', border: '1px solid #bbf7d0', color: '#166534', borderRadius: '16px', padding: '5px 12px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            Check Pet-Safe Plants
+          </button>
         </div>
 
         {/* Input Area */}

@@ -12,5 +12,23 @@
     "interval": "Every 30 Days",
     "nextDue": "2026-09-05",
     "active": true
+  },
+  {
+    "id": "r3",
+    "active": true,
+    "title": "Ficus Bonsai (Bonsai Buddy)",
+    "type": "Water",
+    "frequency": "Every 7 days",
+    "nextDate": "2026-10-09",
+    "health": "100% Thriving"
+  },
+  {
+    "id": "r4",
+    "active": true,
+    "title": "Ficus Bonsai (Bonsai Buddy)",
+    "type": "Water",
+    "frequency": "Every 7 days",
+    "nextDate": "2026-10-09",
+    "health": "100% Thriving"
   }
 ]

@@ -98,10 +98,7 @@ export default function CategoryModal() {
           
           <div style={{ display: 'flex', gap: '16px' }}>
             <button className="btn" id="category-modal-shop-btn" style={{ flex: 1, justifyContent: 'center', height: '46px', fontSize: '14px' }} onClick={handleShop}>
-              🛍️ Shop Products
-            </button>
-            <button className="btn btn-outline" id="category-modal-map-btn" style={{ flex: 1, justifyContent: 'center', height: '46px', fontSize: '14px', border: '2px solid var(--primary-green)' }} onClick={handleMap}>
-              📍 View Stalls on Map
+              🛍️ Explore Collection
             </button>
           </div>
         </div>

@@ -43,7 +43,7 @@ export default function ProductCard({ product }) {
           viewBox="0 0 24 24" 
           fill={isFav ? "currentColor" : "none"} 
           stroke="currentColor" 
-          strokeWidth="2.5"
+          strokeWidth="2.5" 
           strokeLinecap="round" 
           strokeLinejoin="round"
         >
@@ -65,15 +65,16 @@ export default function ProductCard({ product }) {
       </div>
       
       <div className="product-info">
-        <div className="product-vendor-row">
+        <div className="product-vendor-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>
             {product.quantity > 0 ? (
-              `Stall Stock: ${product.quantity} left`
+              <span style={{ color: '#166534', fontWeight: 700, fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                20-30 Mins Express
+              </span>
             ) : (
               <span style={{ color: '#d32f2f', fontWeight: 700 }}>Out of Stock</span>
             )}
           </span>
-          <Link to={`/stall/${product.vendorId}`} className="vendor-link">Store Profile</Link>
         </div>
         
         <Link to={`/product/${product.id}`} className="product-title">{product.name}</Link>

@@ -60,17 +60,15 @@ export default function Header() {
       `}</style>
       <header>
         <div className="header-container">
-        <Link to="/" className="logo">
-          <svg className="logo-leaf"><use href="#icon-leaf"></use></svg>
-          PLANTO
+        <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+          <img src="/logo.png" alt="PlantMe" style={{ height: '42px', width: 'auto', objectFit: 'contain' }} />
         </Link>
         
         <nav className="desktop-nav">
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Explore Nurseries</NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Explore Plants</NavLink>
           
           {(!isLoggedIn || currentUser?.role === 'Customer') && (
             <>
-              <NavLink to="/map" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Nearby Stalls Map</NavLink>
               <NavLink to="/ai" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>AI Plant Doctor</NavLink>
               <NavLink to="/garden" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Virtual Garden</NavLink>
               <NavLink to="/community" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Community</NavLink>
@@ -78,11 +76,11 @@ export default function Header() {
           )}
 
           {isLoggedIn && currentUser?.role === 'Vendor' && (
-            <NavLink to="/vendor" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>🏪 Nursery Vendor Desk</NavLink>
+            <NavLink to="/vendor" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Nursery Vendor Desk</NavLink>
           )}
 
           {isLoggedIn && currentUser?.role === 'Delivery Partner' && (
-            <NavLink to="/delivery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>🛵 Delivery Desk</NavLink>
+            <NavLink to="/delivery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Delivery Desk</NavLink>
           )}
 
           {isLoggedIn && currentUser?.role === 'Admin' && (
@@ -179,7 +177,7 @@ export default function Header() {
                       {currentUser?.name || 'User'}
                     </h4>
                     <span style={{ fontSize: '11px', color: '#64748b', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '2px' }}>
-                      {currentUser?.email || 'customer@planto.in'}
+                      {currentUser?.email || 'customer@plantme.in'}
                     </span>
                   </div>
                 </div>
@@ -193,7 +191,7 @@ export default function Header() {
                     onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
                     onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                   >
-                    <span>⚙️</span> Account Settings & Profile
+                    Account Settings & Profile
                   </Link>
 
                   <Link 
@@ -203,7 +201,7 @@ export default function Header() {
                     onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
                     onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                   >
-                    <span>❤️</span> My Wishlist ({wishlist.length})
+                    My Wishlist ({wishlist.length})
                   </Link>
                 </div>
 
@@ -233,7 +231,7 @@ export default function Header() {
                     onMouseOver={(e) => e.currentTarget.style.background = '#fee2e2'}
                     onMouseOut={(e) => e.currentTarget.style.background = '#fef2f2'}
                   >
-                    <span>🚪</span> Logout Account
+                    Logout Account
                   </button>
                 </div>
               </div>

@@ -667,7 +667,7 @@ export default function MapPage() {
                       <p style={{ fontSize: '11px', color: '#777', margin: 0 }}>{getVendorDesc(vendor.name)}</p>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', fontSize: '11px', fontWeight: 600 }}>
-                        <span style={{ color: 'var(--primary-green)' }}>📍 {vendor.distance} away</span>
+                        <span style={{ color: 'var(--primary-green)' }}>{vendor.distance} away</span>
                         <span style={{ color: '#fb8c00' }}>⭐ {vendor.rating} ({vendor.reviewsCount})</span>
                       </div>
 
@@ -811,7 +811,7 @@ export default function MapPage() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--dark)', margin: '0 0 4px 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{vendor.name}</h4>
                         <span style={{ fontSize: '11px', color: 'var(--primary-green)', fontWeight: 600 }}>{vendor.isOpen ? "Open Now" : "Closed"}</span>
-                        <div style={{ fontSize: '12px', color: '#666', marginTop: '6px' }}>📍 {vendor.distance} away • ⭐ {vendor.rating}</div>
+                        <div style={{ fontSize: '12px', color: '#666', marginTop: '6px' }}>{vendor.distance} away • ⭐ {vendor.rating}</div>
                       </div>
                     </div>
                   ))}
@@ -850,7 +850,7 @@ export default function MapPage() {
                     Open <span style={{ color: '#666' }}>• Closes 9:00 PM</span>
                   </div>
                   <div style={{ fontSize: '11.5px', color: '#666', display: 'flex', gap: '8px' }}>
-                    <span>📍 {selectedVendor.distance} away</span>
+                    <span>{selectedVendor.distance} away</span>
                     <span>⭐ {selectedVendor.rating} ({selectedVendor.reviewsCount})</span>
                   </div>
                   

@@ -32,6 +32,63 @@ export const AppProvider = ({ children }) => {
   const [editingProduct, setEditingProduct] = useState(null); // for edit product form
   const [loginPresetEmail, setLoginPresetEmail] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [certificateData, setCertificateData] = useState(null);
+
+  // New Growth Feature States
+  const [showFreeGiftModal, setShowFreeGiftModal] = useState(false);
+  const [showReplacementModal, setShowReplacementModal] = useState(false);
+  const [replacementOrderData, setReplacementOrderData] = useState(null);
+  const [showBotanistModal, setShowBotanistModal] = useState(false);
+  const [hasCarePass, setHasCarePass] = useState(false);
+  const [activeSociety, setActiveSociety] = useState('Prestige Shantiniketan, Whitefield');
+  const [cuttingSwaps, setCuttingSwaps] = useState([
+    {
+      id: 'SWAP-101',
+      plantName: 'Monstera Deliciosa (Rooted Top Node)',
+      contributor: 'Priya R. (Tower 4)',
+      society: 'Prestige Shantiniketan',
+      type: 'Stem Cutting with aerial root',
+      status: 'Available',
+      dateListed: 'Today',
+      image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'SWAP-102',
+      plantName: 'Golden Pothos Long Vines (3 Nodes)',
+      contributor: 'Arun K. (Block B)',
+      society: 'Brigade Gateway',
+      type: 'Water-rooted trailing cutting',
+      status: 'Available',
+      dateListed: 'Yesterday',
+      image: 'https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'SWAP-103',
+      plantName: 'Snake Plant Laurentii Pup (Rooted)',
+      contributor: 'Sneha M. (Villa 12)',
+      society: 'Sobha City',
+      type: 'Rhizome Pup',
+      status: 'Available',
+      dateListed: '2 days ago',
+      image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=500&q=80'
+    }
+  ]);
+
+  const addCuttingSwap = (swapItem) => {
+    setCuttingSwaps(prev => [swapItem, ...prev]);
+  };
+
+  const openCertificate = async (orderIdOrPlant) => {
+    try {
+      const id = typeof orderIdOrPlant === 'string' ? orderIdOrPlant : (orderIdOrPlant?.id || 'ORD-7290');
+      const data = await api.getPlantCertificate(id);
+      setCertificateData(data);
+      setShowCertificateModal(true);
+    } catch (err) {
+      console.error("Certificate load error", err);
+    }
+  };
 
   // Sync auth state with localStorage on mount
   useEffect(() => {
@@ -236,7 +293,7 @@ export const AppProvider = ({ children }) => {
         setCart([]);
         await refreshOrders();
         await refreshWallet();
-        return { success: true };
+        return { success: true, order: res.order };
       }
       return { success: false, message: 'Order placement failed' };
     } catch (err) {
@@ -358,12 +415,22 @@ export const AppProvider = ({ children }) => {
         showQRDownload, setShowQRDownload,
         showCategoryModal, setShowCategoryModal,
         selectedCategoryName, setSelectedCategoryName,
+        showCertificateModal, setShowCertificateModal,
+        certificateData, openCertificate,
         activeVendorId, setActiveVendorId,
         editingProduct, setEditingProduct,
-         loginUser,
-         logoutUser,
-         updateUserProfile,
-         addToCart,
+        showFreeGiftModal, setShowFreeGiftModal,
+        showReplacementModal, setShowReplacementModal,
+        replacementOrderData, setReplacementOrderData,
+        showBotanistModal, setShowBotanistModal,
+        hasCarePass, setHasCarePass,
+        activeSociety, setActiveSociety,
+        cuttingSwaps, setCuttingSwaps,
+        addCuttingSwap,
+        loginUser,
+        logoutUser,
+        updateUserProfile,
+        addToCart,
         removeFromCart,
         updateCartQty,
         clearCart,

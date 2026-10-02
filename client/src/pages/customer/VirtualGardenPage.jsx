@@ -13,11 +13,43 @@ export default function VirtualGardenPage() {
 
   const getIconForType = (type) => {
     switch(type?.toLowerCase()) {
-      case 'water': return '💧';
-      case 'fertilize': return '🧪';
-      case 'repot': return '🪴';
-      case 'prune': return '✂️';
-      default: return '🌱';
+      case 'water':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+          </svg>
+        );
+      case 'fertilize':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 2v7.31L4.89 20a2 2 0 0 0 1.73 3h14.76a2 2 0 0 0 1.73-3L14 9.31V2" />
+            <path d="M8.5 2h7" />
+            <path d="M14 9.3h-4" />
+          </svg>
+        );
+      case 'repot':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 9h14l-2 11H7L5 9z" />
+            <path d="M3 5h18v4H3z" />
+          </svg>
+        );
+      case 'prune':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <line x1="20" y1="4" x2="8.12" y2="15.88" />
+            <line x1="14.47" y1="14.48" x2="20" y2="20" />
+            <line x1="8.12" y1="8.12" x2="12" y2="12" />
+          </svg>
+        );
+      default:
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.8a7 7 0 0 1-9 8.2z" />
+          </svg>
+        );
     }
   };
 

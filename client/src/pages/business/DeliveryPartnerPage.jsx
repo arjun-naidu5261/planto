@@ -235,7 +235,7 @@ export default function DeliveryDashboardPage() {
                           onClick={() => handleUpdateStatus(order.id, order.status)}
                           style={{ borderRadius: 'var(--radius-pill)', padding: '8px 20px', fontSize: '13px' }}
                         >
-                          {order.status === 'Confirmed' || order.status === 'Pending' ? '🚚 Mark Picked Up' : '✅ Mark Delivered'}
+                          {order.status === 'Confirmed' || order.status === 'Pending' ? 'Mark Picked Up' : 'Mark Delivered'}
                         </button>
                       </div>
                     </div>

@@ -46,7 +46,7 @@ export default function VendorDashboardPage() {
             className="btn" 
             style={{ width: '100%', justifyContent: 'center', height: '46px', borderRadius: '10px' }} 
             onClick={() => {
-              setLoginPresetEmail('vendor@planto.in');
+              setLoginPresetEmail('vendor@plantme.in');
               setShowLogin(true);
             }}
           >

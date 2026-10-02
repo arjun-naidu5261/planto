@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { db } from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -8,16 +13,18 @@ const PORT = process.env.PORT || 5002;
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // --- AUTHENTICATION ---
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
+  const em = (email || '').toLowerCase().trim();
   // Mock customer login check
-  if (email === 'customer@planto.in' && password === 'planto123') {
+  if ((em === 'customer@plantme.in' || em === 'customer@planto.in') && (password === 'plantme123' || password === 'planto123')) {
     return res.json({
       success: true,
       user: {
-        email,
+        email: em,
         name: 'Suhas K.',
         role: 'Customer',
         wallet: db.getWallet()
@@ -25,11 +32,11 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
   // Mock vendor login
-  if (email === 'vendor@planto.in' && (password === 'planto123' || password === 'vendor123')) {
+  if ((em === 'vendor@plantme.in' || em === 'vendor@planto.in') && (password === 'plantme123' || password === 'planto123' || password === 'vendor123')) {
     return res.json({
       success: true,
       user: {
-        email,
+        email: em,
         name: 'Suresh Rao',
         role: 'Vendor',
         vendorId: 'v1'
@@ -37,12 +44,12 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
   // Mock admin login
-  if (email === 'admin@planto.in' && (password === 'admin123' || password === 'planto123')) {
+  if ((em === 'admin@plantme.in' || em === 'admin@planto.in') && (password === 'admin123' || password === 'plantme123' || password === 'planto123')) {
     return res.json({
       success: true,
       user: {
-        email,
-        name: 'PLANTO Controller',
+        email: em,
+        name: 'PlantMe Controller',
         role: 'Admin'
       }
     });
@@ -78,12 +85,41 @@ app.post('/api/auth/login', (req, res) => {
 
 // --- VENDORS ---
 app.get('/api/vendors', (req, res) => {
-  res.json(db.getVendors());
+  const vendors = db.getVendors();
+  const { status } = req.query;
+  if (status) {
+    return res.json(vendors.filter(v => (v.status || 'APPROVED') === status));
+  }
+  res.json(vendors);
+});
+
+app.get('/api/vendors/pending', (req, res) => {
+  const vendors = db.getVendors();
+  res.json(vendors.filter(v => v.status === 'PENDING_APPROVAL'));
+});
+
+app.patch('/api/vendors/:id/approval', (req, res) => {
+  const { status } = req.body; // 'APPROVED' or 'REJECTED'
+  const vendors = db.getVendors();
+  const vendorIndex = vendors.findIndex(v => v.id === req.params.id);
+  
+  if (vendorIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Nursery Vendor not found' });
+  }
+
+  vendors[vendorIndex].status = status || 'APPROVED';
+  db.saveVendors(vendors);
+
+  return res.json({
+    success: true,
+    message: `Nursery vendor status updated to ${status}`,
+    vendor: vendors[vendorIndex]
+  });
 });
 
 app.post('/api/vendors/register', (req, res) => {
   const vendors = db.getVendors();
-  const { name, email, password, phone, address, nurseryName, hours } = req.body;
+  const { name, email, password, phone, address, nurseryName, hours, gstNo, licensePhoto } = req.body;
 
   const newVendor = {
     id: 'v_' + Date.now(),
@@ -91,17 +127,20 @@ app.post('/api/vendors/register', (req, res) => {
     owner: name || 'Nursery Owner',
     email: email || '',
     password: password || '',
+    phone: phone || '+91 98480 22334',
+    address: address || 'Bengaluru, KA',
+    gstNo: gstNo || '',
+    licensePhoto: licensePhoto || '',
+    status: 'PENDING_APPROVAL', // Requires Super Admin approval before catalog goes live
     type: 'Roadside Seller',
     distance: '1.0 km',
     rating: 5.0,
     reviewsCount: 0,
     isOpen: true,
-    phone: phone || '+91 98480 22334',
     hours: hours || '7:00 AM - 7:30 PM',
     coords: { x: 50, y: 50 },
     lat: 12.9716,
     lng: 77.5946,
-    address: address || 'Bengaluru, KA',
     googleMapsUrl: 'https://maps.google.com',
     photos: ['https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80'],
     reviews: []
@@ -109,7 +148,7 @@ app.post('/api/vendors/register', (req, res) => {
 
   vendors.push(newVendor);
   db.saveVendors(vendors);
-  res.json({ success: true, vendor: newVendor });
+  res.json({ success: true, message: 'Nursery registered successfully. Pending Admin verification.', vendor: newVendor });
 });
 
 app.post('/api/vendors', (req, res) => {
@@ -157,8 +196,18 @@ app.post('/api/vendors/:id/reviews', (req, res) => {
 
 // --- PRODUCTS ---
 app.get('/api/products', (req, res) => {
-  const { category, type } = req.query;
+  const { category, type, includePending } = req.query;
   let products = db.getProducts();
+  const vendors = db.getVendors();
+
+  // Filter out products from unapproved nurseries for customer view
+  if (includePending !== 'true') {
+    products = products.filter(p => {
+      const vendor = vendors.find(v => v.id === p.vendorId);
+      // If no vendor found or vendor status is APPROVED (or default approved), include it
+      return !vendor || (vendor.status || 'APPROVED') === 'APPROVED';
+    });
+  }
   
   if (category) {
     products = products.filter(p => p.category.toLowerCase() === category.toLowerCase());
@@ -252,7 +301,18 @@ app.get('/api/orders', (req, res) => {
 });
 
 app.post('/api/orders', (req, res) => {
-  const { items, deliveryType, total, vendorName } = req.body;
+  const { 
+    items, 
+    deliveryType, 
+    total, 
+    vendorName,
+    address,
+    buildingImage,
+    recipientName,
+    phone,
+    landmark,
+    deliveryInstruction
+  } = req.body;
   
   // Deduct wallet balance
   const currentWallet = db.getWallet();
@@ -263,19 +323,38 @@ app.post('/api/orders', (req, res) => {
   const newBalance = currentWallet - total;
   db.saveWallet(newBalance);
   
+  const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+
   // Save order
   const orders = db.getOrders();
   const newOrder = {
     id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
     date: new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
-    items,
+    items: items || [],
     status: 'Confirmed',
-    deliveryType,
+    deliveryType: deliveryType || 'PlantMe Express Delivery',
     total,
-    vendorName: vendorName || 'Planto Hub'
+    vendorName: 'PlantMe Express Fulfillment Hub',
+    address: address || 'Flat 402, Green Heights, Indiranagar, Bengaluru',
+    buildingImage: buildingImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80',
+    recipientName: recipientName || 'Arjun Patel',
+    phone: phone || '+91 98856 00899',
+    landmark: landmark || 'Near Gate 2 Security Cabin',
+    deliveryInstruction: deliveryInstruction || 'Eco-friendly hydration wrap requested.',
+    deliveryOtp: otp,
+    rider: {
+      name: 'Ramu K.',
+      phone: '+91 98450 12345',
+      rating: 4.9,
+      vehicle: 'PlantMe Eco EV-Cargo 12 • KA-01-EV-4421',
+      photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80'
+    },
+    hub: 'PlantMe Central Darkstore Hub',
+    etaMinutes: 18,
+    createdAt: new Date().toISOString()
   };
   
-  orders.push(newOrder);
+  orders.unshift(newOrder);
   db.saveOrders(orders);
   
   res.json({ success: true, order: newOrder, wallet: newBalance });
@@ -540,11 +619,6 @@ app.post('/api/wallet/update', (req, res) => {
   res.json({ wallet: newVal });
 });
 
-app.listen(PORT, () => {
-  console.log(`PLANTO server running on port ${PORT}`);
-});
-// Trigger reload 4
-
 
 
 // Nursery Stories Endpoint
@@ -653,7 +727,7 @@ app.get("/api/user/garden", (req, res) => {
 
 app.post("/api/user/garden/water", (req, res) => {
   const { plantId } = req.body;
-  res.json({ success: true, message: "Marked as watered today! 💧", plantId });
+  res.json({ success: true, message: "Marked as watered today!", plantId });
 });
 
 // Eco-Gifting API
@@ -673,4 +747,156 @@ app.post("/api/tips", (req, res) => {
     success: true,
     message: `₹${tipAmount} tip added! 100% of tips go directly to Ramesh Kumar.`
   });
+});
+
+// --- CUSTOMER EXPERIENCE (CX) APIS ---
+
+// 1. Hyperlocal Botanical Weather & Care Advisory API
+app.get("/api/weather/care-tip", (req, res) => {
+  const city = req.query.city || "Bengaluru";
+  res.json({
+    city,
+    temperature: "30°C",
+    condition: "Sunny & Mild Dry Breeze",
+    humidity: "46%",
+    uvIndex: "High (7/10)",
+    advisory: {
+      title: "High Evaporation Today",
+      summary: "Warm sunlight in Bengaluru today accelerates moisture loss.",
+      actionText: "Water outdoor flowering plants before 10 AM or after 5 PM. Indoor air purifiers only need light misting today.",
+      hydrationAlert: true,
+      thriveTip: "Keep snake plants in indirect light to prevent leaf tip burn."
+    }
+  });
+});
+
+// 2. Plant Birth & Adoption Certificate API
+app.get("/api/care/certificate/:id", (req, res) => {
+  const { id } = req.params;
+  const orders = db.getOrders();
+  const matchedOrder = orders.find(o => o.id === id) || orders[0] || {};
+  const itemName = matchedOrder.items?.[0]?.name || "Premium Golden Pothos";
+  
+  res.json({
+    certificateId: "PLANTME-CERT-" + (id.replace(/[^0-9]/g, '') || Math.floor(1000 + Math.random() * 9000)),
+    plantName: itemName,
+    botanicalName: itemName.includes("Pothos") ? "Epipremnum aureum" : itemName.includes("Snake") ? "Sansevieria trifasciata" : itemName.includes("Bonsai") ? "Ficus microcarpa" : "Tropical Botanical Specimen",
+    adoptionDate: matchedOrder.date || new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
+    parentName: matchedOrder.recipientName || "Arjun Patel",
+    nurseryOrigin: "PlantMe Botanical Hub (Indiranagar)",
+    batchId: "PLANTME-BATCH-A48",
+    vitalityScore: "99% Certified Vitality (Grade A+)",
+    soilBlend: "Organic Cocopeat, Perlite & Vermicompost",
+    planterType: "Handcrafted Eco Ceramic Pot",
+    oxygenRating: "+1.4 Liters Pure O₂ / Day",
+    sunlightNeed: "Bright Indirect Sunlight",
+    wateringCadence: "Every 5-7 Days (Touch dry top inch)",
+    botanistName: "PlantMe Botanical Quality Council",
+    botanistTitle: "Authorized Botanical Registrar & Quality Desk",
+    guarantee: "30-Day PlantMe Thrive or Free Replacement Guarantee",
+    unboxingSteps: [
+      { step: 1, title: "Unwrap with Care", desc: "Gently remove the eco-moss moisture shield from around the root base." },
+      { step: 2, title: "Acclimatize 24 Hours", desc: "Keep the plant in bright, indirect light for 24-48 hours before direct sun exposure." },
+      { step: 3, title: "First Hydration Check", desc: "Touch soil 1 inch down. If dry, give 150ml of room-temperature water." },
+      { step: 4, title: "Register in Virtual Garden", desc: "Log this plant to receive automated WhatsApp watering alerts." }
+    ],
+    qrVerificationUrl: `https://plantme.in/verify/${id}`
+  });
+});
+
+// 3. WhatsApp Notification / Care Card Dispatch
+app.post("/api/notifications/whatsapp-care-card", (req, res) => {
+  const { phone, plantName, orderId } = req.body;
+  res.json({
+    success: true,
+    sentTo: phone || "+91 98856 00899",
+    channel: "WhatsApp Business API",
+    template: "plantme_care_card_v1",
+    message: `🌿 PlantMe Care Card for your ${plantName || 'Plant'} has been sent to WhatsApp with watering schedule & unboxing tips!`
+  });
+});
+
+// 4. Enhanced AI Plant Doctor API
+app.post("/api/ai/diagnose", (req, res) => {
+  const { plantType, symptoms, hasImage } = req.body;
+  const sym = (symptoms || "").toLowerCase();
+  
+  if (sym.includes("yellow") || sym.includes("pale")) {
+    return res.json({
+      issue: "Overwatering & Chlorosis (Root Stress)",
+      confidence: "94%",
+      urgency: "Moderate",
+      cause: "Soil remaining waterlogged for more than 4 days, suffocating root oxygen intake.",
+      remedy: [
+        "Pause watering for 6-8 days until the top 2 inches feel completely bone-dry.",
+        "Check bottom drainage hole of pot to ensure excess water escapes freely.",
+        "Spray diluted seaweed bio-extract on leaves for fast micronutrient recovery."
+      ],
+      recommendedProducts: ["p10", "p11"] // potting mix, vermicompost
+    });
+  } else if (sym.includes("brown") || sym.includes("dry") || sym.includes("curl")) {
+    return res.json({
+      issue: "Underwatered / Low Air Humidity",
+      confidence: "91%",
+      urgency: "Mild",
+      cause: "Dry indoor air from air conditioning or intense direct afternoon sun scorch.",
+      remedy: [
+        "Give a thorough deep watering until moisture drips from drainage holes.",
+        "Mist foliage with water in the morning to increase ambient humidity.",
+        "Move 2 feet away from direct window glass."
+      ],
+      recommendedProducts: ["p8", "p7"] // terracotta pot, self watering pot
+    });
+  } else {
+    return res.json({
+      issue: "Healthy Foliage with Minor Dust Accumulation",
+      confidence: "88%",
+      urgency: "None",
+      cause: "Normal metabolic growth with natural indoor ambient dust.",
+      remedy: [
+        "Gently wipe leaves with a soft damp cotton cloth once a week.",
+        "Rotate the pot 90 degrees every fortnight for balanced sun exposure.",
+        "Top-dress with a tablespoon of vermicompost next month."
+      ],
+      recommendedProducts: ["p11"]
+    });
+  }
+});
+
+// 5. 30-Day "Thrive or Replace" Guarantee Claim API
+app.post("/api/guarantee/claim", (req, res) => {
+  const { orderId, plantName, reason, resolutionPreference, photoUrl } = req.body;
+  res.json({
+    success: true,
+    claimId: "THRIVE-CLM-" + Math.floor(1000 + Math.random() * 9000),
+    status: "Approved",
+    plantName: plantName || "Plant",
+    resolution: resolutionPreference === "consultation" 
+      ? "Virtual Botanist Video Consult scheduled with Ramesh Kumar (Senior Botanist)." 
+      : "Free Nursery Replacement dispatched via Hyperlocal Express Cargo!",
+    message: "Your 30-Day Thrive Guarantee claim has been processed immediately under our Zero-Hassle policy."
+  });
+});
+
+// 6. Personalized Eco-Gifting Flow Save API
+app.post("/api/gifting/save", (req, res) => {
+  const { recipientName, audioNoteUrl, engravedTagText, giftBagType } = req.body;
+  res.json({
+    success: true,
+    giftId: "GIFT-" + Math.floor(1000 + Math.random() * 9000),
+    message: "Personalized eco-gifting details saved successfully!",
+    details: { recipientName, engravedTagText, giftBagType: giftBagType || "Festive Organic Jute" }
+  });
+});
+
+// SPA fallback
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API route not found' });
+  }
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`PLANTO server running on port ${PORT}`);
 });

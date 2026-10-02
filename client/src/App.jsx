@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 
 // Layout Components
@@ -17,6 +17,10 @@ import QRDownloadModal from './components/modals/QRDownloadModal';
 import CategoryModal from './components/modals/CategoryModal';
 import LoginModal from './components/modals/LoginModal';
 import ProfileModal from './components/modals/ProfileModal';
+import PlantBirthCertificateModal from './components/modals/PlantBirthCertificateModal';
+import FreeSaplingGiftModal from './components/modals/FreeSaplingGiftModal';
+import InstantReplacementModal from './components/modals/InstantReplacementModal';
+import BotanistConsultationModal from './components/modals/BotanistConsultationModal';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -34,14 +38,12 @@ import ProfilePage from './pages/ProfilePage';
 import SeasonalPage from './pages/SeasonalPage';
 import VirtualGardenPage from './pages/VirtualGardenPage';
 import NurseriesPage from './pages/NurseriesPage';
+import CorporateGiftingPage from './pages/CorporateGiftingPage';
 
 export default function App() {
   return (
     <AppProvider>
       <Router>
-        {/* Dynamic Leaves Animation Overlay */}
-        <LeavesAnimation />
-
         {/* SVG Icon Definitions Library */}
         <SvgIcons />
 
@@ -52,10 +54,10 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/nurseries" element={<NurseriesPage />} />
+            <Route path="/nurseries" element={<Navigate to="/" replace />} />
             <Route path="/category/:name" element={<CategoryPage />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/stall/:id" element={<StallPage />} />
+            <Route path="/map" element={<Navigate to="/" replace />} />
+            <Route path="/stall/:id" element={<Navigate to="/" replace />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/ai" element={<AIDiagnosticsPage />} />
             <Route path="/vendor" element={<VendorDashboardPage />} />
@@ -67,6 +69,7 @@ export default function App() {
             <Route path="/wishlist" element={<ProfilePage defaultTab="wishlist" />} />
             <Route path="/seasonal/:season" element={<SeasonalPage />} />
             <Route path="/garden" element={<VirtualGardenPage />} />
+            <Route path="/corporate" element={<CorporateGiftingPage />} />
           </Routes>
         </main>
 
@@ -84,6 +87,10 @@ export default function App() {
         <CategoryModal />
         <LoginModal />
         <ProfileModal />
+        <PlantBirthCertificateModal />
+        <FreeSaplingGiftModal />
+        <InstantReplacementModal />
+        <BotanistConsultationModal />
       </Router>
     </AppProvider>
   );

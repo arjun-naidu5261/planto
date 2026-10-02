@@ -203,5 +203,71 @@ export const api = {
       method: 'DELETE'
     });
     return handleResponse(res);
+  },
+
+  // Customer Experience (CX) APIs
+  getWeatherCareTip: async (city = 'Bengaluru') => {
+    const res = await fetch(`${API_BASE}/weather/care-tip?city=${encodeURIComponent(city)}`);
+    return handleResponse(res);
+  },
+
+  getPlantCertificate: async (orderId) => {
+    const res = await fetch(`${API_BASE}/care/certificate/${orderId}`);
+    return handleResponse(res);
+  },
+
+  sendWhatsAppCareCard: async (data) => {
+    const res = await fetch(`${API_BASE}/notifications/whatsapp-care-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  diagnosePlantAI: async (data) => {
+    const res = await fetch(`${API_BASE}/ai/diagnose`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  claimGuarantee: async (data) => {
+    const res = await fetch(`${API_BASE}/guarantee/claim`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  saveEcoGifting: async (data) => {
+    const res = await fetch(`${API_BASE}/gifting/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  createSubscription: async (data) => {
+    const res = await fetch(`${API_BASE}/subscriptions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  waterGardenPlant: async (plantId) => {
+    const res = await fetch(`${API_BASE}/user/garden/water`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plantId })
+    });
+    return handleResponse(res);
   }
 };
+

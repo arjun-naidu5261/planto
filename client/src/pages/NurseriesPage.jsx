@@ -37,13 +37,13 @@ export default function NurseriesPage() {
         boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: 800, color: '#ffb703', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
-          <span>🏪 HYPERLOCAL NURSERY DIRECTORY</span>
+          <span>HYPERLOCAL NURSERY DIRECTORY</span>
         </div>
         <h1 style={{ fontSize: '36px', fontFamily: 'var(--font-serif)', color: '#ffffff', margin: 0 }}>
           All Nearby Plant Nurseries & Stalls
         </h1>
         <p style={{ fontSize: '15px', color: '#d8f3dc', marginTop: '8px', maxWidth: '680px', lineHeight: 1.5 }}>
-          Explore physical plant nurseries, roadside plant stalls, and pottery artisans near you. All items delivered fresh & hydrated within 3-5 hours today or available for direct stall pickup.
+          Explore physical plant nurseries, roadside plant stalls, and pottery artisans near you. All items delivered fresh & hydrated within 20-30 minutes or available for direct stall pickup.
         </p>
 
         {/* Search Bar */}
@@ -97,19 +97,19 @@ export default function NurseriesPage() {
             className={`inventory-filter-btn ${vendorFilter === 'express' ? 'active' : ''}`}
             onClick={() => setVendorFilter('express')}
           >
-            ⚡ Express &lt; 1.5 km
+            Express &lt; 1.5 km
           </button>
           <button 
             className={`inventory-filter-btn ${vendorFilter === 'top' ? 'active' : ''}`}
             onClick={() => setVendorFilter('top')}
           >
-            ⭐ Top Rated (4.6+)
+            Top Rated (4.6+)
           </button>
           <button 
             className={`inventory-filter-btn ${vendorFilter === 'open' ? 'active' : ''}`}
             onClick={() => setVendorFilter('open')}
           >
-            🟢 Open Now
+            Open Now
           </button>
         </div>
 
@@ -169,7 +169,7 @@ export default function NurseriesPage() {
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                   <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.75)', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '4px 10px', borderRadius: '12px' }}>
-                    🚚 Same-Day (3-5 hrs)
+                    Delivery in 20-30 mins
                   </div>
                   <div style={{ position: 'absolute', top: '10px', right: '10px', background: vendor.isOpen ? '#2e7d32' : '#c62828', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '4px 10px', borderRadius: '12px' }}>
                     {vendor.isOpen ? 'OPEN' : 'CLOSED'}
@@ -181,7 +181,7 @@ export default function NurseriesPage() {
                   <div>
                     <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 4px 0', color: '#111' }}>{vendor.name}</h3>
                     <p style={{ fontSize: '12px', color: '#666', margin: '0 0 8px 0' }}>
-                      Owner: <strong>{vendor.owner}</strong> • 📍 {vendor.distance}
+                      Owner: <strong>{vendor.owner}</strong> • {vendor.distance}
                     </p>
                     <p style={{ fontSize: '12px', color: '#888', margin: 0, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                       {vendor.address}

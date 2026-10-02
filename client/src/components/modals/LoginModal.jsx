@@ -7,8 +7,8 @@ export default function LoginModal() {
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup'
   
   // Login State
-  const [email, setEmail] = useState('customer@planto.in');
-  const [password, setPassword] = useState('planto123');
+  const [email, setEmail] = useState('customer@plantme.in');
+  const [password, setPassword] = useState('plantme123');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -20,9 +20,9 @@ export default function LoginModal() {
 
   useEffect(() => {
     if (showLogin) {
-      const preset = loginPresetEmail || 'customer@planto.in';
+      const preset = loginPresetEmail || 'customer@plantme.in';
       setEmail(preset);
-      setPassword('planto123');
+      setPassword('plantme123');
       setErrorMsg('');
     }
   }, [showLogin, loginPresetEmail]);
@@ -56,9 +56,9 @@ export default function LoginModal() {
     }
     
     // Auto sign up & log in customer
-    const res = await loginUser('customer@planto.in', 'planto123');
+    const res = await loginUser('customer@plantme.in', 'plantme123');
     if (res.success) {
-      alert(`🎉 Welcome to PLANTO, ${signUpName}! Account created successfully.`);
+      alert(`Welcome to PlantMe, ${signUpName}! Account created successfully.`);
       setShowLogin(false);
       window.location.hash = "#/profile";
     }
@@ -107,11 +107,10 @@ export default function LoginModal() {
 
         {/* Branding & Header */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-            <svg width="32" height="32" style={{ color: 'var(--primary-green)', fill: 'var(--primary-green)' }}><use href="#icon-leaf"></use></svg>
-            <span style={{ fontSize: '24px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '-0.5px' }}>PLANTO</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
+            <img src="/logo.png" alt="PlantMe" style={{ height: '46px', width: 'auto', objectFit: 'contain' }} />
           </div>
-          <p style={{ fontSize: '13px', color: '#666' }}>Your Premium Smart Nursery Marketplace</p>
+          <p style={{ fontSize: '13px', color: '#666', margin: 0, fontWeight: 500 }}>Hyperlocal Live Plant Delivery & Botanical Care</p>
         </div>
 
         {/* Tab Switcher: Sign In vs Sign Up */}
@@ -180,7 +179,7 @@ export default function LoginModal() {
                 required 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                placeholder="customer@planto.in" 
+                placeholder="customer@plantme.in" 
                 style={{ 
                   width: '100%', 
                   padding: '12px 14px', 
@@ -245,7 +244,7 @@ export default function LoginModal() {
                 marginTop: '6px'
               }}
             >
-              Sign In to PLANTO →
+              Sign In to PlantMe →
             </button>
           </form>
         )}
@@ -317,7 +316,7 @@ export default function LoginModal() {
                 marginTop: '8px'
               }}
             >
-              Create Account & Start Shopping 🪴 →
+              Create Account & Start Shopping →
             </button>
           </form>
         )}
