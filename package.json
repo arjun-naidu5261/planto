@@ -1,7 +1,7 @@
 {
-  "name": "planto-monorepo",
+  "name": "plantme.in",
   "version": "1.0.0",
-  "description": "PLANTO - Premium Smart Plant & Nursery Marketplace Monorepo",
+  "description": "PlantMe.in - India's #1 Hyperlocal Live Plant Delivery Marketplace",
   "scripts": {
     "install-all": "npm install --prefix client && npm install --prefix business && npm install --prefix admin && npm install --prefix backend",
     "client": "npm run dev --prefix client",

@@ -1,7 +1,7 @@
 {
-  "name": "planto-backend",
+  "name": "plantme.in-backend",
   "version": "1.0.0",
-  "description": "PLANTO Backend Server",
+  "description": "PlantMe.in Backend Server",
   "main": "index.js",
   "type": "module",
   "scripts": {
