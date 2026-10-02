@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "144fc1b1-cc81-4556-86d3-c2cfeb7b9728"
+      }
+    },
+    "owner": "arjunuddagiri"
   }
 }
