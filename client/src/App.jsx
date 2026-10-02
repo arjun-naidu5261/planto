@@ -1,6 +1,27 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+
+// Smoothly intercept and convert any legacy '#/path' hashes into clean HTML5 paths
+function HashToPathRedirect() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash && window.location.hash.startsWith('#/')) {
+        const cleanPath = window.location.hash.slice(1);
+        window.history.replaceState(null, '', cleanPath);
+        navigate(cleanPath, { replace: true });
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [navigate]);
+
+  return null;
+}
 
 // Layout Components
 import Header from './components/Header';
@@ -48,6 +69,9 @@ export default function App() {
   return (
     <AppProvider>
       <Router>
+        {/* Legacy Hash URL Redirector */}
+        <HashToPathRedirect />
+
         {/* SVG Icon Definitions Library */}
         <SvgIcons />
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 import VendorCard from '../components/VendorCard';
@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import SocietyGroupDrop from '../components/SocietyGroupDrop';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const { 
     currentUser,
     vendors, 
@@ -200,10 +201,10 @@ export default function HomePage() {
     const match = products.find(p => p.name.toLowerCase().includes(searchVal.toLowerCase()) || p.category.toLowerCase().includes(searchVal.toLowerCase()));
     
     if (match) {
-      window.location.hash = `#/map?filter=${match.type}`;
+      navigate(`/?filter=${match.type}`);
     } else {
       alert(`Showing nurseries stocking "${searchVal}".`);
-      window.location.hash = `#/map`;
+      navigate(`/`);
     }
   };
 
@@ -213,7 +214,7 @@ export default function HomePage() {
     else if (seasonName.toLowerCase().includes("monsoon")) key = 'monsoon';
     else if (seasonName.toLowerCase().includes("winter")) key = 'winter';
     
-    window.location.hash = `#/seasonal/${key}`;
+    navigate(`/seasonal/${key}`);
   };
 
   return (

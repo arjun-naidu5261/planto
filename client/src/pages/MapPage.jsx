@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import L from 'leaflet';
@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import { useApp } from '../context/AppContext';
 
 export default function MapPage() {
+  const navigate = useNavigate();
   const { vendors, products } = useApp();
   const location = useLocation();
   
@@ -803,7 +804,7 @@ export default function MapPage() {
                         gap: '12px',
                         background: '#fff'
                       }}
-                      onClick={() => window.location.hash = `#/stall/${vendor.id}`}
+                      onClick={() => navigate(`/stall/${vendor.id}`)}
                       onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-green)'}
                       onMouseOut={(e) => e.currentTarget.style.borderColor = '#e2e8f0'}
                     >
@@ -987,7 +988,7 @@ export default function MapPage() {
           </div>
           <button 
             className="btn" 
-            onClick={() => window.location.hash = "#/vendor"}
+            onClick={() => navigate("/vendor")}
             style={{ 
               padding: '10px 20px', 
               fontSize: '13px', 

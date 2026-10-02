@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import AddressMapPicker from '../components/AddressMapPicker';
 
 export default function ProfilePage({ defaultTab }) {
+  const navigate = useNavigate();
   const { 
     wishlist, 
     products, 
@@ -690,7 +691,7 @@ export default function ProfilePage({ defaultTab }) {
             <button
               onClick={() => {
                 logoutUser();
-                window.location.hash = "#/";
+                navigate('/');
               }}
               style={{
                 display: 'flex',
@@ -2173,7 +2174,7 @@ export default function ProfilePage({ defaultTab }) {
             <button
               onClick={() => {
                 logoutUser();
-                window.location.hash = "#/";
+                navigate('/');
               }}
               style={{
                 display: 'flex',

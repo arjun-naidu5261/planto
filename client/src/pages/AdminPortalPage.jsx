@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function AdminPortalPage() {
+  const navigate = useNavigate();
   const { 
     vendors, 
     loadAllData,
@@ -16,7 +17,7 @@ export default function AdminPortalPage() {
 
   const handleLogout = () => {
     logoutUser();
-    window.location.hash = "#/";
+    navigate('/');
   };
 
   const isAdmin = isLoggedIn && currentUser?.role === 'Admin';

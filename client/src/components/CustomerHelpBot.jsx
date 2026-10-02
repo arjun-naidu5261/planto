@@ -569,7 +569,7 @@ export default function CustomerHelpBot() {
                         <button
                           onClick={() => {
                             setIsOpen(false);
-                            window.location.hash = "#/profile";
+                            navigate("/profile");
                           }}
                           style={{
                             flex: 1,
@@ -670,7 +670,7 @@ export default function CustomerHelpBot() {
                       <button
                         onClick={() => {
                           setIsOpen(false);
-                          window.location.hash = "#/ai";
+                          navigate("/ai");
                         }}
                         style={{
                           width: '100%',
@@ -688,7 +688,7 @@ export default function CustomerHelpBot() {
                           gap: '6px'
                         }}
                       >
-                        <span>🩺</span> Launch Camera AI Plant Diagnostician
+                        Launch Camera AI Plant Diagnostician
                       </button>
                     </div>
                   )}
@@ -720,13 +720,13 @@ export default function CustomerHelpBot() {
                               {p.name}
                             </div>
                             <div style={{ fontSize: '11px', color: '#166534', fontWeight: 700 }}>
-                              ₹{p.price} • {p.petFriendly ? '🐶 Pet-Friendly' : '🍃 Air-Purifying'}
+                              ₹{p.price} • {p.petFriendly ? 'Pet-Friendly' : 'Air-Purifying'}
                             </div>
                           </div>
                           <button
                             onClick={() => {
                               setIsOpen(false);
-                              window.location.hash = `#/product/${p.id}`;
+                              navigate(`/product/${p.id}`);
                             }}
                             style={{
                               background: '#2d6a4f',
@@ -774,10 +774,10 @@ export default function CustomerHelpBot() {
                             window.location.href = "tel:+918885600899";
                           } else if (pill.includes("AI Plant Doctor") || pill.includes("Launch AI")) {
                             setIsOpen(false);
-                            window.location.hash = "#/ai";
+                            navigate("/ai");
                           } else if (pill.includes("Activate Care Pass")) {
                             setIsOpen(false);
-                            window.location.hash = "#/profile";
+                            navigate("/profile");
                           } else if (pill.includes("Balcony Makeover")) {
                             setIsOpen(false);
                             setShowBalconyModal(true);
@@ -789,7 +789,7 @@ export default function CustomerHelpBot() {
                             setShowClubModal(true);
                           } else if (pill.includes("Corporate") || pill.includes("Retainers")) {
                             setIsOpen(false);
-                            window.location.hash = "#/corporate";
+                            navigate("/corporate");
                           } else {
                             sendMessage(pill);
                           }

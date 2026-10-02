@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 import ProductCard from '../components/ProductCard';
 
 export default function StallPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { products } = useApp();
   
@@ -58,7 +59,7 @@ export default function StallPage() {
 
   const handleReserveClick = () => {
     alert("Items added to reservation list! Proceed to Checkout and choose 'Reserve & Pickup' to collect directly from stall.");
-    window.location.hash = "#/cart";
+    navigate("/cart");
   };
 
   return (

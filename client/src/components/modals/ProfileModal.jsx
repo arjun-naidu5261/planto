@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export default function ProfileModal() {
+  const navigate = useNavigate();
   const { 
     showProfileModal, 
     setShowProfileModal,
@@ -43,7 +45,7 @@ export default function ProfileModal() {
   const handleLogout = () => {
     logoutUser();
     handleClose();
-    window.location.hash = "#/";
+    navigate('/');
   };
 
   const handleSaveProfile = (e) => {

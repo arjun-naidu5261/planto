@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export default function FreeSaplingGiftModal() {
+  const navigate = useNavigate();
   const { showFreeGiftModal, setShowFreeGiftModal, addToCart } = useApp();
   const [activeTab, setActiveTab] = useState('gift'); // 'gift' | 'claim'
   
@@ -30,7 +32,7 @@ export default function FreeSaplingGiftModal() {
     e.preventDefault();
     if (!friendName) return;
     const code = `PLANTME-GIFT-${Math.floor(1000 + Math.random() * 9000)}`;
-    const url = `https://plantme.in/#/claim?code=${code}&to=${encodeURIComponent(friendName)}`;
+    const url = `https://plantme.in/claim?code=${code}&to=${encodeURIComponent(friendName)}`;
     setGeneratedLink(url);
   };
 
@@ -341,7 +343,7 @@ export default function FreeSaplingGiftModal() {
                   Your gift code has been validated at ₹0. Head to cart to complete your dispatch address.
                 </p>
                 <button
-                  onClick={() => { setShowFreeGiftModal(false); window.location.hash = "#/cart"; }}
+                  onClick={() => { setShowFreeGiftModal(false); navigate("/cart"); }}
                   style={{
                     background: 'var(--primary-green)',
                     color: '#ffffff',

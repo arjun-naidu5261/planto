@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 export default function DeliveryDashboardPage() {
+  const navigate = useNavigate();
   const { 
     orders, 
     updateOrderStatus,
@@ -16,7 +18,7 @@ export default function DeliveryDashboardPage() {
 
   const handleLogout = () => {
     logoutUser();
-    window.location.hash = "#/";
+    navigate('/');
   };
 
   // Fallback gate if not delivery partner

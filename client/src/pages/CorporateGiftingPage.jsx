@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 
 export default function CorporateGiftingPage() {
+  const navigate = useNavigate();
   const { addToCart } = useApp();
   
   // Active Page Tab: 'retainers' (Monthly Workplace Care) or 'gifting' (Bulk Desk Plants)
@@ -137,7 +139,7 @@ export default function CorporateGiftingPage() {
       reviewsCount: 42,
       quantity: 1
     }, 1);
-    window.location.hash = "#/cart";
+    navigate("/cart");
   };
 
   return (

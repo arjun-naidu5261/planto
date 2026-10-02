@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 export default function VendorDashboardPage() {
+  const navigate = useNavigate();
   const { 
     products, 
     activeVendorId, 
@@ -84,7 +85,7 @@ export default function VendorDashboardPage() {
 
   const handleLogout = () => {
     logoutUser();
-    window.location.hash = "#/";
+    navigate('/');
   };
 
   // Mock bar chart data (15 sales points)

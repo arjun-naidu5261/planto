@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export default function LoginModal() {
+  const navigate = useNavigate();
   const { showLogin, setShowLogin, loginPresetEmail, setLoginPresetEmail, loginUser } = useApp();
   
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup'
@@ -41,7 +43,7 @@ export default function LoginModal() {
     if (res.success) {
       setShowLogin(false);
       setLoginPresetEmail('');
-      window.location.hash = "#/profile";
+      navigate("/profile");
     } else {
       setErrorMsg(res.message || "Invalid email or password.");
     }
@@ -59,7 +61,7 @@ export default function LoginModal() {
     if (res.success) {
       alert(`Welcome to PlantMe, ${signUpName}! Account created successfully.`);
       setShowLogin(false);
-      window.location.hash = "#/profile";
+      navigate("/profile");
     }
   };
 

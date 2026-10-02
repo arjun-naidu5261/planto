@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 export default function Header() {
+  const navigate = useNavigate();
   const { 
     cart, 
     wishlist, 
@@ -259,7 +260,7 @@ export default function Header() {
                     onClick={() => {
                       setShowDropdown(false);
                       logoutUser();
-                      window.location.hash = "#/";
+                      navigate('/');
                     }}
                     style={{
                       display: 'flex',

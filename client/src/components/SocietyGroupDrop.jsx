@@ -37,12 +37,12 @@ export default function SocietyGroupDrop() {
   };
 
   const handleShareWhatsApp = () => {
-    const text = `🌿 Hey neighbors in ${activeSociety}!\n\nPlantMe is doing a Hyperlocal EV Group Drop in our society today.\n${currentSocietyData.neighborsCount} neighbors have already ordered — we only need ${remaining || 1} more order to unlock:\n✅ 15% Group Discount on all live plants & pots\n✅ Free 1kg Organic Vermicompost Pouch\n✅ Free 20-30 Min Group Delivery\n\nOrder your indoor plants here:\nhttps://plantme.in/#/society?name=${encodeURIComponent(activeSociety)}`;
+    const text = `🌿 Hey neighbors in ${activeSociety}!\n\nPlantMe is doing a Hyperlocal EV Group Drop in our society today.\n${currentSocietyData.neighborsCount} neighbors have already ordered — we only need ${remaining || 1} more order to unlock:\n✅ 15% Group Discount on all live plants & pots\n✅ Free 1kg Organic Vermicompost Pouch\n✅ Free 20-30 Min Group Delivery\n\nOrder your indoor plants here:\nhttps://plantme.in/society?name=${encodeURIComponent(activeSociety)}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`https://plantme.in/#/society?name=${encodeURIComponent(activeSociety)}`);
+    navigator.clipboard.writeText(`https://plantme.in/society?name=${encodeURIComponent(activeSociety)}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
