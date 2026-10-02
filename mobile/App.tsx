@@ -13,6 +13,7 @@ import CartScreen from './src/screens/CartScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import AIDoctorScreen from './src/screens/AIDoctorScreen';
 import ProductDetailScreen from './src/screens/ProductDetailScreen';
+import HelpBotScreen from './src/screens/HelpBotScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ function HomeStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="HelpBot" component={HelpBotScreen} />
     </Stack.Navigator>
   );
 }
@@ -31,6 +33,16 @@ function ShopStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Shop" component={ShopScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="HelpBot" component={HelpBotScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function ProfileStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="HelpBot" component={HelpBotScreen} />
     </Stack.Navigator>
   );
 }
@@ -82,7 +94,7 @@ function MainTabs() {
       <Tab.Screen name="ShopTab" component={ShopStack} options={{ title: 'Shop' }} />
       <Tab.Screen name="CartTab" component={CartScreen} options={{ title: 'Cart' }} />
       <Tab.Screen name="AIDoctor" component={AIDoctorScreen} options={{ title: 'Plant Dr.' }} />
-      <Tab.Screen name="ProfileTab" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Tab.Screen name="ProfileTab" component={ProfileStack} options={{ title: 'Profile' }} />
     </Tab.Navigator>
   );
 }

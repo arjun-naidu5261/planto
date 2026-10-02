@@ -878,15 +878,158 @@ app.post("/api/guarantee/claim", (req, res) => {
   });
 });
 
-// 6. Personalized Eco-Gifting Flow Save API
-app.post("/api/gifting/save", (req, res) => {
-  const { recipientName, audioNoteUrl, engravedTagText, giftBagType } = req.body;
-  res.json({
-    success: true,
-    giftId: "GIFT-" + Math.floor(1000 + Math.random() * 9000),
-    message: "Personalized eco-gifting details saved successfully!",
-    details: { recipientName, engravedTagText, giftBagType: giftBagType || "Festive Organic Jute" }
-  });
+// 7. Customer Help Bot AI Concierge API
+app.post("/api/chatbot/message", (req, res) => {
+  const { message = "", history = [] } = req.body;
+  const q = message.trim().toLowerCase();
+
+  const orders = (db.getOrders ? db.getOrders() : []) || [];
+  const products = (db.getProducts ? db.getProducts() : []) || [];
+
+  // Helper response structure
+  const makeResponse = (reply, options = {}) => {
+    return res.json({
+      reply,
+      type: options.type || "text",
+      data: options.data || null,
+      quickReplies: options.quickReplies || [
+        "📦 Track My Order",
+        "🌿 Plant Health Diagnosis",
+        "🔄 30-Day Guarantee",
+        "⭐ Care Pass (₹99/mo)",
+        "💬 WhatsApp Support"
+      ]
+    });
+  };
+
+  // 1. Order Tracking Query
+  if (q.includes("track") || q.includes("order") || q.includes("status") || q.includes("where is my") || q.match(/ord-\d+/i) || (q.match(/\b\d+\b/) && q.length < 8)) {
+    const matchedOrder = orders.find(o => 
+      (o.id && q.includes(o.id.toLowerCase())) || 
+      (o.deliveryOtp && q.includes(o.deliveryOtp))
+    ) || orders[0];
+
+    if (matchedOrder) {
+      return makeResponse(
+        `Here is the live status for order **#${matchedOrder.id}**:\n\n• **Status:** ${matchedOrder.status || 'Out for Delivery (20-30 Min Transit)'}\n• **Items:** ${matchedOrder.items?.map(i => `${i.name} (x${i.quantity || 1})`).join(', ') || 'Live Indoor Plants'}\n• **Delivery Address:** ${matchedOrder.address || 'Bengaluru'}\n• **Delivery OTP:** \`${matchedOrder.deliveryOtp || '6506'}\`\n• **Eco-Rider:** ${matchedOrder.rider?.name || 'Ramu K.'} (${matchedOrder.rider?.vehicle || 'PlantMe Eco EV-Cargo'})\n• **Rider Contact:** ${matchedOrder.rider?.phone || '+91 98450 12345'}`,
+        {
+          type: "order_card",
+          data: matchedOrder,
+          quickReplies: ["🔄 1-Click Plant Replacement", "📞 Call Delivery Rider", "💬 WhatsApp Concierge", "Shop More Plants"]
+        }
+      );
+    }
+  }
+
+  // 2. Contact & Escalation to Human
+  if (q.includes("contact") || q.includes("support") || q.includes("human") || q.includes("agent") || q.includes("call") || q.includes("whatsapp") || q.includes("email") || q.includes("phone") || q.includes("number")) {
+    return makeResponse(
+      `🌿 You can reach our dedicated PlantMe & Future Forbes support team 24/7 across multiple channels:\n\n• **Email:** info@futureforbes.in\n• **Care Hotline:** +91 88856 00899\n• **WhatsApp Concierge:** +91 88856 00899\n\nOur botanical specialists typically reply within 2–5 minutes on WhatsApp!`,
+      {
+        type: "contact_card",
+        data: {
+          email: "info@futureforbes.in",
+          phone: "+91 88856 00899",
+          whatsapp: "+91 88856 00899"
+        },
+        quickReplies: ["💬 Open WhatsApp Chat", "📞 Call +91 88856 00899", "📦 Track My Order", "🌿 Care Guides"]
+      }
+    );
+  }
+
+  // 3. Plant Care / Yellowing / Drooping / Health
+  if (q.includes("yellow") || q.includes("brown") || q.includes("droop") || q.includes("water") || q.includes("sunlight") || q.includes("fertiliz") || q.includes("soil") || q.includes("repott") || q.includes("pest") || q.includes("bug") || q.includes("fungus") || q.includes("die") || q.includes("dying") || q.includes("care")) {
+    let careAdvice = "";
+    if (q.includes("yellow")) {
+      careAdvice = "🌿 **Yellow Leaves Alert:**\nMost yellowing is caused by **overwatering** or lack of drainage. Let the top 2 inches of soil dry completely before watering again. Ensure your pot has a drainage hole!";
+    } else if (q.includes("droop")) {
+      careAdvice = "💧 **Drooping Leaves:**\nDrooping usually indicates **thirst (under-watering)** or sudden temperature shock. Give the soil a deep soak until water runs out the drainage hole.";
+    } else if (q.includes("water")) {
+      careAdvice = "🚿 **Watering Golden Rule:**\nAlways stick your finger 1-2 inches into the soil. If it feels cool and moist, skip watering! If completely dry and crumbly, it's time for hydration. Most indoor plants thrive with water once every 5–7 days.";
+    } else {
+      careAdvice = "🌱 **Botanical Diagnostic Tips:**\n1. Bright, indirect light is best for 90% of indoor plants.\n2. Ensure proper root drainage.\n3. Wipe dust off leaves weekly to maximize photosynthesis.";
+    }
+
+    return makeResponse(
+      `${careAdvice}\n\nNeed an exact botanical diagnosis with prescription? You can also run our instant camera AI diagnosis or book a live Video Call with our senior botanists.`,
+      {
+        type: "care_card",
+        data: {
+          action: "ai_doctor",
+          link: "#/ai"
+        },
+        quickReplies: ["🩺 Launch AI Plant Doctor", "📹 Book Botanist Video Consult", "🔄 30-Day Guarantee", "📦 Track My Order"]
+      }
+    );
+  }
+
+  // 4. Guarantee / Replacement / Returns
+  if (q.includes("replace") || q.includes("guarantee") || q.includes("thrive") || q.includes("return") || q.includes("refund") || q.includes("damaged") || q.includes("dead") || q.includes("broken")) {
+    return makeResponse(
+      `🛡️ **PlantMe 30-Day 'Thrive or Replace' Guarantee:**\n\nEvery plant you adopt from PlantMe comes backed by our unconditional 30-day survival promise.\n\n• If your plant shows signs of decline within 30 days, we'll send a senior botanist to advise or dispatch a **free nursery-fresh replacement** via Hyperlocal Cargo!\n• Zero return packaging required. Zero return fees.`,
+      {
+        type: "guarantee_card",
+        quickReplies: ["🔄 Claim Free Replacement", "🩺 Diagnose Plant First", "💬 WhatsApp Concierge", "⭐ Care Pass Benefits"]
+      }
+    );
+  }
+
+  // 5. Care Pass
+  if (q.includes("care pass") || q.includes("pass") || q.includes("membership") || q.includes("subscription") || q.includes("99")) {
+    return makeResponse(
+      `⭐ **PlantMe Care Pass (₹99/month):**\n\nThe ultimate plant parent subscription:\n\n✨ **10% OFF** on every plant & pot order automatically\n🌱 **Free Quarterly Soil Replenishment** (Organic vermicompost + perlite mix delivered free)\n⚡ **Priority 15-Minute Replacement Dispatch** under 30-Day Guarantee\n👨‍🌾 **Unlimited Free Live Video Consultations** with certified botanists\n\nSubscribe anytime from your Cart or Profile!`,
+      {
+        type: "care_pass_card",
+        quickReplies: ["⭐ Activate Care Pass", "📦 Track My Order", "🌿 Indoor Plants", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 6. Delivery Timelines & Packaging
+  if (q.includes("delivery") || q.includes("speed") || q.includes("fast") || q.includes("how long") || q.includes("time") || q.includes("mins") || q.includes("minutes") || q.includes("shipping")) {
+    return makeResponse(
+      `⚡ **20–30 Minute Hyperlocal EV Delivery:**\n\n• **Real-Time Transit:** Dispatched from our closest temperature-stabilized nursery hub.\n• **Eco-Moss Hydration Wrap:** Roots remain 100% hydrated in living moss without heavy soil leakage.\n• **Zero Plastic:** Packaged in biodegradable honeycomb cardboard carriers tailored for EVs.`,
+      {
+        type: "delivery_card",
+        quickReplies: ["📦 Track Current Order", "🌿 Browse Plants", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 7. Product Recommendations (Air Purifying, Pet Friendly, Indoor, etc.)
+  if (q.includes("recommend") || q.includes("best") || q.includes("buy") || q.includes("indoor") || q.includes("air purify") || q.includes("pet") || q.includes("snake") || q.includes("pothos") || q.includes("monstera") || q.includes("bonsai") || q.includes("money plant")) {
+    let matchedProducts = [];
+    if (q.includes("pet")) {
+      matchedProducts = products.filter(p => p.petFriendly === true).slice(0, 3);
+    } else if (q.includes("air") || q.includes("purify")) {
+      matchedProducts = products.filter(p => (p.tag || "").toLowerCase().includes("air") || p.airPurificationScore > 8).slice(0, 3);
+    } else {
+      matchedProducts = products.slice(0, 3);
+    }
+
+    return makeResponse(
+      `🌿 Here are our highest-rated plants hand-picked for your space:`,
+      {
+        type: "product_carousel",
+        data: matchedProducts,
+        quickReplies: ["🐶 Pet-Friendly Plants", "🍃 Air-Purifying Plants", "📦 Track My Order", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 8. Default friendly botanical assistance
+  return makeResponse(
+    `Hello! I'm **Flora**, your PlantMe AI Botanical Concierge 🌿\n\nI can help you with:\n• 📦 **Live Order Tracking** & Rider details\n• 🩺 **Plant Health & Care Troubleshooting** (yellow leaves, watering, sunlight)\n• 🔄 **30-Day Thrive Guarantee** & Instant Replacements\n• ⭐ **Care Pass** membership benefits\n• 💬 Connecting directly to our team at **info@futureforbes.in** or **+91 88856 00899**\n\nHow can I help you today?`,
+    {
+      quickReplies: [
+        "📦 Track My Order",
+        "🌿 Why are my leaves yellow?",
+        "🔄 30-Day Thrive Guarantee",
+        "⭐ Care Pass Benefits",
+        "💬 WhatsApp Support"
+      ]
+    }
+  );
 });
 
 // SPA fallback

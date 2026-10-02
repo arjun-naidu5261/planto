@@ -21,6 +21,7 @@ import PlantBirthCertificateModal from './components/modals/PlantBirthCertificat
 import FreeSaplingGiftModal from './components/modals/FreeSaplingGiftModal';
 import InstantReplacementModal from './components/modals/InstantReplacementModal';
 import BotanistConsultationModal from './components/modals/BotanistConsultationModal';
+import CustomerHelpBot from './components/CustomerHelpBot';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -91,6 +92,9 @@ export default function App() {
         <FreeSaplingGiftModal />
         <InstantReplacementModal />
         <BotanistConsultationModal />
+
+        {/* 24/7 AI Botanical Concierge Chatbot */}
+        <CustomerHelpBot />
       </Router>
     </AppProvider>
   );

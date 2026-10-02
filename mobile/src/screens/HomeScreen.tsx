@@ -90,6 +90,13 @@ export default function HomeScreen({ navigation }: any) {
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerIconBtn}
+              onPress={() => navigation.navigate('HelpBot')}
+              accessibilityLabel="Flora AI Concierge"
+            >
+              <Ionicons name="chatbubbles-outline" size={22} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
               onPress={() => navigation.navigate('Cart')}
             >
               <Ionicons name="bag-outline" size={22} color="#fff" />
