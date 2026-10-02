@@ -44,8 +44,33 @@ export default function ShopScreen({ navigation }: any) {
 
       {/* Header */}
       <LinearGradient colors={[Colors.primary, Colors.primaryLight]} style={styles.header}>
-        <Text style={styles.headerTitle}>Plant Collection</Text>
-        <Text style={styles.headerSub}>{filteredPlants.length} plants available for 20-min delivery</Text>
+        <View style={styles.headerRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.headerTitle}>Plant Collection</Text>
+            <Text style={styles.headerSub}>{filteredPlants.length} plants available for 20-min delivery</Text>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => navigation.navigate('Wishlist')}
+              accessibilityLabel="Wishlist"
+            >
+              <Ionicons name="heart-outline" size={22} color="#fff" />
+              {wishlist.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{wishlist.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => navigation.navigate('HelpBot')}
+              accessibilityLabel="Flora AI"
+            >
+              <Ionicons name="chatbubbles-outline" size={22} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
       </LinearGradient>
 
       <View style={styles.body}>
@@ -138,8 +163,12 @@ export default function ShopScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
   header: { paddingTop: 50, paddingHorizontal: Spacing.md, paddingBottom: Spacing.md },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerTitle: { fontSize: 24, fontWeight: '800', color: '#fff' },
   headerSub: { fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 2 },
+  headerIconBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  badge: { position: 'absolute', top: -3, right: -3, backgroundColor: Colors.accent, borderRadius: 9, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
+  badgeText: { color: '#fff', fontSize: 10, fontWeight: '800' },
   body: { flex: 1, paddingHorizontal: Spacing.md, paddingTop: Spacing.sm },
   filterRow: { marginBottom: Spacing.sm },
   filterChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.full, backgroundColor: '#fff', borderWidth: 1.5, borderColor: Colors.border, marginRight: Spacing.sm },

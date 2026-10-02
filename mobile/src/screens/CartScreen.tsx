@@ -7,9 +7,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing, Radius } from '../constants/theme';
 import { useApp } from '../context/AppContext';
+import { ALL_PLANTS, getPlantById } from '../data/plants';
 
 export default function CartScreen({ navigation }: any) {
-  const { cart, updateQty, removeFromCart, wallet, checkout, hasCarePass, setHasCarePass } = useApp();
+  const {
+    cart, updateQty, removeFromCart, wallet, checkout,
+    hasCarePass, setHasCarePass, wishlist, addToCart, removeFromWishlist,
+  } = useApp();
   const [deliveryType, setDeliveryType] = useState('Express');
   const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -39,7 +43,10 @@ export default function CartScreen({ navigation }: any) {
 
   const handleCheckout = async () => {
     if (wallet < grandTotal) {
-      Alert.alert('Insufficient Balance', `Your wallet has ₹${Math.round(wallet)} but order total is ₹${grandTotal}. Please add funds in Profile.`);
+      Alert.alert(
+        'Insufficient Balance',
+        `Your wallet has ₹${Math.round(wallet)} but order total is ₹${grandTotal}. Please add funds in Profile.`
+      );
       return;
     }
     setOrdering(true);
@@ -73,12 +80,12 @@ export default function CartScreen({ navigation }: any) {
           </View>
           <TouchableOpacity
             style={styles.successBtn}
-            onPress={() => { setOrdered(false); navigation.navigate('Home'); }}
+            onPress={() => { setOrdered(false); navigation.navigate('HomeTab'); }}
           >
             <Text style={styles.successBtnText}>Back to Home →</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <Text style={styles.trackLink}>Track Order in Profile →</Text>
+          <TouchableOpacity onPress={() => { setOrdered(false); navigation.navigate('Orders'); }}>
+            <Text style={styles.trackLink}>Track Order & EV Status →</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>
@@ -87,22 +94,67 @@ export default function CartScreen({ navigation }: any) {
 
   if (cart.length === 0) {
     return (
-      <View style={styles.emptyContainer}>
-        <Text style={{ fontSize: 64 }}>🛒</Text>
-        <Text style={styles.emptyTitle}>Your cart is empty</Text>
-        <Text style={styles.emptySub}>Explore our premium live plants for 20-minute express delivery!</Text>
-        <TouchableOpacity style={styles.shopBtn} onPress={() => navigation.navigate('Shop')}>
-          <Text style={styles.shopBtnText}>Explore Plants →</Text>
-        </TouchableOpacity>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
+        <LinearGradient colors={[Colors.primary, Colors.primaryLight]} style={styles.header}>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerTitle}>My Cart</Text>
+            <TouchableOpacity
+              style={styles.headerWishlistBtn}
+              onPress={() => navigation.navigate('Wishlist')}
+            >
+              <Ionicons name="heart-outline" size={22} color="#fff" />
+              {wishlist.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{wishlist.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+
+        <View style={styles.emptyContainer}>
+          <Text style={{ fontSize: 64 }}>🛒</Text>
+          <Text style={styles.emptyTitle}>Your cart is empty</Text>
+          <Text style={styles.emptySub}>Explore our premium live plants for 20-minute express delivery!</Text>
+          <TouchableOpacity style={styles.shopBtn} onPress={() => navigation.navigate('ShopTab')}>
+            <Text style={styles.shopBtnText}>Explore Plants →</Text>
+          </TouchableOpacity>
+
+          {wishlist.length > 0 && (
+            <TouchableOpacity
+              style={styles.viewWishlistBanner}
+              onPress={() => navigation.navigate('Wishlist')}
+            >
+              <Ionicons name="heart" size={18} color="#e11d48" />
+              <Text style={styles.viewWishlistBannerText}>
+                You have {wishlist.length} {wishlist.length === 1 ? 'plant' : 'plants'} saved in your Wishlist →
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
       <LinearGradient colors={[Colors.primary, Colors.primaryLight]} style={styles.header}>
-        <Text style={styles.headerTitle}>My Cart ({cart.length} items)</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.headerTitle}>My Cart ({cart.length} items)</Text>
+          <TouchableOpacity
+            style={styles.headerWishlistBtn}
+            onPress={() => navigation.navigate('Wishlist')}
+          >
+            <Ionicons name="heart-outline" size={22} color="#fff" />
+            {wishlist.length > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{wishlist.length}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
 
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -136,6 +188,44 @@ export default function CartScreen({ navigation }: any) {
             </View>
           ))}
         </View>
+
+        {/* Saved from Wishlist section if any */}
+        {wishlist.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.wishlistSecHeader}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Ionicons name="heart" size={16} color="#e11d48" />
+                <Text style={styles.sectionTitle}>Saved in Wishlist ({wishlist.length})</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Wishlist')}>
+                <Text style={styles.seeAllWishlist}>View All →</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, paddingVertical: 4 }}>
+              {wishlist.map(id => {
+                const p = getPlantById(id) || ALL_PLANTS.find(x => x.id === id);
+                if (!p) return null;
+                return (
+                  <View key={id} style={styles.wishlistMiniCard}>
+                    <Image source={{ uri: p.image }} style={styles.wishlistMiniImg} />
+                    <Text style={styles.wishlistMiniName} numberOfLines={1}>{p.name}</Text>
+                    <Text style={styles.wishlistMiniPrice}>₹{p.price}</Text>
+                    <TouchableOpacity
+                      style={styles.wishlistAddBtn}
+                      onPress={() => {
+                        addToCart({ id: p.id, name: p.name, price: p.price, images: [p.image] });
+                        removeFromWishlist(p.id);
+                        Alert.alert('Added to Cart! 🌿', `${p.name} added to your cart.`);
+                      }}
+                    >
+                      <Text style={styles.wishlistAddBtnText}>+ Add</Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
 
         {/* Delivery Mode */}
         <View style={styles.section}>
@@ -283,7 +373,11 @@ export default function CartScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
   header: { paddingTop: 50, paddingHorizontal: Spacing.md, paddingBottom: Spacing.md },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerTitle: { fontSize: 20, fontWeight: '800', color: '#fff' },
+  headerWishlistBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  badge: { position: 'absolute', top: -3, right: -3, backgroundColor: Colors.accent, borderRadius: 9, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
+  badgeText: { color: '#fff', fontSize: 10, fontWeight: '800' },
   scroll: { flex: 1 },
   section: { backgroundColor: '#fff', margin: Spacing.md, marginBottom: 0, padding: Spacing.md, borderRadius: Radius.lg },
   sectionTitle: { fontSize: 14, fontWeight: '800', color: Colors.text, marginBottom: 12 },
@@ -299,6 +393,14 @@ const styles = StyleSheet.create({
   qtyValue: { width: 28, textAlign: 'center', fontSize: 14, fontWeight: '800' },
   itemRight: { alignItems: 'flex-end', gap: 6 },
   itemTotal: { fontSize: 14, fontWeight: '800', color: Colors.primary },
+  wishlistSecHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  seeAllWishlist: { fontSize: 12, fontWeight: '800', color: Colors.primary },
+  wishlistMiniCard: { width: 110, backgroundColor: '#f8fafc', padding: 8, borderRadius: Radius.md, borderWidth: 1, borderColor: Colors.border, alignItems: 'center' },
+  wishlistMiniImg: { width: 70, height: 70, borderRadius: Radius.sm, marginBottom: 6 },
+  wishlistMiniName: { fontSize: 11, fontWeight: '700', color: Colors.text, textAlign: 'center', width: '100%' },
+  wishlistMiniPrice: { fontSize: 11, fontWeight: '800', color: Colors.primary, marginVertical: 2 },
+  wishlistAddBtn: { backgroundColor: Colors.primary, paddingHorizontal: 12, paddingVertical: 4, borderRadius: Radius.full, marginTop: 2 },
+  wishlistAddBtnText: { color: '#fff', fontSize: 10, fontWeight: '800' },
   deliveryOption: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: Radius.md, borderWidth: 1.5, borderColor: Colors.border, marginBottom: 8 },
   deliveryOptionActive: { borderColor: Colors.primary, backgroundColor: Colors.surfaceAlt },
   deliveryLabel: { flex: 1, fontSize: 13, color: Colors.textSecondary },
@@ -335,6 +437,8 @@ const styles = StyleSheet.create({
   emptySub: { fontSize: 14, color: Colors.textMuted, textAlign: 'center', lineHeight: 20, marginBottom: 24 },
   shopBtn: { backgroundColor: Colors.primary, borderRadius: Radius.lg, paddingVertical: 14, paddingHorizontal: 28 },
   shopBtnText: { color: '#fff', fontWeight: '800', fontSize: 15 },
+  viewWishlistBanner: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#ffe4e6', paddingHorizontal: 16, paddingVertical: 12, borderRadius: Radius.full, marginTop: 24, borderWidth: 1, borderColor: '#fecdd3' },
+  viewWishlistBannerText: { fontSize: 13, fontWeight: '700', color: '#be123c' },
   successContainer: { flex: 1 },
   successGradient: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: Spacing.xl },
   successTitle: { fontSize: 28, fontWeight: '800', color: '#fff', marginBottom: 12 },

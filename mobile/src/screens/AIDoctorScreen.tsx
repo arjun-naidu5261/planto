@@ -127,13 +127,19 @@ export default function AIDoctorScreen() {
       </ScrollView>
 
       {/* Quick Symptom Pills */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickRow}>
-        {QUICK_SYMPTOMS.map((s, i) => (
-          <TouchableOpacity key={i} style={styles.quickPill} onPress={() => sendMessage(s.query)}>
-            <Text style={styles.quickPillText}>{s.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <View style={styles.quickWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.quickRowContainer}
+        >
+          {QUICK_SYMPTOMS.map((s, i) => (
+            <TouchableOpacity key={i} style={styles.quickPill} onPress={() => sendMessage(s.query)}>
+              <Text style={styles.quickPillText}>{s.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Input Row */}
       <View style={styles.inputRow}>
@@ -182,8 +188,9 @@ const styles = StyleSheet.create({
   typingRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
   typingBubble: { backgroundColor: '#fff', borderRadius: 16, borderBottomLeftRadius: 4, padding: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 6, elevation: 2 },
   typingDots: { fontSize: 16, color: Colors.textMuted, letterSpacing: 4 },
-  quickRow: { paddingLeft: Spacing.md, paddingVertical: Spacing.sm },
-  quickPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.full, backgroundColor: '#fff', borderWidth: 1.5, borderColor: Colors.border, marginRight: Spacing.sm },
+  quickWrapper: { height: 48, flexGrow: 0, flexShrink: 0, backgroundColor: Colors.bg, justifyContent: 'center' },
+  quickRowContainer: { paddingHorizontal: Spacing.md, alignItems: 'center', flexDirection: 'row' },
+  quickPill: { height: 34, paddingHorizontal: 16, borderRadius: 17, backgroundColor: '#fff', borderWidth: 1.5, borderColor: Colors.border, marginRight: Spacing.sm, justifyContent: 'center', alignItems: 'center' },
   quickPillText: { fontSize: 12, fontWeight: '700', color: Colors.primary },
   inputRow: { flexDirection: 'row', gap: 10, paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm, paddingBottom: 32, backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: Colors.border, alignItems: 'flex-end' },
   chatInput: { flex: 1, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.md, padding: 12, fontSize: 14, maxHeight: 100 },

@@ -22,7 +22,7 @@ export default function ProductDetailScreen({ route, navigation }: any) {
     addToCart(product, qty);
     Alert.alert('Added to Cart!', `${qty}x ${product.name} added to your cart.`, [
       { text: 'Continue Shopping', style: 'cancel' },
-      { text: 'Go to Cart →', onPress: () => navigation.navigate('Cart') },
+      { text: 'Go to Cart →', onPress: () => navigation.navigate('CartTab') },
     ]);
   };
 

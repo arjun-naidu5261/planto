@@ -90,6 +90,18 @@ export default function HomeScreen({ navigation }: any) {
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerIconBtn}
+              onPress={() => navigation.navigate('Wishlist')}
+              accessibilityLabel="My Wishlist"
+            >
+              <Ionicons name="heart-outline" size={22} color="#fff" />
+              {wishlist.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{wishlist.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
               onPress={() => navigation.navigate('HelpBot')}
               accessibilityLabel="Flora AI Concierge"
             >
@@ -97,7 +109,8 @@ export default function HomeScreen({ navigation }: any) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerIconBtn}
-              onPress={() => navigation.navigate('Cart')}
+              onPress={() => navigation.navigate('CartTab')}
+              accessibilityLabel="My Cart"
             >
               <Ionicons name="bag-outline" size={22} color="#fff" />
               {cartCount > 0 && (
@@ -108,7 +121,8 @@ export default function HomeScreen({ navigation }: any) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerIconBtn}
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('ProfileTab')}
+              accessibilityLabel="Profile"
             >
               <Ionicons name="person-outline" size={22} color="#fff" />
             </TouchableOpacity>
@@ -155,7 +169,7 @@ export default function HomeScreen({ navigation }: any) {
             <Text style={styles.heroBannerTag}>LIMITED TIME OFFER</Text>
             <Text style={styles.heroBannerTitle}>Get your first{'\n'}plant delivered{'\n'}in 20 minutes</Text>
             <Text style={styles.heroBannerSub}>Use code FIRSTPLANT for 20% off</Text>
-            <TouchableOpacity style={styles.heroBannerBtn} onPress={() => navigation.navigate('Shop')}>
+            <TouchableOpacity style={styles.heroBannerBtn} onPress={() => navigation.navigate('ShopTab')}>
               <Text style={styles.heroBannerBtnText}>Shop Now →</Text>
             </TouchableOpacity>
           </View>
@@ -188,7 +202,7 @@ export default function HomeScreen({ navigation }: any) {
         {/* Plant Grid */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Trending Plants</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Shop')}>
+          <TouchableOpacity onPress={() => navigation.navigate('ShopTab')}>
             <Text style={styles.seeAll}>See All →</Text>
           </TouchableOpacity>
         </View>
@@ -256,7 +270,7 @@ export default function HomeScreen({ navigation }: any) {
             <Text style={styles.carePassSub}>
               Unlimited 1-Click replacements • Free quarterly vermicompost • Live botanist calls
             </Text>
-            <TouchableOpacity style={styles.carePassBtn} onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity style={styles.carePassBtn} onPress={() => navigation.navigate('ProfileTab')}>
               <Text style={styles.carePassBtnText}>Activate for ₹99/mo</Text>
             </TouchableOpacity>
           </View>

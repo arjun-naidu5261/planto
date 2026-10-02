@@ -1,8 +1,8 @@
-// PlantMe API service — connects to the same backend at port 3001
-const BASE_URL = 'http://localhost:3001/api';
+// PlantMe API service — connects to the production backend
+const BASE_URL = 'https://plantme.in/api';
 
 async function fetchJSON(path: string, options?: RequestInit) {
-  const token = globalThis.__plantme_token;
+  const token = (globalThis as any).__plantme_token;
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',

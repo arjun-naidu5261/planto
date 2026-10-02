@@ -14,6 +14,8 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import AIDoctorScreen from './src/screens/AIDoctorScreen';
 import ProductDetailScreen from './src/screens/ProductDetailScreen';
 import HelpBotScreen from './src/screens/HelpBotScreen';
+import WishlistScreen from './src/screens/WishlistScreen';
+import OrdersScreen from './src/screens/OrdersScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -23,6 +25,8 @@ function HomeStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="Wishlist" component={WishlistScreen} />
+      <Stack.Screen name="Orders" component={OrdersScreen} />
       <Stack.Screen name="HelpBot" component={HelpBotScreen} />
     </Stack.Navigator>
   );
@@ -33,6 +37,20 @@ function ShopStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Shop" component={ShopScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="Wishlist" component={WishlistScreen} />
+      <Stack.Screen name="Orders" component={OrdersScreen} />
+      <Stack.Screen name="HelpBot" component={HelpBotScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function CartStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Cart" component={CartScreen} />
+      <Stack.Screen name="Wishlist" component={WishlistScreen} />
+      <Stack.Screen name="Orders" component={OrdersScreen} />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="HelpBot" component={HelpBotScreen} />
     </Stack.Navigator>
   );
@@ -42,6 +60,9 @@ function ProfileStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Wishlist" component={WishlistScreen} />
+      <Stack.Screen name="Orders" component={OrdersScreen} />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="HelpBot" component={HelpBotScreen} />
     </Stack.Navigator>
   );
@@ -92,7 +113,7 @@ function MainTabs() {
     >
       <Tab.Screen name="HomeTab" component={HomeStack} options={{ title: 'Home' }} />
       <Tab.Screen name="ShopTab" component={ShopStack} options={{ title: 'Shop' }} />
-      <Tab.Screen name="CartTab" component={CartScreen} options={{ title: 'Cart' }} />
+      <Tab.Screen name="CartTab" component={CartStack} options={{ title: 'Cart' }} />
       <Tab.Screen name="AIDoctor" component={AIDoctorScreen} options={{ title: 'Plant Dr.' }} />
       <Tab.Screen name="ProfileTab" component={ProfileStack} options={{ title: 'Profile' }} />
     </Tab.Navigator>
