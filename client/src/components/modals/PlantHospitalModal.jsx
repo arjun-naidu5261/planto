@@ -176,7 +176,7 @@ export default function PlantHospitalModal() {
                 <div><strong>Total Paid:</strong> ₹{bookedResult.price} ({bookedResult.paymentMethod.toUpperCase()})</div>
                 <div style={{ gridColumn: '1 / -1' }}><strong>Doorstep Address:</strong> {bookedResult.address}</div>
                 <div style={{ gridColumn: '1 / -1', color: '#0369a1', fontWeight: 700 }}>
-                  🚚 PlantMe shock-free EV cargo rider will bring hydration crates to collect your plants.
+                  PlantMe shock-free EV cargo rider will bring hydration crates to collect your plants.
                 </div>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default function PlantHospitalModal() {
                   gap: '8px'
                 }}
               >
-                <span>✈️</span> Vacation Nursery Boarding (₹199/wk)
+                Vacation Nursery Boarding (₹199/wk)
               </button>
 
               <button
@@ -242,7 +242,7 @@ export default function PlantHospitalModal() {
                   gap: '8px'
                 }}
               >
-                <span>🏥</span> Plant Hospital ICU Recovery (₹299/plant)
+                Plant Hospital ICU Recovery (₹299/plant)
               </button>
             </div>
 
@@ -258,7 +258,7 @@ export default function PlantHospitalModal() {
             }}>
               {activeTab === 'vacation' ? (
                 <div>
-                  <strong>🌱 What's Included in Vacation Boarding:</strong>
+                  <strong>What's Included in Vacation Boarding:</strong>
                   <div style={{ marginTop: '4px', lineHeight: 1.5 }}>
                     • Sensor-controlled automated watering & climate humidity misting<br/>
                     • Full-spectrum LED grow light cycles matching plant species<br/>
@@ -268,7 +268,7 @@ export default function PlantHospitalModal() {
                 </div>
               ) : (
                 <div>
-                  <strong>🩺 What's Included in Plant Hospital ICU:</strong>
+                  <strong>What's Included in Plant Hospital ICU:</strong>
                   <div style={{ marginTop: '4px', lineHeight: 1.5 }}>
                     • Clinical root rot debridement & anti-fungal botanical bath<br/>
                     • Repotting into sterile bio-char enriched aerated rooting substrate<br/>

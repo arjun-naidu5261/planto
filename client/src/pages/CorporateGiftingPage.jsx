@@ -26,7 +26,7 @@ export default function CorporateGiftingPage() {
   const [companyName, setCompanyName] = useState('TechCorp Bangalore');
   const [selectedPlant, setSelectedPlant] = useState('ZZ Fortune Plant in Matte White Ceramic');
   const [quantity, setQuantity] = useState(25);
-  const [customTagMessage, setCustomTagMessage] = useState('Welcome to the Green Team! 🌿');
+  const [customTagMessage, setCustomTagMessage] = useState('Welcome to the Green Team!');
   const [includeGiftBox, setIncludeGiftBox] = useState(true);
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
 
@@ -51,7 +51,6 @@ export default function CorporateGiftingPage() {
       price: 2499,
       subtitle: 'Up to 20 office desk & cabin plants',
       cadence: 'Fortnightly visits (2 visits/mo)',
-      icon: '🪴',
       features: [
         'Routine watering, pruning & leaf shine polish',
         '100% Free wilt replacement within 24 hours',
@@ -66,7 +65,6 @@ export default function CorporateGiftingPage() {
       popular: true,
       subtitle: 'Up to 60 plants + 4 reception trees',
       cadence: 'Weekly visits (4 visits/mo)',
-      icon: '🏢',
       features: [
         'Dedicated uniformed certified botanist',
         'Immediate 4-hour plant swap guarantee',
@@ -80,7 +78,6 @@ export default function CorporateGiftingPage() {
       price: 14999,
       subtitle: 'Multi-floor campus & living green walls',
       cadence: 'Twice-weekly visits (8 visits/mo)',
-      icon: '🌴',
       features: [
         'Unlimited office & executive boardroom plants',
         'Automated telemetry & sub-irrigation servicing',
@@ -178,7 +175,7 @@ export default function CorporateGiftingPage() {
             boxShadow: activeTab === 'retainers' ? '0 4px 14px rgba(20,83,45,0.2)' : 'none'
           }}
         >
-          <span>🏢</span> Monthly Office Plant Care Retainers
+          Monthly Office Plant Care Retainers
         </button>
 
         <button
@@ -198,7 +195,7 @@ export default function CorporateGiftingPage() {
             boxShadow: activeTab === 'gifting' ? '0 4px 14px rgba(20,83,45,0.2)' : 'none'
           }}
         >
-          <span>🎁</span> Branded Desk Plants & Welcome Swag
+          Branded Desk Plants & Welcome Swag
         </button>
       </div>
 
@@ -232,12 +229,11 @@ export default function CorporateGiftingPage() {
                 )}
                 
                 <div>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>{t.icon}</div>
                   <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1e293b', margin: '0 0 4px 0' }}>{t.name}</h3>
                   <div style={{ fontSize: '12.5px', color: '#64748b', marginBottom: '14px' }}>{t.subtitle}</div>
                   
                   <div style={{ background: '#f8fafc', padding: '8px 12px', borderRadius: '10px', fontSize: '12px', fontWeight: 700, color: '#166534', marginBottom: '16px' }}>
-                    🗓️ Cadence: {t.cadence}
+                    Cadence: {t.cadence}
                   </div>
 
                   <ul style={{ paddingLeft: '16px', margin: '0 0 16px 0', fontSize: '12.5px', color: '#475569', lineHeight: 1.6 }}>
@@ -253,7 +249,7 @@ export default function CorporateGiftingPage() {
                     <span style={{ fontSize: '12px', color: '#64748b' }}> / month</span>
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: 800, color: selectedRetainerTier === t.id ? 'var(--primary-green)' : '#94a3b8' }}>
-                    {selectedRetainerTier === t.id ? '✓ Selected' : 'Select Plan'}
+                    {selectedRetainerTier === t.id ? 'Selected' : 'Select Plan'}
                   </span>
                 </div>
               </div>
@@ -277,7 +273,6 @@ export default function CorporateGiftingPage() {
 
               {retainerQuoteSent ? (
                 <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: '18px', padding: '24px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '40px', marginBottom: '8px' }}>📋</div>
                   <h4 style={{ fontSize: '18px', fontWeight: 800, color: '#166534', margin: '0 0 6px 0' }}>
                     Retainer Proposal #{retainerQuoteId} Dispatched!
                   </h4>
@@ -516,7 +511,7 @@ export default function CorporateGiftingPage() {
               </div>
               
               <div style={{ display: 'inline-block', background: '#ffffff', padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 800, color: '#1b4332', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
-                🏷️ {companyName} • "{customTagMessage}"
+                {companyName} • "{customTagMessage}"
               </div>
             </div>
 

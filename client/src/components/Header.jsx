@@ -230,7 +230,7 @@ export default function Header() {
                       onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
                       onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <span>🏡</span> Balcony Makeover (₹499)
+                      Balcony Makeover (₹499)
                     </button>
 
                     <button
@@ -239,7 +239,7 @@ export default function Header() {
                       onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
                       onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <span>🎁</span> Mystery Box Club (₹349/mo)
+                      Mystery Box Club (₹349/mo)
                     </button>
 
                     <button
@@ -248,7 +248,7 @@ export default function Header() {
                       onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
                       onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <span>✈️</span> Vacation Boarding & ICU
+                      Vacation Boarding & ICU
                     </button>
                   </div>
                 </div>

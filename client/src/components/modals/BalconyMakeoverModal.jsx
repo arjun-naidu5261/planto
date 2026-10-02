@@ -27,7 +27,6 @@ export default function BalconyMakeoverModal() {
       badge: 'CLINICAL CARE',
       price: 499,
       duration: '45 Mins',
-      icon: '🩺',
       features: [
         '10-plant thorough root & pest inspection',
         'Organic cold-pressed neem & antifungal spray',
@@ -42,7 +41,6 @@ export default function BalconyMakeoverModal() {
       popular: true,
       price: 999,
       duration: '2 Hours',
-      icon: '🌿',
       features: [
         'Full balcony layout & sunlight optimization',
         'Repotting of up to 6 plants into fresh potting mix',
@@ -56,7 +54,6 @@ export default function BalconyMakeoverModal() {
       badge: 'COMPREHENSIVE',
       price: 2499,
       duration: '4 Hours',
-      icon: '🌴',
       features: [
         'Complete micro-drip automated irrigation setup',
         '20kg premium vermicompost enriched soil treatment',
@@ -264,7 +261,6 @@ export default function BalconyMakeoverModal() {
                       </span>
                     )}
                     <div>
-                      <div style={{ fontSize: '24px', marginBottom: '4px' }}>{t.icon}</div>
                       <div style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>{t.title}</div>
                       <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>Duration: {t.duration}</div>
                       
@@ -278,7 +274,7 @@ export default function BalconyMakeoverModal() {
                     <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--primary-green)' }}>₹{t.price}</span>
                       <span style={{ fontSize: '11px', fontWeight: 700, color: selectedTier === t.id ? 'var(--primary-green)' : '#94a3b8' }}>
-                        {selectedTier === t.id ? '● Selected' : 'Choose'}
+                        {selectedTier === t.id ? 'Selected' : 'Choose'}
                       </span>
                     </div>
                   </div>

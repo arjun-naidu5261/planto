@@ -272,31 +272,31 @@ export default function HomePage() {
           {/* Quick CX Action Shortcuts */}
           <div className="quick-action-shortcuts" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <Link to="/ai" className="cx-shortcut-btn">
-              🩺 Free AI Plant Doctor
+              AI Plant Doctor
             </Link>
             <button 
               onClick={() => setShowBalconyModal(true)} 
               className="cx-shortcut-btn"
               style={{ border: 'none', cursor: 'pointer' }}
             >
-              🏡 Balcony Makeover (₹499)
+              Balcony Makeover (₹499)
             </button>
             <button 
               onClick={() => setShowClubModal(true)} 
               className="cx-shortcut-btn"
               style={{ border: 'none', cursor: 'pointer' }}
             >
-              🎁 Mystery Box Club (₹349/mo)
+              Mystery Box Club (₹349/mo)
             </button>
             <button 
               onClick={() => setShowHospitalModal(true)} 
               className="cx-shortcut-btn"
               style={{ border: 'none', cursor: 'pointer' }}
             >
-              ✈️ Vacation Boarding & ICU
+              Vacation Boarding & ICU
             </button>
             <Link to="/corporate" className="cx-shortcut-btn">
-              🏢 Office Retainers
+              Office Retainers
             </Link>
           </div>
 

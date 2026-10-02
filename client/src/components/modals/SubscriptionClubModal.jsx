@@ -27,11 +27,11 @@ export default function SubscriptionClubModal() {
   if (cadence === 'quarterly') {
     totalMonths = 3;
     discountRate = 0.10;
-    bonusGift = '🎁 FREE Vintage Brass Plant Misting Spray included in Box 1!';
+    bonusGift = 'FREE Vintage Brass Plant Misting Spray included in Box 1!';
   } else if (cadence === 'half_yearly') {
     totalMonths = 6;
     discountRate = 0.20;
-    bonusGift = '🎁 FREE Digital Soil Moisture & Sunlight Sensor included in Box 1!';
+    bonusGift = 'FREE Digital Soil Moisture & Sunlight Sensor included in Box 1!';
   }
 
   const rawTotal = baseMonthlyPrice * totalMonths;
@@ -150,8 +150,8 @@ export default function SubscriptionClubModal() {
         {subResult ? (
           /* Active Subscription State */
           <div style={{ padding: '32px 28px', textAlign: 'center' }}>
-            <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#dcfce7', color: '#15803d', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', margin: '0 auto 16px' }}>
-              🎁
+            <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#dcfce7', color: '#15803d', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', fontWeight: 800, margin: '0 auto 16px' }}>
+              ✓
             </div>
             <h3 style={{ fontSize: '22px', fontFamily: 'var(--font-serif)', color: '#14532d', marginBottom: '8px' }}>
               Welcome to the Mystery Club!
@@ -165,9 +165,9 @@ export default function SubscriptionClubModal() {
                 {subResult.planName} ({subResult.cadence.toUpperCase()})
               </div>
               <div style={{ fontSize: '12.5px', color: '#475569', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div>📦 <strong>Next Mystery Box Dispatch:</strong> {subResult.nextMysteryBoxDispatch} via EV Cargo</div>
-                <div>📍 <strong>Shipping Address:</strong> {subResult.deliveryAddress}</div>
-                <div>⭐ <strong>VIP Perks Active:</strong> Storewide 10% discount, free botanist video credits, replacement guarantee</div>
+                <div><strong>Next Mystery Box Dispatch:</strong> {subResult.nextMysteryBoxDispatch} via EV Cargo</div>
+                <div><strong>Shipping Address:</strong> {subResult.deliveryAddress}</div>
+                <div><strong>VIP Perks Active:</strong> Storewide 10% discount, free botanist video credits, replacement guarantee</div>
               </div>
             </div>
 
@@ -210,8 +210,7 @@ export default function SubscriptionClubModal() {
                     position: 'relative'
                   }}
                 >
-                  <div style={{ fontSize: '28px', marginBottom: '4px' }}>🌱</div>
-                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b' }}>The Green Explorer Club</div>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>The Green Explorer Club</div>
                   <div style={{ fontSize: '11.5px', color: '#64748b', marginBottom: '10px' }}>Perfect for apartment greenery & beginner botanists</div>
                   
                   <ul style={{ paddingLeft: '14px', margin: '0 0 12px 0', fontSize: '12px', color: '#334155', lineHeight: 1.4 }}>
@@ -241,8 +240,7 @@ export default function SubscriptionClubModal() {
                   <span style={{ position: 'absolute', top: '-8px', right: '10px', background: '#b45309', color: '#ffffff', fontSize: '9px', fontWeight: 800, padding: '2px 8px', borderRadius: '8px' }}>
                     COLLECTOR'S CHOICE
                   </span>
-                  <div style={{ fontSize: '28px', marginBottom: '4px' }}>🌸</div>
-                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b' }}>Rare & Collector's Bloom Club</div>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>Rare & Collector's Bloom Club</div>
                   <div style={{ fontSize: '11.5px', color: '#64748b', marginBottom: '10px' }}>Rare variegated cultivars, bonsai & exotic blooms</div>
 
                   <ul style={{ paddingLeft: '14px', margin: '0 0 12px 0', fontSize: '12px', color: '#334155', lineHeight: 1.4 }}>

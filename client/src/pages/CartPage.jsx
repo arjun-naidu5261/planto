@@ -444,7 +444,7 @@ export default function CartPage() {
                 />
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '13.5px', color: '#582f0e', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>🎁</span> Send as a Gift to Someone Special (Hide Invoice)
+                    Send as a Gift to Someone Special (Hide Invoice)
                   </div>
                   <div style={{ fontSize: '11px', color: '#7f5539' }}>Festive Packaging • Gold-Foil Card / Wooden Tag • 15s Voice Note</div>
                 </div>
@@ -464,9 +464,9 @@ export default function CartPage() {
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
                     {[
-                      { id: 'eco', name: 'Festive Jute Wrap', price: 49, icon: '🌿', desc: 'Organic jute + raffia' },
-                      { id: 'royal', name: 'Royal Satin & Gold Card', price: 99, icon: '🎀', desc: 'Satin bow + foil card', popular: true },
-                      { id: 'deluxe', name: 'Deluxe Pine Wood Box', price: 199, icon: '🪵', desc: 'Handcrafted hamper' }
+                      { id: 'eco', name: 'Festive Jute Wrap', price: 49, desc: 'Organic jute + raffia' },
+                      { id: 'royal', name: 'Royal Satin & Gold Card', price: 99, desc: 'Satin bow + foil card', popular: true },
+                      { id: 'deluxe', name: 'Deluxe Pine Wood Box', price: 199, desc: 'Handcrafted hamper' }
                     ].map(pkg => (
                       <div
                         key={pkg.id}
@@ -486,8 +486,7 @@ export default function CartPage() {
                             BEST CHOICE
                           </span>
                         )}
-                        <div style={{ fontSize: '18px' }}>{pkg.icon}</div>
-                        <div style={{ fontSize: '12px', fontWeight: 800, color: '#432818', marginTop: '2px' }}>{pkg.name}</div>
+                        <div style={{ fontSize: '12px', fontWeight: 800, color: '#432818', marginTop: '4px' }}>{pkg.name}</div>
                         <div style={{ fontSize: '10px', color: '#7f5539' }}>{pkg.desc}</div>
                         <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#b45309', marginTop: '4px' }}>+₹{pkg.price}</div>
                       </div>
@@ -502,9 +501,9 @@ export default function CartPage() {
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
                     {[
-                      { id: 'standard', title: 'Standard Express', time: '20-30 Mins', fee: 0, icon: '⚡' },
-                      { id: 'morning', title: 'Morning Surprise', time: '7:00 - 9:00 AM', fee: 49, icon: '🌅' },
-                      { id: 'midnight', title: 'Midnight Birthday', time: '11:45 PM - 12:15 AM', fee: 99, icon: '🌙' }
+                      { id: 'standard', title: 'Standard Express', time: '20-30 Mins', fee: 0 },
+                      { id: 'morning', title: 'Morning Surprise', time: '7:00 - 9:00 AM', fee: 49 },
+                      { id: 'midnight', title: 'Midnight Birthday', time: '11:45 PM - 12:15 AM', fee: 99 }
                     ].map(slot => (
                       <div
                         key={slot.id}
@@ -518,7 +517,6 @@ export default function CartPage() {
                           textAlign: 'center'
                         }}
                       >
-                        <div style={{ fontSize: '16px' }}>{slot.icon}</div>
                         <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#432818' }}>{slot.title}</div>
                         <div style={{ fontSize: '10px', color: '#7f5539' }}>{slot.time}</div>
                         <div style={{ fontSize: '11px', fontWeight: 800, color: slot.fee > 0 ? '#b45309' : '#166534', marginTop: '2px' }}>
@@ -558,7 +556,7 @@ export default function CartPage() {
                     type="text" 
                     value={engravedTag} 
                     onChange={(e) => setEngravedTag(e.target.value)} 
-                    placeholder="e.g. Happy Birthday Sneha! 🌿 From Arjun" 
+                    placeholder="e.g. Happy Birthday Sneha! From Arjun" 
                     maxLength={60}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ccd5ae', fontSize: '12.5px' }}
                   />
@@ -591,18 +589,17 @@ export default function CartPage() {
                         gap: '6px'
                       }}
                     >
-                      <span>{isRecording ? 'Recording...' : hasRecordedAudio ? '✓ Audio Attached' : '🎙️ Record 15s Greeting'}</span>
+                      <span>{isRecording ? 'Recording...' : hasRecordedAudio ? '✓ Audio Attached' : 'Record 15s Greeting'}</span>
                     </button>
                     {hasRecordedAudio && (
                       <span style={{ fontSize: '11px', color: '#166534', fontWeight: 700 }}>
-                        ▶ Ready! Plays when recipient scans QR
+                        Ready! Plays when recipient scans QR
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div style={{ background: '#e9edc9', padding: '10px', borderRadius: '10px', fontSize: '11.5px', color: '#333d29', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🌱</span>
+                <div style={{ background: '#e9edc9', padding: '10px', borderRadius: '10px', fontSize: '11.5px', color: '#333d29' }}>
                   <span><strong>Green Impact:</strong> +1 native sapling planted in recipient's name via SankalpTaru foundation.</span>
                 </div>
               </div>
@@ -619,7 +616,6 @@ export default function CartPage() {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '16px' }}>⚡</span>
                 <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   1-Click Plant Parent Essentials
                 </span>
@@ -641,15 +637,12 @@ export default function CartPage() {
                 border: addCareKit ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
                 transition: 'all 0.2s'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '24px' }}>🌿</span>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
-                      Doctor-Recommended Plant Care Kit
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>
-                      Cold-Pressed Neem Oil Spray (100ml) + 10x Bio-Fertilizer Spikes + Glazed Saucer
-                    </div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
+                    Doctor-Recommended Plant Care Kit
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>
+                    Cold-Pressed Neem Oil Spray (100ml) + 10x Bio-Fertilizer Spikes + Glazed Saucer
                   </div>
                 </div>
                 <button
@@ -682,15 +675,12 @@ export default function CartPage() {
                 border: addSelfWatering ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
                 transition: 'all 0.2s'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '24px' }}>💧</span>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
-                      Self-Watering Sub-Irrigation Reservoir Insert
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>
-                      Prevents root rot & keeps roots hydrated for up to 14 days without manual watering
-                    </div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
+                    Self-Watering Sub-Irrigation Reservoir Insert
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>
+                    Prevents root rot & keeps roots hydrated for up to 14 days without manual watering
                   </div>
                 </div>
                 <button
@@ -734,7 +724,7 @@ export default function CartPage() {
                 />
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '13.5px', color: '#14532d', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>🛡️</span> {hasCarePass ? 'PlantMe Care Pass (Active VIP Member)' : 'Add PlantMe Care Pass (+ ₹99/mo)'}
+                    {hasCarePass ? 'PlantMe Care Pass (Active VIP Member)' : 'Add PlantMe Care Pass (+ ₹99/mo)'}
                   </div>
                   <div style={{ fontSize: '11px', color: '#166534' }}>
                     Unlimited 1-Click replacements • Free quarterly vermicompost • 2 free live botanist calls/mo
