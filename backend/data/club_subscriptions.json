@@ -1,0 +1,23 @@
+[
+  {
+    "subscriptionId": "CLUB-41021",
+    "tier": "green_explorer",
+    "planName": "The Green Explorer Club",
+    "cadence": "quarterly",
+    "price": 942,
+    "customerName": "Explorer Parent",
+    "customerEmail": "customer@plantme.in",
+    "customerPhone": "+91 98450 11223",
+    "deliveryAddress": "HSR Layout, Bengaluru",
+    "status": "ACTIVE",
+    "nextMysteryBoxDispatch": "1st of Next Month",
+    "validUntil": "2027-01-02T13:34:27.660Z",
+    "perks": [
+      "Curated exotic nursery plant + designer pot every month",
+      "Official Collector Passport Stamp & Care Guide",
+      "Free 1-on-1 Botanist Consultation credit",
+      "Zero shipping fees on all express orders"
+    ],
+    "createdAt": "2026-10-02T13:34:27.660Z"
+  }
+]

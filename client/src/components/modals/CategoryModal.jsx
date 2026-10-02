@@ -30,6 +30,14 @@ const categoryData = {
   "Gardening Essentials": {
     img: "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?auto=format&fit=crop&w=600&q=80",
     desc: "Empower your green thumb with the right equipment. Discover ergonomic pruning shears, premium watering cans, hand trowels, moisture meters, and organic plant protection products."
+  },
+  "Fresh Flower Bouquets": {
+    img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80",
+    desc: "Handcrafted fresh-cut floral bouquets including Dutch red roses, exotic Asiatic lilies, carnations, and orchids. Shipped in 20-30 minutes with damp-stem hydration wraps & floral food."
+  },
+  "Bouquets & Flowers": {
+    img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80",
+    desc: "Handcrafted fresh-cut floral bouquets including Dutch red roses, exotic Asiatic lilies, carnations, and orchids. Shipped in 20-30 minutes with damp-stem hydration wraps & floral food."
   }
 };
 

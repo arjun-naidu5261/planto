@@ -60,7 +60,7 @@ export default function CommunityPage() {
     <div id="view-community" className="page-view active" style={{ display: 'block' }}>
       <div className="section-title-row" style={{ marginBottom: '24px', alignItems: 'flex-start' }}>
         <div>
-          <h2 className="section-title">PlantMe Gardening Community Hub</h2>
+          <h2 className="section-title">PlantMe Gardening Community</h2>
           <p className="section-subtitle">Share gardening diaries, swap plant cuttings with neighbors, or consult expert guidelines.</p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>

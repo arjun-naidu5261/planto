@@ -24,7 +24,7 @@ export default function PlantBirthCertificateModal() {
   const botanicalName = certificateData.botanicalName || 'Ficus microcarpa';
   const parentName = certificateData.parentName || 'Arjun Patel';
   const adoptionDate = certificateData.adoptionDate || 'Sep 11, 2026';
-  const originHub = certificateData.nurseryOrigin || 'PlantMe Botanical Hub (Indiranagar)';
+  const originNursery = certificateData.nurseryOrigin || 'PlantMe Certified Partner Nursery (Bengaluru)';
   const oxygenRating = certificateData.oxygenRating || '+1.4 Liters Pure O₂ / Day';
   const soilBlend = certificateData.soilBlend || 'Organic Cocopeat, Perlite & Vermicompost';
   const planterType = certificateData.planterType || 'Handcrafted Eco Ceramic Pot';
@@ -403,8 +403,8 @@ export default function PlantBirthCertificateModal() {
                 fontSize: '11.5px'
               }}>
                 <div>
-                  <div style={{ color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', fontSize: '10px' }}>BOTANICAL HUB</div>
-                  <div style={{ fontWeight: 800, color: '#1b4332', marginTop: '2px' }}>{originHub}</div>
+                  <div style={{ color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', fontSize: '10px' }}>NURSERY ORIGIN</div>
+                  <div style={{ fontWeight: 800, color: '#1b4332', marginTop: '2px' }}>{originNursery}</div>
                 </div>
                 <div>
                   <div style={{ color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', fontSize: '10px' }}>VITALITY SCORE</div>

@@ -972,15 +972,6 @@ export default function App() {
                     <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13.5px' }} />
                   </div>
 
-                  <div style={{ display: 'flex', gap: '10px', background: '#f8faf9', padding: '10px 12px', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '11px' }}>
-                    <button type="button" onClick={() => { setLoginEmail('vendor@planto.in'); setLoginPassword('planto123'); }} style={{ flex: 1, background: '#e8f5e9', color: '#1b4332', border: 'none', padding: '6px', borderRadius: '6px', fontWeight: 800, cursor: 'pointer' }}>
-                      Demo Nursery Owner
-                    </button>
-                    <button type="button" onClick={() => { setLoginEmail('delivery@planto.in'); setLoginPassword('delivery123'); }} style={{ flex: 1, background: '#e0f2fe', color: '#0369a1', border: 'none', padding: '6px', borderRadius: '6px', fontWeight: 800, cursor: 'pointer' }}>
-                      Demo Delivery Rider
-                    </button>
-                  </div>
-
                   <button type="submit" style={{ justifyContent: 'center', height: '46px', fontSize: '14.5px', fontWeight: 800, background: '#1b4332', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', marginTop: '6px', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
                     Login to Partner Dashboard →
                   </button>

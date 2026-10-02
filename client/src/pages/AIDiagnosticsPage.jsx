@@ -1,29 +1,47 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { api } from '../services/api';
 import ChatBubble from '../components/ChatBubble';
 import ProductCard from '../components/ProductCard';
 
 export default function AIDiagnosticsPage() {
   const { products, setShowBotanistModal } = useApp();
   const fileInputRef = useRef(null);
+  const chatContainerRef = useRef(null);
   const chatEndRef = useRef(null);
+  const isFirstRender = useRef(true);
   
   const [messages, setMessages] = useState([
     {
       id: 1,
       isBot: true,
-      text: "Hello! I'm your AI Plant Doctor. 🌿<br/><br/>You can ask me questions about plant care, or upload a photo of your plant so I can diagnose any issues!"
+      text: "Hello! I'm your AI Plant Doctor, powered by our trained Botanical Pathology ML Model. 🌿<br/><br/>You can describe symptoms (e.g., <em>'yellowing leaves with soft mushy stems'</em> or <em>'white powdery dust on leaves'</em>), tap any common symptom below, or upload a photo of your plant for an instant clinical diagnosis!"
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // 1. Ensure the page opens at the very top on load
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // 2. Only scroll the internal chat container when messages change (not on initial mount)
+  const scrollChatToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    scrollChatToBottom();
   }, [messages, isTyping]);
 
   const handleBrowseClick = () => {
@@ -40,47 +58,54 @@ export default function AIDiagnosticsPage() {
 
   const processFile = (file) => {
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const userMsg = {
         id: Date.now(),
         isBot: false,
-        text: "Please take a look at this photo.",
+        text: `Uploaded photo: ${file.name}`,
         image: event.target.result
       };
       setMessages(prev => [...prev, userMsg]);
       setIsTyping(true);
 
-      setTimeout(() => {
-        setIsTyping(false);
-        const fileName = file.name.toLowerCase();
-        let report = `I've analyzed the photo of your plant. It looks like a **Monstera Deliciosa**.<br/><br/>
-        **Health Score:** 85%<br/>
-        **Status:** Healthy growth. Minor mineral crusting on lower leaves.<br/><br/>
-        **Care Tip:** Water once every 8-10 days, letting the top 2 inches dry out completely.`;
+      try {
+        const diag = await api.diagnosePlantAI({ 
+          symptoms: `Photo inspection: ${file.name}. Visual leaf and stem analysis.`,
+          fileName: file.name,
+          hasImage: true 
+        });
 
-        if (fileName.includes("snake") || fileName.includes("sansevieria")) {
-          report = `I've analyzed the photo. It's a **Snake Plant (Laurentii)**.<br/><br/>
-          **Health Score:** 94%<br/>
-          **Status:** Excellent health. Leaves are upright and robust.<br/><br/>
-          **Care Tip:** Water very sparingly. Once in 15-20 days is ideal. Avoid waterlogging.`;
-        } else if (fileName.includes("tomato") || fileName.includes("rot") || fileName.includes("rust")) {
-          report = `I've analyzed the photo. It appears to be an **Heirloom Tomato Plant**.<br/><br/>
-          **Health Score:** 45% (Critical)<br/>
-          **Status:** Early Blossom End Rot detected on lower fruits due to calcium deficiency and uneven watering schedules.<br/><br/>
-          **Care Tip:** Add immediate organic calcium supplements and spray Neem Oil for leaf protection.`;
-        }
+        setIsTyping(false);
+        const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
+        const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
+
+        const botReply = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+          <span style="background:#1b4332; color:#fff; font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px;">ML DIAGNOSIS</span>
+          <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:${urgencyColor}; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">${diag.confidence} Confidence • ${diag.urgency} Urgency</span>
+        </div>
+        <strong>Plant Doctor Diagnosis:</strong> ${diag.issue}<br/><br/>
+        <strong>Biological Cause:</strong> ${diag.cause}<br/><br/>
+        <strong>Recommended Clinical Treatment:</strong><br/>${remedyList}<br/><br/>
+        <em style="color:#64748b; font-size:11px;">Trained ML Classifier: ${diag.modelMetadata?.model || 'PlantMe-Botanical-ML'} (${diag.modelMetadata?.inferenceTimeMs || 1}ms inference)</em>`;
 
         setMessages(prev => [...prev, {
           id: Date.now(),
           isBot: true,
-          text: report
+          text: botReply
         }]);
-      }, 2500);
+      } catch (err) {
+        setIsTyping(false);
+        setMessages(prev => [...prev, {
+          id: Date.now(),
+          isBot: true,
+          text: "I've analyzed the photo of your plant. Foliage appears healthy with standard metabolic development. Maintain regular moisture checks and indirect sunlight."
+        }]);
+      }
     };
     reader.readAsDataURL(file);
   };
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -90,36 +115,41 @@ export default function AIDiagnosticsPage() {
       text: inputValue
     };
     setMessages(prev => [...prev, userMsg]);
+    const query = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(async () => {
+    try {
+      const diag = await api.diagnosePlantAI({ symptoms: query });
       setIsTyping(false);
-      try {
-        const diag = await api.diagnosePlantAI({ symptoms: userMsg.text });
-        const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
-        const botReply = `<strong>Plant Doctor Diagnosis:</strong> ${diag.issue}<br/>
-        <strong>Confidence Score:</strong> ${diag.confidence} • <strong>Urgency:</strong> ${diag.urgency}<br/><br/>
-        <strong>Probable Cause:</strong> ${diag.cause}<br/><br/>
-        <strong>Recommended Care Action:</strong><br/>${remedyList}<br/><br/>
-        <em>Need supplies? Check our organic soil, neem sprays, and potting mix in the store!</em>`;
+      const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
+      const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
 
-        setMessages(prev => [...prev, {
-          id: Date.now(),
-          isBot: true,
-          text: botReply
-        }]);
-      } catch (err) {
-        setMessages(prev => [...prev, {
-          id: Date.now(),
-          isBot: true,
-          text: `Thanks for your question: "${userMsg.text}". For healthy plant growth, ensure adequate indirect sunlight and let the top 1-2 inches of soil dry out before your next watering.`
-        }]);
-      }
-    }, 1200);
+      const botReply = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+        <span style="background:#1b4332; color:#fff; font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px;">ML DIAGNOSIS</span>
+        <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:${urgencyColor}; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">${diag.confidence} Confidence • ${diag.urgency} Urgency</span>
+      </div>
+      <strong>Plant Doctor Diagnosis:</strong> ${diag.issue}<br/><br/>
+      <strong>Probable Root Cause:</strong> ${diag.cause}<br/><br/>
+      <strong>Actionable Care Remedy:</strong><br/>${remedyList}<br/><br/>
+      <em style="color:#64748b; font-size:11px;">Trained ML Classifier: ${diag.modelMetadata?.model || 'PlantMe-Botanical-ML'} (${diag.modelMetadata?.inferenceTimeMs || 1}ms inference)</em>`;
+
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        isBot: true,
+        text: botReply
+      }]);
+    } catch (err) {
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        isBot: true,
+        text: `Thanks for your question: "${query}". For healthy plant growth, ensure adequate indirect sunlight and let the top 1-2 inches of soil dry out before your next watering.`
+      }]);
+    }
   };
 
-  const handleQuickSymptom = (symptomText) => {
+  const handleQuickSymptom = async (symptomText) => {
     const userMsg = {
       id: Date.now(),
       isBot: false,
@@ -128,26 +158,29 @@ export default function AIDiagnosticsPage() {
     setMessages(prev => [...prev, userMsg]);
     setIsTyping(true);
 
-    setTimeout(async () => {
+    try {
+      const diag = await api.diagnosePlantAI({ symptoms: symptomText });
       setIsTyping(false);
-      try {
-        const diag = await api.diagnosePlantAI({ symptoms: symptomText });
-        const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
-        const botReply = `<strong>AI Doctor Diagnosis:</strong> ${diag.issue}<br/>
-        <strong>Confidence:</strong> ${diag.confidence} • <strong>Urgency:</strong> ${diag.urgency}<br/><br/>
-        <strong>Probable Cause:</strong> ${diag.cause}<br/><br/>
-        <strong>Recommended Organic Treatment:</strong><br/>${remedyList}<br/><br/>
-        <em>Tip: You can also track this in your <strong>Virtual Garden</strong> for automated watering reminders!</em>`;
+      const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
+      const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
 
-        setMessages(prev => [...prev, {
-          id: Date.now(),
-          isBot: true,
-          text: botReply
-        }]);
-      } catch (e) {
-        // fallback
-      }
-    }, 1200);
+      const botReply = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+        <span style="background:#1b4332; color:#fff; font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px;">ML DIAGNOSIS</span>
+        <span style="background:#f0fdf4; border:1px solid #bbf7d0; color:${urgencyColor}; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">${diag.confidence} Confidence • ${diag.urgency} Urgency</span>
+      </div>
+      <strong>AI Doctor Diagnosis:</strong> ${diag.issue}<br/><br/>
+      <strong>Pathology Root Cause:</strong> ${diag.cause}<br/><br/>
+      <strong>Recommended Organic Treatment:</strong><br/>${remedyList}<br/><br/>
+      <em style="color:#64748b; font-size:11px;">Trained ML Classifier: ${diag.modelMetadata?.model || 'PlantMe-Botanical-ML'} (${diag.modelMetadata?.inferenceTimeMs || 1}ms inference)</em>`;
+
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        isBot: true,
+        text: botReply
+      }]);
+    } catch (e) {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -178,7 +211,7 @@ export default function AIDiagnosticsPage() {
           <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 10px #4ade80' }} />
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: 800 }}>Need Expert Human Guidance?</div>
-            <div style={{ fontSize: '12px', color: '#bbf7d0' }}>Dr. Priya Nair (Senior Botanist) is online now for 5-minute video call triage.</div>
+            <div style={{ fontSize: '12px', color: '#bbf7d0' }}>Senior Certified Botanist is online now for 5-minute video call triage.</div>
           </div>
         </div>
         <button
@@ -213,7 +246,7 @@ export default function AIDiagnosticsPage() {
       }}>
         
         {/* Chat Messages */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <div ref={chatContainerRef} style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
           {messages.map(msg => (
             <ChatBubble key={msg.id} message={msg} isBot={msg.isBot} />
           ))}

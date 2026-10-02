@@ -166,7 +166,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const checkout = async (deliveryType: string, total: number) => {
     try {
-      const res = await api.checkout(deliveryType, total, 'PlantMe Express Hub');
+      const res = await api.checkout(deliveryType, total, 'PlantMe Certified Nursery');
       if (res.success) {
         clearCart();
         setOrders(prev => [res.order, ...prev]);

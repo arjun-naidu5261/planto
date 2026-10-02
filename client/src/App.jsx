@@ -21,6 +21,9 @@ import PlantBirthCertificateModal from './components/modals/PlantBirthCertificat
 import FreeSaplingGiftModal from './components/modals/FreeSaplingGiftModal';
 import InstantReplacementModal from './components/modals/InstantReplacementModal';
 import BotanistConsultationModal from './components/modals/BotanistConsultationModal';
+import BalconyMakeoverModal from './components/modals/BalconyMakeoverModal';
+import SubscriptionClubModal from './components/modals/SubscriptionClubModal';
+import PlantHospitalModal from './components/modals/PlantHospitalModal';
 import CustomerHelpBot from './components/CustomerHelpBot';
 
 // Pages
@@ -92,6 +95,9 @@ export default function App() {
         <FreeSaplingGiftModal />
         <InstantReplacementModal />
         <BotanistConsultationModal />
+        <BalconyMakeoverModal />
+        <SubscriptionClubModal />
+        <PlantHospitalModal />
 
         {/* 24/7 AI Botanical Concierge Chatbot */}
         <CustomerHelpBot />

@@ -1,0 +1,27 @@
+[
+  {
+    "bookingId": "BM-38731",
+    "tier": "balcony",
+    "tierTitle": "Balcony Garden Makeover",
+    "price": 999,
+    "customerName": "Test Parent",
+    "customerEmail": "customer@plantme.in",
+    "customerPhone": "+91 98450 11223",
+    "address": "Indiranagar, Bengaluru",
+    "society": "General Residential",
+    "preferredDate": "Tomorrow",
+    "preferredSlot": "10:00 AM - 12:00 PM",
+    "plantCount": 10,
+    "specialNotes": "",
+    "paymentMethod": "cod",
+    "status": "Confirmed",
+    "assignedBotanist": {
+      "name": "Dr. Anita Deshmukh",
+      "title": "Senior Urban Landscape Botanist (Gold Medalist)",
+      "phone": "+91 98450 88214",
+      "rating": 4.95,
+      "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
+    },
+    "createdAt": "2026-10-02T13:34:08.238Z"
+  }
+]

@@ -12,7 +12,7 @@
     "status": "Confirmed",
     "deliveryType": "PlantMe Express Delivery",
     "total": 10,
-    "vendorName": "PlantMe Express Fulfillment Hub",
+    "vendorName": "PlantMe Certified Local Nursery",
     "address": "Flat 402, Green Heights, Indiranagar",
     "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00",
     "recipientName": "Arjun Patel",
@@ -27,7 +27,7 @@
       "vehicle": "PlantMe Eco EV-Cargo 12 • KA-01-EV-4421",
       "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
     },
-    "hub": "PlantMe Central Darkstore Hub",
+    "nurseryOrigin": "PlantMe Certified Local Nursery",
     "etaMinutes": 18,
     "createdAt": "2026-09-11T19:35:06.017Z"
   },
@@ -45,6 +45,6 @@
     "status": "Out for Delivery",
     "deliveryType": "PlantMe Express Delivery",
     "total": 180,
-    "vendorName": "PlantMe Express Fulfillment Hub"
+    "vendorName": "PlantMe Certified Local Nursery"
   }
 ]

@@ -7,7 +7,21 @@ import ProductCard from '../components/ProductCard';
 import SocietyGroupDrop from '../components/SocietyGroupDrop';
 
 export default function HomePage() {
-  const { vendors, products, categories: apiCategories, itemTypes, setSelectedCategoryName, setShowCategoryModal, setLoginPresetEmail, setShowLogin, setShowFreeGiftModal, setShowBotanistModal } = useApp();
+  const { 
+    vendors, 
+    products, 
+    categories: apiCategories, 
+    itemTypes, 
+    setSelectedCategoryName, 
+    setShowCategoryModal, 
+    setLoginPresetEmail, 
+    setShowLogin, 
+    setShowFreeGiftModal, 
+    setShowBotanistModal,
+    setShowBalconyModal,
+    setShowClubModal,
+    setShowHospitalModal
+  } = useApp();
   const [searchVal, setSearchVal] = useState('');
   const [gpsStatus, setGpsStatus] = useState('Detecting Live Location...');
   const [showAllVendors, setShowAllVendors] = useState(false);
@@ -15,9 +29,16 @@ export default function HomePage() {
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const [weatherData, setWeatherData] = useState(null);
 
+  const fetchWeather = (cityName = 'Hyderabad') => {
+    api.getWeatherCareTip(cityName)
+      .then(data => setWeatherData(data))
+      .catch(() => {});
+  };
+
   const requestLiveLocation = () => {
     if (!navigator.geolocation) {
-      setGpsStatus('Indiranagar, Bengaluru (20-30 mins)');
+      setGpsStatus('Kothaguda, Hyderabad (Delivery in 20-30 Mins)');
+      fetchWeather('Hyderabad');
       return;
     }
 
@@ -30,24 +51,36 @@ export default function HomePage() {
           const data = await res.json();
           const road = data.address?.road || data.address?.pedestrian || data.address?.street || '';
           const locality = data.address?.suburb || data.address?.neighbourhood || data.address?.residential || '';
-          const city = data.address?.city || data.address?.town || data.address?.district || '';
-          const exactAddress = (road && locality) ? `${road}, ${locality}` : (locality && city) ? `${locality}, ${city}` : city || 'Live Location';
+          const city = data.address?.city || data.address?.town || data.address?.district || data.address?.state_district || 'Hyderabad';
+          const exactAddress = (road && locality) ? `${road}, ${locality}` : (locality && city) ? `${locality}, ${city}` : locality || city || 'Hyderabad';
           setGpsStatus(`${exactAddress} (Delivery in 20-30 Mins)`);
+          fetchWeather(city);
         } catch (err) {
-          setGpsStatus(`Indiranagar, Bengaluru (Delivery in 20-30 Mins)`);
+          setGpsStatus(`Kothaguda, Hyderabad (Delivery in 20-30 Mins)`);
+          fetchWeather('Hyderabad');
         }
       },
       (error) => {
-        setGpsStatus('Indiranagar, Bengaluru (Delivery in 20-30 Mins)');
+        setGpsStatus('Kothaguda, Hyderabad (Delivery in 20-30 Mins)');
+        fetchWeather('Hyderabad');
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
   };
 
   useEffect(() => {
+    // Check if user has a saved address with city
+    const savedAddresses = currentUser?.addresses || JSON.parse(localStorage.getItem('plantme_delivery_addresses') || '[]');
+    let initialCity = 'Hyderabad';
+    if (savedAddresses && savedAddresses.length > 0) {
+      const active = savedAddresses[0];
+      if (typeof active === 'object' && active.city) {
+        initialCity = active.city;
+      }
+    }
+    fetchWeather(initialCity);
     requestLiveLocation();
-    api.getWeatherCareTip().then(data => setWeatherData(data)).catch(() => {});
-  }, []);
+  }, [currentUser]);
 
   const categoryPresetMap = {
     "indoor plants": { icon: "🪴", badge: "Air Purifiers", color: "#e8f5e9" },
@@ -183,7 +216,7 @@ export default function HomePage() {
   };
 
   return (
-    <div id="view-home" className="page-view active" style={{ paddingBottom: '40px' }}>
+    <div id="view-home" className="page-view active" style={{ paddingBottom: '10px' }}>
       
       {/* Hyperlocal Top Delivery Bar */}
       <div className="top-delivery-banner">
@@ -236,19 +269,34 @@ export default function HomePage() {
           </div>
 
           {/* Quick CX Action Shortcuts */}
-          <div className="quick-action-shortcuts">
+          <div className="quick-action-shortcuts" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <Link to="/ai" className="cx-shortcut-btn">
-              Free AI Plant Doctor
-            </Link>
-            <Link to="/garden" className="cx-shortcut-btn">
-              Virtual Garden & Tracker
+              🩺 Free AI Plant Doctor
             </Link>
             <button 
-              onClick={() => setProductCategoryFilter('pet')} 
-              className="cx-shortcut-btn pet-safe-btn"
+              onClick={() => setShowBalconyModal(true)} 
+              className="cx-shortcut-btn"
+              style={{ border: 'none', cursor: 'pointer' }}
             >
-              Pet-Safe Matchmaker
+              🏡 Balcony Makeover (₹499)
             </button>
+            <button 
+              onClick={() => setShowClubModal(true)} 
+              className="cx-shortcut-btn"
+              style={{ border: 'none', cursor: 'pointer' }}
+            >
+              🎁 Mystery Box Club (₹349/mo)
+            </button>
+            <button 
+              onClick={() => setShowHospitalModal(true)} 
+              className="cx-shortcut-btn"
+              style={{ border: 'none', cursor: 'pointer' }}
+            >
+              ✈️ Vacation Boarding & ICU
+            </button>
+            <Link to="/corporate" className="cx-shortcut-btn">
+              🏢 Office Retainers
+            </Link>
           </div>
 
           {/* Botanical Weather & Care Advisory Widget */}
@@ -303,100 +351,151 @@ export default function HomePage() {
       {/* Apartment Society & Tech Park Group Drop */}
       <SocietyGroupDrop />
 
-      {/* Hyper-Growth Launch Levers (Viral Gifting, Live Botanist, Corporate) */}
-      <section style={{ marginBottom: '40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+      {/* REVENUE GENERATING BOTANICAL SERVICES & CLUBS */}
+      <section style={{ marginBottom: '44px' }}>
+        <div className="section-title-row" style={{ alignItems: 'flex-end', marginBottom: '18px' }}>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>PLANTME SIGNATURE BOTANICAL SERVICES</div>
+            <h2 className="section-title" style={{ fontSize: '26px', margin: 0 }}>At-Home Care, Subscriptions & Boarding</h2>
+            <p className="section-subtitle">Comprehensive plant parent solutions from certified horticulturists</p>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
           
-          {/* Card 1: Viral Free Sapling Gifting */}
-          <div style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1px solid #bbf7d0', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {/* Card 1: At-Home Balcony Makeover & Plant Doctor */}
+          <div style={{ background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border: '1.5px solid #86efac', borderRadius: '18px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(22,101,52,0.06)' }}>
             <div>
-              <span style={{ background: '#166534', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
-                VIRAL GIFTING REWARD
-              </span>
-              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#14532d', margin: '8px 0 4px 0' }}>
-                Adopt a Plant, Gift One Free!
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ background: '#166534', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  AT-HOME CARE
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#166534' }}>From ₹499</span>
+              </div>
+              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#14532d', margin: '4px 0 6px 0' }}>
+                Balcony Makeover & Plant Doctor
               </h4>
               <p style={{ fontSize: '12.5px', color: '#334155', lineHeight: 1.4, margin: '0 0 16px 0' }}>
-                Unlock a 100% free live welcome sapling (Mini Jade or Pothos) to surprise a friend or neighbor via WhatsApp.
+                Senior landscape botanist dispatched to your home. Complete health triage, organic pest spray, potting mix soil replenishment & sunlight layout styling.
               </p>
             </div>
             <button
-              onClick={() => setShowFreeGiftModal(true)}
+              onClick={() => setShowBalconyModal(true)}
               style={{
                 background: 'var(--primary-green)',
                 color: '#ffffff',
                 border: 'none',
-                padding: '10px 16px',
-                borderRadius: '10px',
-                fontSize: '12.5px',
+                padding: '11px 16px',
+                borderRadius: '11px',
+                fontSize: '13px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 textAlign: 'center'
               }}
             >
-              Send Free Plant Gift →
+              Book At-Home Visit (From ₹499) →
             </button>
           </div>
 
-          {/* Card 2: 5-Minute Live Botanist Video Call */}
-          <div style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border: '1px solid #fcd34d', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {/* Card 2: "Plant of the Month" Mystery Box Club */}
+          <div style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border: '1.5px solid #fcd34d', borderRadius: '18px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(180,83,9,0.06)' }}>
             <div>
-              <span style={{ background: '#92400e', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
-                ZERO-FEAR GUARANTEE
-              </span>
-              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#78350f', margin: '8px 0 4px 0' }}>
-                5-Min Live Botanist Video Call
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ background: '#92400e', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  VIP SUBSCRIPTION
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#78350f' }}>From ₹349/mo</span>
+              </div>
+              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#78350f', margin: '4px 0 6px 0' }}>
+                "Plant of the Month" Mystery Club
               </h4>
               <p style={{ fontSize: '12.5px', color: '#334155', lineHeight: 1.4, margin: '0 0 16px 0' }}>
-                Unsure why leaves are yellowing? Connect live with our certified horticulturists for instant 1-on-1 care guidance.
+                Curated exotic live plant in a handcrafted ceramic planter delivered to your door every month. Includes collector passport & free organic plant nutrition.
               </p>
             </div>
             <button
-              onClick={() => setShowBotanistModal(true)}
+              onClick={() => setShowClubModal(true)}
               style={{
                 background: '#b45309',
                 color: '#ffffff',
                 border: 'none',
-                padding: '10px 16px',
-                borderRadius: '10px',
-                fontSize: '12.5px',
+                padding: '11px 16px',
+                borderRadius: '11px',
+                fontSize: '13px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 textAlign: 'center'
               }}
             >
-              Start Free Video Consultation →
+              Join Mystery Box Club (₹349/mo) →
             </button>
           </div>
 
-          {/* Card 3: Corporate Desk Gifting */}
-          <div style={{ background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)', border: '1px solid #7dd3fc', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {/* Card 3: Vacation Plant Boarding & ICU Hospital */}
+          <div style={{ background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)', border: '1.5px solid #7dd3fc', borderRadius: '18px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(3,105,161,0.06)' }}>
             <div>
-              <span style={{ background: '#0369a1', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
-                B2B & OFFICE TEAMS
-              </span>
-              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#0c4a6e', margin: '8px 0 4px 0' }}>
-                Corporate Desk Plants & Swag
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ background: '#0369a1', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  CLIMATE NURSERY
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#0369a1' }}>From ₹199/wk</span>
+              </div>
+              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#0c4a6e', margin: '4px 0 6px 0' }}>
+                Vacation Boarding & Plant Hospital
               </h4>
               <p style={{ fontSize: '12.5px', color: '#334155', lineHeight: 1.4, margin: '0 0 16px 0' }}>
-                Custom company-branded ceramic pots & employee home delivery for onboarding, events & anniversaries.
+                Going traveling? Board plants in our sensor-monitored greenhouse with daily WhatsApp photo logs. Dying plant? 14-day ICU root recovery ward.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowHospitalModal(true)}
+              style={{
+                background: '#0284c7',
+                color: '#ffffff',
+                border: 'none',
+                padding: '11px 16px',
+                borderRadius: '11px',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                textAlign: 'center'
+              }}
+            >
+              Schedule Boarding or ICU Recovery →
+            </button>
+          </div>
+
+          {/* Card 4: B2B Office Care Retainers */}
+          <div style={{ background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', borderRadius: '18px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(0,0,0,0.04)' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ background: '#334155', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, padding: '3px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  B2B CORPORATE
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#334155' }}>From ₹2,499/mo</span>
+              </div>
+              <h4 style={{ fontSize: '17px', fontWeight: 800, color: '#1e293b', margin: '4px 0 6px 0' }}>
+                Workplace Plant Care Retainers
+              </h4>
+              <p style={{ fontSize: '12.5px', color: '#475569', lineHeight: 1.4, margin: '0 0 16px 0' }}>
+                Zero-effort biophilic offices. Uniformed certified botanists maintain, water, and replace desk plants & reception statement trees with 100% thrive guarantee.
               </p>
             </div>
             <Link
               to="/corporate"
               style={{
-                background: '#0284c7',
+                background: '#1e293b',
                 color: '#ffffff',
                 textDecoration: 'none',
-                padding: '10px 16px',
-                borderRadius: '10px',
-                fontSize: '12.5px',
+                padding: '11px 16px',
+                borderRadius: '11px',
+                fontSize: '13px',
                 fontWeight: 800,
                 textAlign: 'center',
                 display: 'block'
               }}
             >
-              Explore Corporate Gifting (Up to 35% Off) →
+              View Corporate Retainers & Audit →
             </Link>
           </div>
 
@@ -440,7 +539,7 @@ export default function HomePage() {
             </div>
             <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#1b4332', marginBottom: '6px' }}>20-30 Min EV Express</h4>
             <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-              Shipped upright in custom shock-absorbing cargo boxes via eco-friendly electric vehicles across Bengaluru.
+              Shipped upright in custom shock-absorbing cargo boxes via eco-friendly electric vehicles across Hyderabad & Bengaluru.
             </p>
           </div>
 
@@ -461,7 +560,7 @@ export default function HomePage() {
         <div style={{ marginBottom: '14px' }}>
           <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>PLANT & POT MARKETPLACE</div>
           <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: '4px 0 4px 0', color: 'var(--dark)' }}>Fresh Plant & Pot Catalog</h2>
-          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Inspected & dispatched fresh from PlantMe Express Fulfillment Hubs</p>
+          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Inspected & dispatched fresh from PlantMe Certified Partner Nurseries</p>
         </div>
 
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', width: '100%', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
@@ -507,6 +606,61 @@ export default function HomePage() {
           >
             Organic Soil & Care
           </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'bouquets' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('bouquets')}
+          >
+            💐 Flower Bouquets
+          </button>
+        </div>
+
+        {/* Express Fresh Flower Delivery Feature Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%)',
+          border: '1px solid #f472b6',
+          borderRadius: '16px',
+          padding: '16px 20px',
+          marginBottom: '20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <span style={{ fontSize: '34px', filter: 'drop-shadow(0 2px 6px rgba(244,114,182,0.4))' }}>💐</span>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ background: '#db2777', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  NEW SERVICE
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#9d174d' }}>20-30 Mins Express Delivery</span>
+              </div>
+              <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#831843', margin: '3px 0 2px 0' }}>
+                Handcrafted Fresh Flower Bouquets
+              </h4>
+              <p style={{ fontSize: '12px', color: '#9d174d', margin: 0 }}>
+                Dutch red roses, oriental lilies, carnations & orchids delivered with stem-hydration wraps & flower food.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setProductCategoryFilter('bouquets')}
+            style={{
+              background: '#db2777',
+              color: '#ffffff',
+              border: 'none',
+              padding: '9px 18px',
+              borderRadius: '10px',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 3px 10px rgba(219,39,119,0.3)',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Browse Bouquets →
+          </button>
         </div>
 
         <div className="products-grid" id="home-deals-grid">
@@ -519,8 +673,8 @@ export default function HomePage() {
       {/* Seasonal Curation Grid Sector */}
       <section style={{ 
         clear: 'both', 
-        marginTop: '64px', 
-        paddingTop: '32px', 
+        marginTop: '28px', 
+        paddingTop: '20px', 
         borderTop: '1px solid rgba(0,0,0,0.06)',
         position: 'relative', 
         zIndex: 1 

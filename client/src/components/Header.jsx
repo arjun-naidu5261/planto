@@ -3,7 +3,22 @@ import { NavLink, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 export default function Header() {
-  const { cart, wishlist, isLoggedIn, currentUser, wallet, setShowQRScanner, setShowLogin, setShowProfileModal, logoutUser, isDarkMode, toggleDarkMode } = useApp();
+  const { 
+    cart, 
+    wishlist, 
+    isLoggedIn, 
+    currentUser, 
+    wallet, 
+    setShowQRScanner, 
+    setShowLogin, 
+    setShowProfileModal, 
+    logoutUser, 
+    isDarkMode, 
+    toggleDarkMode,
+    setShowBalconyModal,
+    setShowClubModal,
+    setShowHospitalModal
+  } = useApp();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -71,6 +86,7 @@ export default function Header() {
             <>
               <NavLink to="/ai" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>AI Plant Doctor</NavLink>
               <NavLink to="/garden" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Virtual Garden</NavLink>
+              <NavLink to="/corporate" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>B2B Retainers</NavLink>
               <NavLink to="/community" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Community</NavLink>
             </>
           )}
@@ -90,15 +106,6 @@ export default function Header() {
 
 
         <div className="header-actions">
-          <button 
-            className="action-btn" 
-            onClick={toggleDarkMode} 
-            title="Toggle Dark Mode"
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px' }}
-          >
-            {isDarkMode ? '☀️' : '🌙'}
-          </button>
-          
           {/* Wishlist */}
           {(!isLoggedIn || currentUser?.role === 'Customer') && (
             <Link to="/wishlist" className="action-btn" title="My Wishlist">
@@ -136,7 +143,11 @@ export default function Header() {
                 alignItems: 'center'
               }}
             >
-              <svg width="22" height="22"><use href="#icon-user"></use></svg>
+              {currentUser?.avatar ? (
+                <img src={currentUser.avatar} alt="Profile" style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <svg width="22" height="22"><use href="#icon-user"></use></svg>
+              )}
               {isLoggedIn && currentUser?.role === 'Customer' && (
                 <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--primary-green)' }} id="header-wallet-bal">
                   ₹{Math.round(wallet)}
@@ -169,8 +180,12 @@ export default function Header() {
               }}>
                 {/* User Header Info: Name & Email below name */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                  <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#1b4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '16px', flexShrink: 0 }}>
-                    {currentUser?.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                  <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#1b4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '16px', flexShrink: 0, overflow: 'hidden' }}>
+                    {currentUser?.avatar ? (
+                      <img src={currentUser.avatar} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      currentUser?.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'
+                    )}
                   </div>
                   <div style={{ overflow: 'hidden' }}>
                     <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#1b4332', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -203,6 +218,39 @@ export default function Header() {
                   >
                     My Wishlist ({wishlist.length})
                   </Link>
+
+                  <div style={{ borderTop: '1px solid #f1f5f9', margin: '4px 0', paddingTop: '4px' }}>
+                    <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#94a3b8', padding: '4px 12px', textTransform: 'uppercase' }}>
+                      Botanical Services
+                    </div>
+                    
+                    <button
+                      onClick={() => { setShowDropdown(false); setShowBalconyModal(true); }}
+                      style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px', color: '#1b4332', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer' }}
+                      onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
+                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <span>🏡</span> Balcony Makeover (₹499)
+                    </button>
+
+                    <button
+                      onClick={() => { setShowDropdown(false); setShowClubModal(true); }}
+                      style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px', color: '#1b4332', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer' }}
+                      onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
+                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <span>🎁</span> Mystery Box Club (₹349/mo)
+                    </button>
+
+                    <button
+                      onClick={() => { setShowDropdown(false); setShowHospitalModal(true); }}
+                      style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px', color: '#1b4332', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer' }}
+                      onMouseOver={(e) => e.currentTarget.style.background = '#f4f9f5'}
+                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <span>✈️</span> Vacation Boarding & ICU
+                    </button>
+                  </div>
                 </div>
 
                 {/* Logout Button below options */}

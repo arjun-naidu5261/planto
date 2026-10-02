@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 
 export default function CustomerHelpBot() {
   const navigate = useNavigate();
+  const { setShowBalconyModal, setShowClubModal, setShowHospitalModal } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [showTeaser, setShowTeaser] = useState(true);
@@ -171,6 +173,7 @@ export default function CustomerHelpBot() {
     <>
       {/* 1. FLOATING LAUNCHER BUTTON & TEASER (Bottom Right) */}
       <div 
+        className="customer-help-bot-launcher"
         style={{
           position: 'fixed',
           bottom: '84px', // Clears mobile bottom navigation smoothly
@@ -276,7 +279,7 @@ export default function CustomerHelpBot() {
               />
             </div>
             
-            <div style={{ textAlign: 'left' }}>
+            <div style={{ textAlign: 'left' }} className="bot-launcher-text">
               <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.2px' }}>Flora AI</div>
               <div style={{ fontSize: '11px', opacity: 0.85, fontWeight: 500 }}>24/7 Care & Support</div>
             </div>
@@ -775,6 +778,18 @@ export default function CustomerHelpBot() {
                           } else if (pill.includes("Activate Care Pass")) {
                             setIsOpen(false);
                             window.location.hash = "#/profile";
+                          } else if (pill.includes("Balcony Makeover")) {
+                            setIsOpen(false);
+                            setShowBalconyModal(true);
+                          } else if (pill.includes("Vacation") || pill.includes("Boarding") || pill.includes("Plant Hospital") || pill.includes("ICU")) {
+                            setIsOpen(false);
+                            setShowHospitalModal(true);
+                          } else if (pill.includes("Mystery Club") || pill.includes("Mystery Box")) {
+                            setIsOpen(false);
+                            setShowClubModal(true);
+                          } else if (pill.includes("Corporate") || pill.includes("Retainers")) {
+                            setIsOpen(false);
+                            window.location.hash = "#/corporate";
                           } else {
                             sendMessage(pill);
                           }

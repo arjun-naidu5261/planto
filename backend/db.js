@@ -73,5 +73,20 @@ export const db = {
     } catch {
       return false;
     }
-  }
+  },
+
+  getConsultations: () => readJSON('consultations.json'),
+  saveConsultations: (data) => writeJSON('consultations.json', data),
+
+  getServiceBookings: () => readJSON('service_bookings.json'),
+  saveServiceBookings: (data) => writeJSON('service_bookings.json', data),
+
+  getPlantHospital: () => readJSON('plant_hospital.json'),
+  savePlantHospital: (data) => writeJSON('plant_hospital.json', data),
+
+  getClubSubscriptions: () => readJSON('club_subscriptions.json'),
+  saveClubSubscriptions: (data) => writeJSON('club_subscriptions.json', data),
+
+  getCorporateQuotes: () => readJSON('corporate_quotes.json'),
+  saveCorporateQuotes: (data) => writeJSON('corporate_quotes.json', data)
 };

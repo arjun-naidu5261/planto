@@ -40,13 +40,22 @@ export const AppProvider = ({ children }) => {
   const [showReplacementModal, setShowReplacementModal] = useState(false);
   const [replacementOrderData, setReplacementOrderData] = useState(null);
   const [showBotanistModal, setShowBotanistModal] = useState(false);
-  const [hasCarePass, setHasCarePass] = useState(false);
+  const [showBalconyModal, setShowBalconyModal] = useState(false);
+  const [showClubModal, setShowClubModal] = useState(false);
+  const [showHospitalModal, setShowHospitalModal] = useState(false);
+  const [hasCarePass, setHasCarePassState] = useState(() => {
+    return localStorage.getItem('plantme_carepass') === 'true';
+  });
+  const setHasCarePass = (val) => {
+    setHasCarePassState(val);
+    localStorage.setItem('plantme_carepass', val ? 'true' : 'false');
+  };
   const [activeSociety, setActiveSociety] = useState('Prestige Shantiniketan, Whitefield');
   const [cuttingSwaps, setCuttingSwaps] = useState([
     {
       id: 'SWAP-101',
       plantName: 'Monstera Deliciosa (Rooted Top Node)',
-      contributor: 'Priya R. (Tower 4)',
+      contributor: 'Ananya R. (Tower 4)',
       society: 'Prestige Shantiniketan',
       type: 'Stem Cutting with aerial root',
       status: 'Available',
@@ -102,28 +111,12 @@ export const AppProvider = ({ children }) => {
     // Load initial data
     loadAllData();
     
-    // Check saved theme
-    const savedTheme = localStorage.getItem('planto_theme');
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
+    // Enforce clean light theme
+    localStorage.removeItem('planto_theme');
+    document.documentElement.classList.remove('dark');
   }, []);
 
-  // Theme Toggle Effect
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => {
-      const nextTheme = !prev;
-      if (nextTheme) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('planto_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('planto_theme', 'light');
-      }
-      return nextTheme;
-    });
-  };
+  const toggleDarkMode = () => {};
 
   const [categories, setCategories] = useState([]);
   const [itemTypes, setItemTypes] = useState([]);
@@ -271,15 +264,18 @@ export const AppProvider = ({ children }) => {
   };
 
   // Checkout
-  const checkout = async (deliveryType, total, vendorName) => {
+  const checkout = async (deliveryType, total, vendorName, additionalItems = []) => {
     if (!isLoggedIn) return { success: false, message: 'Please login' };
     
-    const items = cart.map((item) => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity
-    }));
+    const items = [
+      ...cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      ...(additionalItems || [])
+    ];
 
     try {
       const res = await api.placeOrder({
@@ -423,6 +419,9 @@ export const AppProvider = ({ children }) => {
         showReplacementModal, setShowReplacementModal,
         replacementOrderData, setReplacementOrderData,
         showBotanistModal, setShowBotanistModal,
+        showBalconyModal, setShowBalconyModal,
+        showClubModal, setShowClubModal,
+        showHospitalModal, setShowHospitalModal,
         hasCarePass, setHasCarePass,
         activeSociety, setActiveSociety,
         cuttingSwaps, setCuttingSwaps,

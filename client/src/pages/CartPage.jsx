@@ -28,28 +28,49 @@ export default function CartPage() {
 
   // Personalized Eco-Gifting States
   const [isGift, setIsGift] = useState(false);
+  const [packagingTier, setPackagingTier] = useState('royal'); // 'eco' (₹49), 'royal' (₹99), 'deluxe' (₹199)
+  const [deliveryTimingSlot, setDeliveryTimingSlot] = useState('standard'); // 'standard' (0), 'midnight' (99), 'morning' (49)
   const [giftRecipient, setGiftRecipient] = useState('');
+  const [giftRecipientPhone, setGiftRecipientPhone] = useState('');
   const [engravedTag, setEngravedTag] = useState('');
   const [voiceGreetingType, setVoiceGreetingType] = useState('recorded'); // 'recorded' or 'text'
   const [voiceGreetingText, setVoiceGreetingText] = useState('Happy birthday! May this green plant bring happiness & fresh oxygen to your home.');
   const [isRecording, setIsRecording] = useState(false);
   const [hasRecordedAudio, setHasRecordedAudio] = useState(false);
 
+  // 1-Click Impulse Care Cross-Sell States
+  const [addCareKit, setAddCareKit] = useState(false); // +₹149 (Doctor-Recommended Essentials)
+  const [addSelfWatering, setAddSelfWatering] = useState(false); // +₹99 (Self-Watering Reservoir)
+
   // Delivery costs
   const getDeliveryCharge = () => {
-    if (deliveryType === 'PlantMe Express Delivery' || deliveryType === 'Express Nursery Delivery') return 30;
-    if (deliveryType === 'Standard Courier') return 15;
-    return 0; // Reserve & Collect
+    let base = 30;
+    if (deliveryType === 'Standard Courier') base = 15;
+    if (deliveryTimingSlot === 'midnight') base += 99;
+    if (deliveryTimingSlot === 'morning') base += 49;
+    return base;
   };
 
   const deliveryCharge = getDeliveryCharge();
-  const giftCharge = isGift ? 49 : 0;
+  
+  // Gifting price based on selected tier
+  const getGiftCharge = () => {
+    if (!isGift) return 0;
+    if (packagingTier === 'eco') return 49;
+    if (packagingTier === 'royal') return 99;
+    if (packagingTier === 'deluxe') return 199;
+    return 49;
+  };
+
+  const giftCharge = getGiftCharge();
   const carePassCharge = (addCarePass && !hasCarePass) ? 99 : 0;
+  const careKitCharge = addCareKit ? 149 : 0;
+  const selfWateringCharge = addSelfWatering ? 99 : 0;
   
   // Calculate pricing
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discount = Math.round(subtotal * (discountPercent / 100));
-  const grandTotal = Math.max(0, subtotal + deliveryCharge + giftCharge + carePassCharge - discount);
+  const grandTotal = Math.max(0, subtotal + deliveryCharge + giftCharge + carePassCharge + careKitCharge + selfWateringCharge - discount);
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
@@ -72,21 +93,48 @@ export default function CartPage() {
       return;
     }
 
-    const firstVendor = 'PlantMe Express Fulfillment Hub';
+    const firstVendor = 'PlantMe Certified Local Nursery';
     
     if (isGift) {
       try {
         await api.saveEcoGifting({
           recipientName: giftRecipient || 'Beloved Recipient',
+          recipientPhone: giftRecipientPhone || '+91 88856 00899',
+          packagingTier,
+          deliveryTimingSlot,
           engravedTagText: engravedTag || 'Growing with Love 🌿',
-          giftBagType: 'Festive Organic Jute Bag + Biodegradable Raffia',
+          giftBagType: packagingTier === 'deluxe' ? 'Deluxe Pine Wood Hamper Box' : packagingTier === 'royal' ? 'Royal Satin Ribbon & Gold Foil Card' : 'Festive Organic Jute Bag',
           audioGreetingText: voiceGreetingText,
           hasAudio: hasRecordedAudio
         });
       } catch (e) {}
     }
 
-    const res = await checkout(deliveryType, grandTotal, firstVendor);
+    // Build extra items if cross-sell selected
+    const additionalItems = [];
+    if (addCareKit) {
+      additionalItems.push({
+        id: 'cross-carekit',
+        name: 'Doctor-Recommended Plant Care Kit (Neem Spray + Bio-Spikes + Saucer)',
+        price: 149,
+        quantity: 1
+      });
+    }
+    if (addSelfWatering) {
+      additionalItems.push({
+        id: 'cross-selfwatering',
+        name: 'Self-Watering Sub-Irrigation Reservoir Pot Upgrade',
+        price: 99,
+        quantity: 1
+      });
+    }
+
+    const res = await checkout(
+      `${deliveryType}${deliveryTimingSlot === 'midnight' ? ' (Scheduled Midnight Slot)' : deliveryTimingSlot === 'morning' ? ' (Morning Surprise Slot)' : ''}`, 
+      grandTotal, 
+      firstVendor,
+      additionalItems
+    );
     if (res.success) {
       if (addCarePass) {
         setHasCarePass(true);
@@ -147,7 +195,7 @@ export default function CartPage() {
               Order Confirmed & Preparing!
             </h3>
             <p style={{ fontSize: '13px', color: '#555', marginBottom: '16px' }}>
-              Estimated Delivery: <strong>20-30 Mins</strong> • PlantMe Express Fulfillment Hub
+              Estimated Delivery: <strong>20-30 Mins</strong> • Certified Local Nursery Dispatch
             </p>
 
             {/* Live Plant Transit Guarantee Badge */}
@@ -165,7 +213,7 @@ export default function CartPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', opacity: trackerStage >= 1 ? 1 : 0.4 }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: trackerStage >= 1 ? '#2e7d32' : '#ccc', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800 }}>✓</div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '14px' }}>1. Quality Inspection at PlantMe Hub</div>
+                  <div style={{ fontWeight: 800, fontSize: '14px' }}>1. Quality Inspection at Partner Nursery</div>
                   <div style={{ fontSize: '11px', color: '#666' }}>Foliage health and soil moisture verified by botanist</div>
                 </div>
               </div>
@@ -280,7 +328,7 @@ export default function CartPage() {
             <span style={{ fontSize: '20px' }}>🌿</span>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', textTransform: 'uppercase' }}>FULFILLED BY</div>
-              <div style={{ fontWeight: 800, fontSize: '14px', color: '#1b4332' }}>PlantMe Express Fulfillment Hub (Bengaluru)</div>
+              <div style={{ fontWeight: 800, fontSize: '14px', color: '#1b4332' }}>PlantMe Certified Partner Nursery (Bengaluru)</div>
             </div>
           </div>
 
@@ -341,7 +389,6 @@ export default function CartPage() {
               style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ccc', fontWeight: 600, fontSize: '13px' }}
             >
               <option value="PlantMe Express Delivery">PlantMe Express Delivery (20-30 Mins) - ₹30</option>
-              <option value="Reserve & Collect">PlantMe Micro-Hub Pickup - Free</option>
               <option value="Standard Courier">Standard Eco-Shipping (1-2 Days) - ₹15</option>
             </select>
           </div>
@@ -392,48 +439,133 @@ export default function CartPage() {
                   type="checkbox" 
                   checked={isGift} 
                   onChange={(e) => setIsGift(e.target.checked)} 
-                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#b45309' }}
                 />
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '13.5px', color: '#582f0e', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>🎁</span> Send as Personalized Eco-Gift (+ ₹49)
+                    <span>🎁</span> Send as a Gift to Someone Special (Hide Invoice)
                   </div>
-                  <div style={{ fontSize: '11px', color: '#7f5539' }}>Festive Jute Wrap • Engraved Wooden Tag • 15s Voice Note</div>
+                  <div style={{ fontSize: '11px', color: '#7f5539' }}>Festive Packaging • Gold-Foil Card / Wooden Tag • 15s Voice Note</div>
                 </div>
               </label>
               <span style={{ fontSize: '11px', fontWeight: 800, background: '#faedcd', color: '#603808', padding: '3px 8px', borderRadius: '8px' }}>
-                Eco-Friendly
+                {isGift ? `+₹${giftCharge}` : 'Gift Mode'}
               </span>
             </div>
 
             {isGift && (
-              <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #ebd9c8', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #ebd9c8', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                
+                {/* Packaging Tier Selector */}
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '4px' }}>RECIPIENT NAME</label>
-                  <input 
-                    type="text" 
-                    value={giftRecipient} 
-                    onChange={(e) => setGiftRecipient(e.target.value)} 
-                    placeholder="e.g. Sneha Reddy" 
-                    style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ccd5ae', fontSize: '12.5px' }}
-                  />
+                  <label style={{ fontSize: '11.5px', fontWeight: 800, color: '#582f0e', display: 'block', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    Choose Gift Packaging Style
+                  </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                    {[
+                      { id: 'eco', name: 'Festive Jute Wrap', price: 49, icon: '🌿', desc: 'Organic jute + raffia' },
+                      { id: 'royal', name: 'Royal Satin & Gold Card', price: 99, icon: '🎀', desc: 'Satin bow + foil card', popular: true },
+                      { id: 'deluxe', name: 'Deluxe Pine Wood Box', price: 199, icon: '🪵', desc: 'Handcrafted hamper' }
+                    ].map(pkg => (
+                      <div
+                        key={pkg.id}
+                        onClick={() => setPackagingTier(pkg.id)}
+                        style={{
+                          border: packagingTier === pkg.id ? '2px solid #b45309' : '1px solid #e2e8f0',
+                          background: packagingTier === pkg.id ? '#ffffff' : '#fefae0',
+                          borderRadius: '12px',
+                          padding: '10px 8px',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          position: 'relative'
+                        }}
+                      >
+                        {pkg.popular && (
+                          <span style={{ position: 'absolute', top: '-7px', right: '6px', background: '#b45309', color: '#fff', fontSize: '9px', fontWeight: 800, padding: '1px 6px', borderRadius: '6px' }}>
+                            BEST CHOICE
+                          </span>
+                        )}
+                        <div style={{ fontSize: '18px' }}>{pkg.icon}</div>
+                        <div style={{ fontSize: '12px', fontWeight: 800, color: '#432818', marginTop: '2px' }}>{pkg.name}</div>
+                        <div style={{ fontSize: '10px', color: '#7f5539' }}>{pkg.desc}</div>
+                        <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#b45309', marginTop: '4px' }}>+₹{pkg.price}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Scheduled Delivery Timing Slot */}
+                <div>
+                  <label style={{ fontSize: '11.5px', fontWeight: 800, color: '#582f0e', display: 'block', marginBottom: '6px', textTransform: 'uppercase' }}>
+                    Scheduled Delivery Timing
+                  </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                    {[
+                      { id: 'standard', title: 'Standard Express', time: '20-30 Mins', fee: 0, icon: '⚡' },
+                      { id: 'morning', title: 'Morning Surprise', time: '7:00 - 9:00 AM', fee: 49, icon: '🌅' },
+                      { id: 'midnight', title: 'Midnight Birthday', time: '11:45 PM - 12:15 AM', fee: 99, icon: '🌙' }
+                    ].map(slot => (
+                      <div
+                        key={slot.id}
+                        onClick={() => setDeliveryTimingSlot(slot.id)}
+                        style={{
+                          border: deliveryTimingSlot === slot.id ? '2px solid #b45309' : '1px solid #e2e8f0',
+                          background: deliveryTimingSlot === slot.id ? '#ffffff' : '#fefae0',
+                          borderRadius: '12px',
+                          padding: '10px 8px',
+                          cursor: 'pointer',
+                          textAlign: 'center'
+                        }}
+                      >
+                        <div style={{ fontSize: '16px' }}>{slot.icon}</div>
+                        <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#432818' }}>{slot.title}</div>
+                        <div style={{ fontSize: '10px', color: '#7f5539' }}>{slot.time}</div>
+                        <div style={{ fontSize: '11px', fontWeight: 800, color: slot.fee > 0 ? '#b45309' : '#166534', marginTop: '2px' }}>
+                          {slot.fee > 0 ? `+₹${slot.fee}` : 'Free'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+                  <div>
+                    <label style={{ fontSize: '11px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '4px' }}>RECIPIENT NAME</label>
+                    <input 
+                      type="text" 
+                      value={giftRecipient} 
+                      onChange={(e) => setGiftRecipient(e.target.value)} 
+                      placeholder="e.g. Sneha Reddy" 
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ccd5ae', fontSize: '12.5px' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '11px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '4px' }}>RECIPIENT PHONE (FOR TRACKING)</label>
+                    <input 
+                      type="tel" 
+                      value={giftRecipientPhone} 
+                      onChange={(e) => setGiftRecipientPhone(e.target.value)} 
+                      placeholder="e.g. +91 98765 43210" 
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ccd5ae', fontSize: '12.5px' }}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '4px' }}>ENGRAVED WOODEN PLANT TAG TEXT</label>
+                  <label style={{ fontSize: '11px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '4px' }}>ENGRAVED WOODEN TAG OR CARD NOTE</label>
                   <input 
                     type="text" 
                     value={engravedTag} 
                     onChange={(e) => setEngravedTag(e.target.value)} 
-                    placeholder="e.g. Happy Housewarming Sneha! 🌿 From Arjun" 
-                    maxLength={50}
+                    placeholder="e.g. Happy Birthday Sneha! 🌿 From Arjun" 
+                    maxLength={60}
                     style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ccd5ae', fontSize: '12.5px' }}
                   />
-                  <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>Max 50 chars • Laser-etched onto sustainable birchwood</div>
+                  <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>Max 60 chars • Laser-etched onto sustainable birchwood / gold-foil printed</div>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '6px' }}>15-SECOND VOICE GREETING (AUDIO NOTE)</label>
+                  <label style={{ fontSize: '11px', fontWeight: 700, color: '#582f0e', display: 'block', marginBottom: '6px' }}>15-SECOND VOICE GREETING (AUDIO NOTE)</label>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <button
                       type="button"
@@ -442,7 +574,7 @@ export default function CartPage() {
                         setTimeout(() => {
                           setIsRecording(false);
                           setHasRecordedAudio(true);
-                        }, 2500);
+                        }, 2000);
                       }}
                       style={{
                         background: hasRecordedAudio ? '#2e7d32' : isRecording ? '#dc2626' : '#ffffff',
@@ -458,11 +590,11 @@ export default function CartPage() {
                         gap: '6px'
                       }}
                     >
-                      <span>{isRecording ? 'Recording...' : hasRecordedAudio ? '✓ Audio Attached' : 'Record 15s Greeting'}</span>
+                      <span>{isRecording ? 'Recording...' : hasRecordedAudio ? '✓ Audio Attached' : '🎙️ Record 15s Greeting'}</span>
                     </button>
                     {hasRecordedAudio && (
                       <span style={{ fontSize: '11px', color: '#166534', fontWeight: 700 }}>
-                        ▶ Ready! Plays when recipient scans tag QR
+                        ▶ Ready! Plays when recipient scans QR
                       </span>
                     )}
                   </div>
@@ -474,6 +606,111 @@ export default function CartPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* REVENUE DRIVER 2: 1-Click Impulse Care Cross-Sell */}
+          <div style={{
+            background: '#ffffff',
+            border: '1.5px solid #cbd5e1',
+            borderRadius: '16px',
+            padding: '16px',
+            marginBottom: '20px'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '16px' }}>⚡</span>
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  1-Click Plant Parent Essentials
+                </span>
+              </div>
+              <span style={{ fontSize: '10.5px', fontWeight: 800, background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: '8px' }}>
+                87% Add This
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* Item A: Plant Doctor Care Kit */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 12px',
+                borderRadius: '12px',
+                background: addCareKit ? '#f0fdf4' : '#f8fafc',
+                border: addCareKit ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
+                transition: 'all 0.2s'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '24px' }}>🌿</span>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
+                      Doctor-Recommended Plant Care Kit
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#64748b' }}>
+                      Cold-Pressed Neem Oil Spray (100ml) + 10x Bio-Fertilizer Spikes + Glazed Saucer
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddCareKit(!addCareKit)}
+                  style={{
+                    background: addCareKit ? '#16a34a' : '#ffffff',
+                    color: addCareKit ? '#ffffff' : '#16a34a',
+                    border: '1.5px solid #16a34a',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {addCareKit ? '✓ Added (₹149)' : '+ Add ₹149'}
+                </button>
+              </div>
+
+              {/* Item B: Self-Watering Sub-Irrigation Reservoir */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 12px',
+                borderRadius: '12px',
+                background: addSelfWatering ? '#f0fdf4' : '#f8fafc',
+                border: addSelfWatering ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
+                transition: 'all 0.2s'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '24px' }}>💧</span>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
+                      Self-Watering Sub-Irrigation Reservoir Insert
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#64748b' }}>
+                      Prevents root rot & keeps roots hydrated for up to 14 days without manual watering
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddSelfWatering(!addSelfWatering)}
+                  style={{
+                    background: addSelfWatering ? '#16a34a' : '#ffffff',
+                    color: addSelfWatering ? '#ffffff' : '#16a34a',
+                    border: '1.5px solid #16a34a',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {addSelfWatering ? '✓ Added (₹99)' : '+ Add ₹99'}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* PlantMe Care Pass Subscription Option */}
@@ -515,13 +752,25 @@ export default function CartPage() {
               <span id="cart-subtotal" style={{ fontWeight: 700 }}>₹{subtotal}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Delivery Fee</span>
+              <span>Delivery Fee {deliveryTimingSlot !== 'standard' ? `(${deliveryTimingSlot === 'midnight' ? 'Midnight Slot' : 'Morning Slot'})` : ''}</span>
               <span id="cart-delivery-charge" style={{ fontWeight: 700 }}>₹{deliveryCharge}</span>
             </div>
             {isGift && (
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#7f5539', fontWeight: 700 }}>
-                <span>Eco-Gift Wrap & Wooden Tag</span>
-                <span>+₹49</span>
+                <span>Gift Packaging ({packagingTier === 'deluxe' ? 'Deluxe Pine Box' : packagingTier === 'royal' ? 'Royal Satin Ribbon' : 'Eco Jute Wrap'})</span>
+                <span>+₹{giftCharge}</span>
+              </div>
+            )}
+            {addCareKit && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#15803d', fontWeight: 700 }}>
+                <span>Doctor Plant Care Kit</span>
+                <span>+₹149</span>
+              </div>
+            )}
+            {addSelfWatering && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#0284c7', fontWeight: 700 }}>
+                <span>Self-Watering Sub-Irrigation Insert</span>
+                <span>+₹99</span>
               </div>
             )}
             {carePassCharge > 0 && (

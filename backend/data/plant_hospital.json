@@ -1,0 +1,27 @@
+[
+  {
+    "hospitalId": "BOARD-18552",
+    "serviceType": "vacation_boarding",
+    "serviceTitle": "Vacation Greenhouse Boarding",
+    "price": 398,
+    "customerName": "Traveler Plant Parent",
+    "customerPhone": "+91 98450 11223",
+    "customerEmail": "customer@plantme.in",
+    "plantCount": 5,
+    "durationWeeks": 2,
+    "symptoms": "",
+    "address": "Koramangala, Bengaluru",
+    "pickupDate": "Tomorrow",
+    "pickupSlot": "Morning (9 AM - 12 PM)",
+    "paymentMethod": "cod",
+    "wardStatus": "Pickup Scheduled",
+    "updates": [
+      {
+        "timestamp": "2026-10-02T13:34:19.625Z",
+        "status": "EV Doorstep Pickup Scheduled",
+        "note": "Hydration transport carrier assigned with climate-controlled EV rider."
+      }
+    ],
+    "createdAt": "2026-10-02T13:34:19.625Z"
+  }
+]

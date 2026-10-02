@@ -161,7 +161,7 @@ export default function CartScreen({ navigation }: any) {
         {/* Cart Items */}
         <View style={styles.section}>
           <View style={styles.fulfillmentBadge}>
-            <Text style={styles.fulfillmentText}>Fulfilled by PlantMe Express Hub, Bengaluru</Text>
+            <Text style={styles.fulfillmentText}>Dispatched fresh from Certified Local Nurseries, Bengaluru</Text>
           </View>
           {cart.map(item => (
             <View key={item.id} style={styles.cartItem}>
@@ -231,9 +231,8 @@ export default function CartScreen({ navigation }: any) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Delivery Mode</Text>
           {[
-            { key: 'Express', label: 'PlantMe Express (20-30 min)', fee: 30 },
+            { key: 'Express', label: 'PlantMe Express Doorstep (20-30 min)', fee: 30 },
             { key: 'Standard', label: 'Eco-Shipping (1-2 days)', fee: 15 },
-            { key: 'Pickup', label: 'PlantMe Hub Pickup', fee: 0 },
           ].map(opt => (
             <TouchableOpacity
               key={opt.key}

@@ -1,0 +1,238 @@
+[
+  {
+    "category": "overwatering_root_rot",
+    "issue": "Overwatering & Anaerobic Root Rot (Chlorosis)",
+    "urgency": "High",
+    "cause": "Excess soil moisture suffocating root hair capillaries, causing lack of oxygen and secondary bacterial/fungal root decay.",
+    "symptoms": [
+      "yellow lower leaves with mushy soft stems",
+      "plant leaves turning yellow and dropping, soil is wet",
+      "soil smells bad swampy foul odor damp",
+      "mushy black roots waterlogged potting mix",
+      "leaves turning translucent yellow drooping wet soil",
+      "overwatered yellowing foliage wet soil days",
+      "leaves limp soggy and pale yellow potting soil constantly wet",
+      "potted plant sitting in standing water saucer yellow leaves",
+      "squishy soft stems and falling yellow leaves",
+      "roots brown and mushy instead of firm white",
+      "chlorosis on bottom leaves moist soil heavy pot",
+      "over watered monstera money plant pothos yellowing",
+      "plant drowning wet muddy potting mix drooping"
+    ],
+    "remedy": [
+      "Immediately withhold all watering for 7-10 days until top 2-3 inches of soil dry completely.",
+      "Inspect pot drainage holes and ensure excess water drains out completely into the saucer without standing water.",
+      "Prune away any mushy, blackened, decaying roots with sterilized shears.",
+      "Repot into fresh, aerated, well-draining soil mix containing perlite and cocopeat.",
+      "Spray foliage with organic bio-stimulant or diluted seaweed extract for recovery."
+    ],
+    "recommendedProducts": ["so1", "so2", "po1"]
+  },
+  {
+    "category": "underwatering_drought",
+    "issue": "Dehydration & Ambient Moisture Deficit (Drought Scorch)",
+    "urgency": "Moderate",
+    "cause": "Cellular turgor pressure loss due to prolonged dry soil or dry air conditioned indoor environments.",
+    "symptoms": [
+      "dry crispy brown leaf tips and curling leaves",
+      "underwatered dry crunchy brittle leaves drooping",
+      "soil pulled away from pot edge completely dry",
+      "leaves shriveled wrinkly dry crisp foliage",
+      "pale dull drooping leaves dry light pot bone dry soil",
+      "brown edges crunchy tips low humidity AC air",
+      "crispy edges brown leaf tips indoor heater AC",
+      "plant wilting thirsty dry soil cracked surface",
+      "drooping stems leaves perk up when watered dry crust",
+      "parched plant forgotten to water crunchy foliage"
+    ],
+    "remedy": [
+      "Provide a thorough bottom-watering soak by placing the pot in a shallow tub of water for 30 minutes until moist.",
+      "Trim off completely crispy brown dead tips using clean angled pruning shears.",
+      "Mist leaves every morning or use a pebble tray to boost ambient relative humidity above 55%.",
+      "Move the plant 2-3 feet away from direct air conditioner or heater drafts.",
+      "Establish a weekly moisture finger-test routine before watering."
+    ],
+    "recommendedProducts": ["po2", "so1"]
+  },
+  {
+    "category": "pest_spider_mites_aphids",
+    "issue": "Sucking Insect Infestation (Spider Mites, Mealybugs & Aphids)",
+    "urgency": "High",
+    "cause": "Colonies of sap-sucking arthropods depleting plant chlorophyll, photosynthates, and epidermal cells.",
+    "symptoms": [
+      "white cottony fluffy webbing sticky residue on leaf undersides",
+      "fine spider webs between leaf petioles and yellow stippling dots",
+      "tiny black green bugs clustering on new shoots",
+      "sticky clear honeydew droplets on leaves and floor",
+      "small white fuzzy insects mealybugs in leaf nodes",
+      "mottled speckled leaves tiny crawling dots webs",
+      "aphids clustering on flower buds distorted new leaves",
+      "scale insects brown oval bumps stuck to plant stems",
+      "bugs crawling under leaves stippling yellow spots mites",
+      "leaf curling distorted growth sticky bugs underside"
+    ],
+    "remedy": [
+      "Isolate the plant immediately to prevent cross-infestation to neighboring houseplants.",
+      "Physically wipe away visible mealybugs or aphids using a cotton swab dipped in 70% isopropyl alcohol.",
+      "Wash foliage thoroughly in the shower or sink with a steady stream of lukewarm water.",
+      "Apply pure cold-pressed organic Neem Oil spray (5ml/L + 2 drops mild soap) every 4 days for 3 cycles.",
+      "Dust soil surface with food-grade diatomaceous earth to break pest larval cycles."
+    ],
+    "recommendedProducts": ["e1", "so2"]
+  },
+  {
+    "category": "blossom_end_rot",
+    "issue": "Blossom End Rot & Calcium Mobility Deficiency",
+    "urgency": "Critical",
+    "cause": "Localized calcium deficiency in rapidly expanding fruit tissues, exacerbated by irregular soil hydration cycles.",
+    "symptoms": [
+      "tomato bottom turning black sunken leathery patch",
+      "black rotten flat spot on bottom of tomato fruit",
+      "blossom end rot dark brown sunken leathery fruit base",
+      "heirloom tomato fruit rotting from bottom tip",
+      "bell pepper bottoms dark brown sunken spots",
+      "fruit rotting before ripening calcium deficiency tomato",
+      "irregular watering tomato fruit bottom decay brown spot",
+      "black leathery patch on base of green tomatoes"
+    ],
+    "remedy": [
+      "Maintain strictly consistent soil moisture; avoid cycles of severe drying followed by heavy flooding.",
+      "Apply organic crushed eggshell tea, agricultural gypsum, or chelated calcium foliar spray immediately.",
+      "Mulch soil surface with 2 inches of organic cocopeat to stabilize root zone moisture levels.",
+      "Prune off currently affected fruits so the plant channels calcium reserves into newly forming clusters.",
+      "Ensure soil pH is balanced between 6.2 and 6.8 for optimal calcium root uptake."
+    ],
+    "recommendedProducts": ["so2", "so1", "s1"]
+  },
+  {
+    "category": "nutrient_nitrogen_iron",
+    "issue": "Micronutrient Chlorosis (Nitrogen / Iron Deficiency)",
+    "urgency": "Moderate",
+    "cause": "Depleted organic matter or alkaline soil locking out iron and nitrogen synthesis needed for chlorophyll production.",
+    "symptoms": [
+      "leaves turning pale yellow but veins remain dark green",
+      "interveinal chlorosis green veins yellow leaf blade",
+      "overall pale lime light green stunted slow growth",
+      "yellowing upper young leaves green vein pattern iron deficiency",
+      "older lower leaves uniformly yellowing lacking nitrogen",
+      "pale faded yellow foliage no growth fertilizer needed",
+      "chlorosis yellow leaf surface dark green veins pothos ficus",
+      "hungry plant faded leaves weak thin stems nutrient deficiency"
+    ],
+    "remedy": [
+      "Top-dress the pot with 2 handfuls of microbial-rich organic vermicompost to reintroduce micro & macro nutrients.",
+      "Apply chelated iron (Fe-EDDHA) or seaweed liquid fertilizer to correct interveinal chlorosis quickly.",
+      "Test and adjust potting mix pH to 6.0 - 6.5 so roots can absorb metallic trace minerals.",
+      "Dilute balanced liquid organic seaweed/fish emulsion feed every 14 days during active growing season."
+    ],
+    "recommendedProducts": ["so2", "so1"]
+  },
+  {
+    "category": "fungal_powdery_mildew",
+    "issue": "Fungal Leaf Spot & Powdery Mildew Infection",
+    "urgency": "High",
+    "cause": "Airborne fungal spores (Erysiphales/Cercospora) germinating on damp leaf surfaces in stagnant air.",
+    "symptoms": [
+      "white powdery dust coating leaves looks like flour",
+      "powdery mildew white spots patches on leaf surface",
+      "brown circular spots with yellow halo rings on leaves",
+      "fungal leaf spots black dots spreading foliage damp",
+      "orange rust pustules powdery spots under leaves",
+      "gray mold fuzzy fungus on leaves flower buds damping off",
+      "sooty black mold growing on leaf surface fungus damp leaves"
+    ],
+    "remedy": [
+      "Prune and discard severely infected leaves immediately (do not compost diseased foliage).",
+      "Avoid overhead watering; always water directly into the root zone without splashing leaves.",
+      "Improve room air circulation with an oscillating fan or open window.",
+      "Spray organic potassium bicarbonate solution (1 tsp/L) or botanical neem fungicide every 5 days.",
+      "Ensure plant foliage receives at least 3-4 hours of bright, dry, filtered daylight."
+    ],
+    "recommendedProducts": ["e1", "so1"]
+  },
+  {
+    "category": "sunburn_heat_stress",
+    "issue": "Photo-Oxidation & Direct Sun Scorch (Heat Shock)",
+    "urgency": "Moderate",
+    "cause": "Excessive ultraviolet radiation and temperature breaking down cellular chlorophyll in shade-loving foliage.",
+    "symptoms": [
+      "bleached white translucent papery patches on leaves",
+      "sunburned scorched bleached leaf spots after moving outside",
+      "leaves bleached faded white tan crispy patches direct sun",
+      "heat stress wilting leaf burn direct afternoon scorching sun",
+      "plant placed in hot balcony leaves bleached crisp yellow brown",
+      "monstera pothos leaves turned bleached white dry papery"
+    ],
+    "remedy": [
+      "Relocate the plant immediately out of direct harsh midday/afternoon sunlight into bright filtered indirect light.",
+      "Do not fertilize a heat-stressed plant while it recovers from solar shock.",
+      "Leave slightly scorched leaves on until new growth emerges to maintain photosynthesis.",
+      "Ensure ambient temperature remains below 32°C during peak summer months."
+    ],
+    "recommendedProducts": ["po2", "p1"]
+  },
+  {
+    "category": "etiolation_low_light",
+    "issue": "Phototropism & Severe Etiolation (Light Starvation)",
+    "urgency": "Mild",
+    "cause": "Insufficient photon flux causing rapid elongation of internodes as the plant expends energy searching for light.",
+    "symptoms": [
+      "plant stretching leggy thin weak stems reaching for window",
+      "small pale new leaves wide gaps between leaf nodes",
+      "etiolated succulent stretched tall pale losing compact rosette",
+      "plant leaning heavily towards light source spindly weak growth",
+      "dark room plant not growing leggy pale stems falling over",
+      "succulent lost compact shape stretched out tall pale leaves"
+    ],
+    "remedy": [
+      "Gradually acclimate the plant to a location with bright, indirect, natural light (near an east or north window).",
+      "Rotate the pot 90 degrees every week to prevent unilateral leaning and promote symmetrical stem growth.",
+      "Prune back overly leggy, spindly stems to encourage compact lateral bushier growth.",
+      "If growing in a windowless room or dark corridor, provide a full-spectrum 15W botanical LED grow light."
+    ],
+    "recommendedProducts": ["p2", "p3"]
+  },
+  {
+    "category": "fertilizer_burn",
+    "issue": "Mineral Salt Accumulation & Osmotic Fertilizer Burn",
+    "urgency": "High",
+    "cause": "Excess soluble synthetic salts drawing moisture out of root cells via reverse osmosis and burning leaf margins.",
+    "symptoms": [
+      "white crusty salt deposits on soil surface and pot rim",
+      "sudden brown leaf margins after fertilizing burned leaf edges",
+      "fertilizer burn brown burnt scorched edges after feeding plant",
+      "roots brown shriveled white crust on terracotta rim chemical feed",
+      "plant dying wilting right after adding concentrated fertilizer"
+    ],
+    "remedy": [
+      "Thoroughly flush the root ball with 3 to 4 volumes of lukewarm distilled or filtered water to leach out excess mineral salts.",
+      "Scrape off the top 1 inch of crusty soil containing accumulated salt deposits and replace with fresh potting mix.",
+      "Halt all fertilization for at least 6 weeks while root systems regenerate.",
+      "Switch permanently to gentle, slow-release organic fertilizers like vermicompost instead of chemical synthetics."
+    ],
+    "recommendedProducts": ["so1", "so2", "po1"]
+  },
+  {
+    "category": "healthy_maintenance",
+    "issue": "Vibrant Botanical Health & Normal Metabolic Foliage",
+    "urgency": "None",
+    "cause": "Balanced photosynthetically active radiation, proper hydraulic conductivity, and healthy root development.",
+    "symptoms": [
+      "healthy green glossy leaves plant growing well",
+      "how to take care of my healthy monstera plant routine",
+      "shiny green leaves new unfurling leaf looks great",
+      "routine care watering schedule for indoor plants",
+      "healthy ficus bonsai general care tips maintenance",
+      "best soil and pot for repotting healthy snake plant",
+      "plant looks healthy how often to clean leaves dust",
+      "my plant is doing well just want best advice tips"
+    ],
+    "remedy": [
+      "Maintain your current balanced watering routine; check the top 1-2 inches before adding water.",
+      "Wipe leaves with a damp microfiber cloth once a month to remove household dust and enhance light absorption.",
+      "Rotate the container quarterly to ensure even 360-degree foliage development.",
+      "Top-dress with a tablespoon of organic vermicompost every 60 days to replenish trace soil minerals."
+    ],
+    "recommendedProducts": ["so2", "p1", "p2"]
+  }
+]

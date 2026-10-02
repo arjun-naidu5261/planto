@@ -1,0 +1,23 @@
+[
+  {
+    "quoteId": "CORP-RET-95544",
+    "companyName": "Google Bengaluru",
+    "contactPerson": "Facilities Lead",
+    "email": "facilities@google.com",
+    "phone": "+91 98450 12345",
+    "officeCity": "Bengaluru",
+    "officeAddress": "Bagmane Constellation Business Park",
+    "deskCount": 120,
+    "tier": "tech_floor",
+    "tierTitle": "Tech Floor Oasis (₹6,999/mo)",
+    "estimatedMonthlyPrice": 6999,
+    "notes": "Weekly plant maintenance",
+    "status": "Proposal Dispatched",
+    "serviceLevel": {
+      "botanistVisits": "Weekly (4 visits/mo)",
+      "wiltReplacement": "100% Free instant replacements within 4 hours",
+      "includedSupplies": "Soil aeration, organic neem polish, perlite replenishment & sensor telemetry"
+    },
+    "createdAt": "2026-10-02T13:34:38.237Z"
+  }
+]

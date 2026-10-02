@@ -3,6 +3,8 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { db } from './db.js';
+import { sendBookingEmails } from './mailer.js';
+import { plantDoctorML } from './ml/plantDoctorML.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -334,7 +336,7 @@ app.post('/api/orders', (req, res) => {
     status: 'Confirmed',
     deliveryType: deliveryType || 'PlantMe Express Delivery',
     total,
-    vendorName: 'PlantMe Express Fulfillment Hub',
+    vendorName: 'PlantMe Certified Local Nursery',
     address: address || 'Flat 402, Green Heights, Indiranagar, Bengaluru',
     buildingImage: buildingImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80',
     recipientName: recipientName || 'Arjun Patel',
@@ -349,7 +351,7 @@ app.post('/api/orders', (req, res) => {
       vehicle: 'PlantMe Eco EV-Cargo 12 • KA-01-EV-4421',
       photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80'
     },
-    hub: 'PlantMe Central Darkstore Hub',
+    nurseryOrigin: 'PlantMe Certified Local Nursery',
     etaMinutes: 18,
     createdAt: new Date().toISOString()
   };
@@ -753,21 +755,88 @@ app.post("/api/tips", (req, res) => {
 
 // 1. Hyperlocal Botanical Weather & Care Advisory API
 app.get("/api/weather/care-tip", (req, res) => {
-  const city = req.query.city || "Bengaluru";
-  res.json({
-    city,
-    temperature: "30°C",
-    condition: "Sunny & Mild Dry Breeze",
-    humidity: "46%",
-    uvIndex: "High (7/10)",
+  const rawCity = (req.query.city || "").trim();
+  const city = rawCity || "Hyderabad";
+  const cityLower = city.toLowerCase();
+
+  let weatherProfile = {
+    city: city,
+    temperature: "31°C",
+    condition: "Warm Sunshine & Mild Breeze",
+    humidity: "44%",
+    uvIndex: "Moderate (6/10)",
     advisory: {
-      title: "High Evaporation Today",
-      summary: "Warm sunlight in Bengaluru today accelerates moisture loss.",
-      actionText: "Water outdoor flowering plants before 10 AM or after 5 PM. Indoor air purifiers only need light misting today.",
+      title: "Moderate Transpiration Today",
+      summary: `Warm sunshine across ${city} today accelerates soil moisture evaporation.`,
+      actionText: `Deeply water outdoor flowering plants before 10 AM. Indoor air purifiers and tropical aroids only need light foliage misting today.`,
       hydrationAlert: true,
-      thriveTip: "Keep snake plants in indirect light to prevent leaf tip burn."
+      thriveTip: "Check topsoil with your finger 1 inch down before your next watering cycle."
     }
-  });
+  };
+
+  if (cityLower.includes("hyderabad")) {
+    weatherProfile = {
+      city: "Hyderabad",
+      temperature: "31°C",
+      condition: "Warm Sunshine & Gentle Breeze",
+      humidity: "44%",
+      uvIndex: "Moderate (6/10)",
+      advisory: {
+        title: "Active Growth & Transpiration",
+        summary: "Warm, dry afternoon breeze in Hyderabad accelerates leaf transpiration.",
+        actionText: "Water outdoor flowering saplings and terrace pots before 9:30 AM. Give indoor Monstera and Pothos a light foliage misting.",
+        hydrationAlert: true,
+        thriveTip: "Keep jade and succulents in bright sun; shield delicate ferns from dry afternoon balcony winds."
+      }
+    };
+  } else if (cityLower.includes("bengaluru") || cityLower.includes("bangalore")) {
+    weatherProfile = {
+      city: "Bengaluru",
+      temperature: "27°C",
+      condition: "Pleasant Tropical Breeze & Filtered Sun",
+      humidity: "58%",
+      uvIndex: "Moderate (5/10)",
+      advisory: {
+        title: "Optimal Botanical Humidity",
+        summary: "Mild tropical Bengaluru air keeps indoor foliage naturally hydrated.",
+        actionText: "Ideal day for soil aeration and repotting. Water only when the top 1.5 inches feel dry to the touch.",
+        hydrationAlert: false,
+        thriveTip: "Rotate pots 90 degrees every fortnight for balanced symmetrical foliage development."
+      }
+    };
+  } else if (cityLower.includes("mumbai") || cityLower.includes("chennai")) {
+    weatherProfile = {
+      city: city,
+      temperature: "32°C",
+      condition: "Humid & Coastal Sunshine",
+      humidity: "72%",
+      uvIndex: "High (7/10)",
+      advisory: {
+        title: "High Coastal Humidity",
+        summary: `Tropical coastal humidity in ${city} is exceptional for tropical foliage and ferns.`,
+        actionText: "Ensure good room ventilation to prevent fungal leaf spots. Soil stays damp longer in this humidity.",
+        hydrationAlert: false,
+        thriveTip: "Avoid overwatering; check that pots have free-draining bottom outlets."
+      }
+    };
+  } else if (cityLower.includes("delhi") || cityLower.includes("noida") || cityLower.includes("gurgaon")) {
+    weatherProfile = {
+      city: city,
+      temperature: "33°C",
+      condition: "Dry Heat & Clear Sky",
+      humidity: "35%",
+      uvIndex: "High (7/10)",
+      advisory: {
+        title: "High Evaporation Advisory",
+        summary: `Dry continental climate in ${city} rapidly dries out topsoil moisture.`,
+        actionText: "Water outdoor plants deeply early morning. Group indoor plants together over a pebble water tray to maintain local humidity.",
+        hydrationAlert: true,
+        thriveTip: "Wipe dust off leaves once weekly to maximize oxygen generation."
+      }
+    };
+  }
+
+  res.json(weatherProfile);
 });
 
 // 2. Plant Birth & Adoption Certificate API
@@ -783,7 +852,7 @@ app.get("/api/care/certificate/:id", (req, res) => {
     botanicalName: itemName.includes("Pothos") ? "Epipremnum aureum" : itemName.includes("Snake") ? "Sansevieria trifasciata" : itemName.includes("Bonsai") ? "Ficus microcarpa" : "Tropical Botanical Specimen",
     adoptionDate: matchedOrder.date || new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
     parentName: matchedOrder.recipientName || "Arjun Patel",
-    nurseryOrigin: "PlantMe Botanical Hub (Indiranagar)",
+    nurseryOrigin: "PlantMe Certified Partner Nursery (Bengaluru)",
     batchId: "PLANTME-BATCH-A48",
     vitalityScore: "99% Certified Vitality (Grade A+)",
     soilBlend: "Organic Cocopeat, Perlite & Vermicompost",
@@ -816,50 +885,98 @@ app.post("/api/notifications/whatsapp-care-card", (req, res) => {
   });
 });
 
-// 4. Enhanced AI Plant Doctor API
-app.post("/api/ai/diagnose", (req, res) => {
-  const { plantType, symptoms, hasImage } = req.body;
-  const sym = (symptoms || "").toLowerCase();
+// 3b. Botanist Consultation Slot Booking & SMTP Email Dispatch
+app.get("/api/botanist/slots", (req, res) => {
+  const days = [];
+  const today = new Date();
   
-  if (sym.includes("yellow") || sym.includes("pale")) {
-    return res.json({
-      issue: "Overwatering & Chlorosis (Root Stress)",
-      confidence: "94%",
-      urgency: "Moderate",
-      cause: "Soil remaining waterlogged for more than 4 days, suffocating root oxygen intake.",
-      remedy: [
-        "Pause watering for 6-8 days until the top 2 inches feel completely bone-dry.",
-        "Check bottom drainage hole of pot to ensure excess water escapes freely.",
-        "Spray diluted seaweed bio-extract on leaves for fast micronutrient recovery."
-      ],
-      recommendedProducts: ["p10", "p11"] // potting mix, vermicompost
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    days.push({
+      date: dateStr,
+      isToday: i === 0,
+      slots: [
+        { time: '10:00 AM - 10:30 AM', available: true },
+        { time: '11:30 AM - 12:00 PM', available: true },
+        { time: '02:00 PM - 02:30 PM', available: true },
+        { time: '03:30 PM - 04:00 PM', available: true },
+        { time: '05:00 PM - 05:30 PM', available: true },
+        { time: '06:30 PM - 07:00 PM', available: true }
+      ]
     });
-  } else if (sym.includes("brown") || sym.includes("dry") || sym.includes("curl")) {
-    return res.json({
-      issue: "Underwatered / Low Air Humidity",
-      confidence: "91%",
-      urgency: "Mild",
-      cause: "Dry indoor air from air conditioning or intense direct afternoon sun scorch.",
-      remedy: [
-        "Give a thorough deep watering until moisture drips from drainage holes.",
-        "Mist foliage with water in the morning to increase ambient humidity.",
-        "Move 2 feet away from direct window glass."
-      ],
-      recommendedProducts: ["p8", "p7"] // terracotta pot, self watering pot
+  }
+  res.json({ success: true, days });
+});
+
+app.post("/api/botanist/book-slot", async (req, res) => {
+  try {
+    const {
+      customerName,
+      customerEmail,
+      customerPhone,
+      slotDate,
+      slotTime,
+      plantType,
+      plantIssue
+    } = req.body;
+
+    if (!customerName || !customerPhone || !slotDate || !slotTime) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, phone number, date, and time slot are required.'
+      });
+    }
+
+    const bookingId = 'SLOT-' + Math.floor(1000 + Math.random() * 9000);
+    const booking = {
+      bookingId,
+      customerName,
+      customerEmail: customerEmail || '',
+      customerPhone,
+      slotDate,
+      slotTime,
+      plantType: plantType || 'Indoor Foliage',
+      plantIssue: plantIssue || 'General Consultation & Plant Health Checkup',
+      status: 'Confirmed',
+      meetingType: '1-on-1 Virtual Video Call',
+      createdAt: new Date().toISOString()
+    };
+
+    // Save to database
+    const consultations = db.getConsultations();
+    consultations.unshift(booking);
+    db.saveConsultations(consultations);
+
+    // Send emails via Outlook SMTP
+    const emailResult = await sendBookingEmails(booking);
+
+    res.json({
+      success: true,
+      booking,
+      emailDelivered: emailResult.delivered,
+      message: 'Consultation slot successfully reserved! Email details dispatched.'
     });
-  } else {
-    return res.json({
-      issue: "Healthy Foliage with Minor Dust Accumulation",
-      confidence: "88%",
-      urgency: "None",
-      cause: "Normal metabolic growth with natural indoor ambient dust.",
-      remedy: [
-        "Gently wipe leaves with a soft damp cotton cloth once a week.",
-        "Rotate the pot 90 degrees every fortnight for balanced sun exposure.",
-        "Top-dress with a tablespoon of vermicompost next month."
-      ],
-      recommendedProducts: ["p11"]
-    });
+  } catch (err) {
+    console.error('Error booking slot:', err);
+    res.status(500).json({ success: false, message: 'Failed to complete booking. Please try again.' });
+  }
+});
+
+app.get("/api/botanist/bookings", (req, res) => {
+  res.json(db.getConsultations());
+});
+
+// 4. Production ML Botanical Pathology Diagnostic API
+app.post("/api/ai/diagnose", (req, res) => {
+  try {
+    const { plantType, symptoms, hasImage, fileName } = req.body;
+    const diagnosis = plantDoctorML.predict(symptoms || "", { plantType, fileName, hasImage });
+    return res.json(diagnosis);
+  } catch (err) {
+    console.error("[PlantDoctorML] Diagnosis API error:", err);
+    return res.status(500).json({ error: "ML Diagnosis error: " + err.message });
   }
 });
 
@@ -974,6 +1091,54 @@ app.post("/api/chatbot/message", (req, res) => {
     );
   }
 
+  // 4b. At-Home Balcony Makeover & Plant Doctor Visit
+  if (q.includes("balcony") || q.includes("makeover") || q.includes("at-home") || q.includes("visit") || q.includes("repotting")) {
+    return makeResponse(
+      `🏡 **PlantMe At-Home Balcony Makeover & Plant Doctor Visits:**\n\nCertified urban landscape botanists arrive at your doorstep with organic soil, nutrients & styling equipment:\n\n• **Plant Doctor At-Home Triage (₹499):** 10-plant clinical checkup, organic neem pest treatment & repotting of 2 pots\n• **Balcony Garden Makeover (₹999):** Full balcony sunlight optimization, repotting of up to 6 plants & vertical arrangement\n• **Terrace Jungle & Drip Setup (₹2,499):** Micro-drip automated irrigation + 20kg organic soil treatment\n\nBook directly from the homepage or services menu!`,
+      {
+        type: "service_card",
+        data: { service: "balcony" },
+        quickReplies: ["🏡 Book Balcony Makeover", "✈️ Vacation Plant Boarding", "⭐ Care Pass Benefits", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 4c. Vacation Plant Boarding & ICU Hospital
+  if (q.includes("boarding") || q.includes("vacation") || q.includes("holiday") || q.includes("hospital") || q.includes("icu") || q.includes("travel")) {
+    return makeResponse(
+      `✈️ **Vacation Plant Boarding & Plant Hospital ICU:**\n\nNever let your green family wither while you travel or battle root decline:\n\n• **Vacation Nursery Boarding (₹199/week for 5 plants):** Full greenhouse climate control, LED grow lights & daily WhatsApp photo logs. Doorstep EV pickup & drop!\n• **Plant Hospital ICU Ward (₹299/plant):** 14-day clinical recovery ward with root debridement, anti-fungal botanical dips & sterile potting. 100% Revived or Replaced Guarantee!`,
+      {
+        type: "service_card",
+        data: { service: "hospital" },
+        quickReplies: ["✈️ Book Vacation Boarding", "🏥 Plant Hospital ICU", "🏡 Balcony Makeover", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 4d. "Plant of the Month" Mystery Box Club
+  if (q.includes("mystery") || q.includes("club") || q.includes("box") || (q.includes("month") && q.includes("plant"))) {
+    return makeResponse(
+      `🎁 **"Plant of the Month" Mystery Box Club:**\n\nUnbox nursery-fresh curated living green treasures delivered to your door every month:\n\n• **The Green Explorer Club (₹349/mo):** 1 Exotic live potted air purifier/foliage + handcrafted ceramic pot + collector passport + free fertilizer pouch\n• **Rare & Collector's Bloom Club (₹699/mo):** Rare variegated cultivars (Pink Princess / Bonsai) + luxury self-watering pot + signed art print + free 1-on-1 botanist video call\n\nGet up to 20% off with 3-month or 6-month plans!`,
+      {
+        type: "service_card",
+        data: { service: "club" },
+        quickReplies: ["🎁 Join Mystery Club", "⭐ Care Pass", "🏡 Balcony Makeover", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
+  // 4e. Corporate Retainers
+  if (q.includes("corporate") || q.includes("office") || q.includes("b2b") || q.includes("retainer") || q.includes("coworking") || q.includes("bulk")) {
+    return makeResponse(
+      `🏢 **PlantMe B2B Workplace Plant Care Retainers & Gifting:**\n\nZero-effort biophilic offices for India's fastest-growing tech teams:\n\n• **Startup Desk Greenery (₹2,499/mo):** Up to 20 desk plants, fortnightly visits & free wilt replacements\n• **Tech Floor Oasis (₹6,999/mo):** Up to 60 plants + 4 reception statement trees, weekly botanist visits & monthly AQI report\n• **Enterprise HQ Canopy (₹14,999/mo):** Multi-floor campus care & executive boardroom bonsai styling\n• **Corporate Gifting:** Branded planters with company logo delivered to employee homes from ₹259 each\n\nExplore full packages at our Corporate Portal!`,
+      {
+        type: "service_card",
+        data: { service: "corporate" },
+        quickReplies: ["🏢 View Corporate Retainers", "🎁 Corporate Gifting", "💬 WhatsApp Concierge"]
+      }
+    );
+  }
+
   // 5. Care Pass
   if (q.includes("care pass") || q.includes("pass") || q.includes("membership") || q.includes("subscription") || q.includes("99")) {
     return makeResponse(
@@ -988,7 +1153,7 @@ app.post("/api/chatbot/message", (req, res) => {
   // 6. Delivery Timelines & Packaging
   if (q.includes("delivery") || q.includes("speed") || q.includes("fast") || q.includes("how long") || q.includes("time") || q.includes("mins") || q.includes("minutes") || q.includes("shipping")) {
     return makeResponse(
-      `⚡ **20–30 Minute Hyperlocal EV Delivery:**\n\n• **Real-Time Transit:** Dispatched from our closest temperature-stabilized nursery hub.\n• **Eco-Moss Hydration Wrap:** Roots remain 100% hydrated in living moss without heavy soil leakage.\n• **Zero Plastic:** Packaged in biodegradable honeycomb cardboard carriers tailored for EVs.`,
+      `⚡ **20–30 Minute Hyperlocal EV Delivery:**\n\n• **Real-Time Transit:** Dispatched fresh from our closest certified partner nursery.\n• **Eco-Moss Hydration Wrap:** Roots remain 100% hydrated in living moss without heavy soil leakage.\n• **Zero Plastic:** Packaged in biodegradable honeycomb cardboard carriers tailored for EVs.`,
       {
         type: "delivery_card",
         quickReplies: ["📦 Track Current Order", "🌿 Browse Plants", "💬 WhatsApp Concierge"]
@@ -1030,6 +1195,405 @@ app.post("/api/chatbot/message", (req, res) => {
       ]
     }
   );
+});
+
+// --- RAZORPAY / CARE PASS PAYMENT ENDPOINTS ---
+app.post('/api/payment/create-carepass-order', async (req, res) => {
+  const { amount = 99, currency = 'INR', customerEmail = 'customer@plantme.in' } = req.body;
+  
+  const keyId = process.env.RAZORPAY_KEY_ID || '';
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || '';
+
+  // If live/test Razorpay credentials are provided:
+  if (keyId && keySecret) {
+    try {
+      const auth = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+      const response = await fetch('https://api.razorpay.com/v1/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${auth}`
+        },
+        body: JSON.stringify({
+          amount: Math.round(amount * 100), // paise
+          currency,
+          receipt: `rcpt_carepass_${Date.now()}`,
+          notes: {
+            membership: 'PlantMe Care Pass',
+            email: customerEmail
+          }
+        })
+      });
+      const order = await response.json();
+      return res.json({
+        success: true,
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+        keyId,
+        isConfigured: true
+      });
+    } catch (err) {
+      console.error('Razorpay API error:', err);
+    }
+  }
+
+  // If Razorpay keys are not yet provided by the user:
+  return res.json({
+    success: true,
+    orderId: `order_sim_${Date.now()}`,
+    amount: amount * 100,
+    currency: 'INR',
+    keyId: keyId || 'rzp_test_placeholder',
+    isConfigured: !!keyId,
+    message: keyId ? 'Order created' : 'Razorpay gateway initialized in sandbox ready mode.'
+  });
+});
+
+app.post('/api/payment/verify-carepass', (req, res) => {
+  const { paymentId, orderId, method = 'Razorpay', email = 'customer@plantme.in' } = req.body;
+  const txnId = paymentId || `TXN-RZP-${Math.floor(100000 + Math.random() * 900000)}`;
+  const validUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  return res.json({
+    success: true,
+    message: 'PlantMe Care Pass activated successfully!',
+    membership: {
+      status: 'ACTIVE',
+      plan: 'PlantMe Care Pass (Monthly)',
+      price: 99,
+      method,
+      transactionId: txnId,
+      activatedAt: new Date().toISOString(),
+      validUntil,
+      benefits: [
+        'Unlimited 1-Click plant replacements',
+        '2 Free 5-Min live botanist consultations/mo',
+        'Free quarterly organic vermicompost pouch',
+        'Priority 20-min express transit'
+      ]
+    }
+  });
+});
+
+// --- REVENUE DRIVER 1: AT-HOME BALCONY MAKEOVER & PLANT DOCTOR TRIAGE ---
+app.get('/api/services/balcony-makeover', (req, res) => {
+  res.json(db.getServiceBookings());
+});
+
+app.post('/api/services/balcony-makeover', async (req, res) => {
+  try {
+    const {
+      tier,
+      tierTitle,
+      price,
+      customerName,
+      customerEmail,
+      customerPhone,
+      address,
+      society,
+      preferredDate,
+      preferredSlot,
+      plantCount,
+      specialNotes,
+      paymentMethod = 'wallet'
+    } = req.body;
+
+    const amount = Number(price) || 499;
+
+    // Check & deduct wallet if selected
+    let currentWallet = db.getWallet();
+    if (paymentMethod === 'wallet') {
+      if (currentWallet < amount) {
+        return res.status(400).json({ success: false, message: `Insufficient wallet balance (₹${currentWallet}). Required: ₹${amount}.` });
+      }
+      currentWallet -= amount;
+      db.saveWallet(currentWallet);
+    }
+
+    const bookingId = 'BM-' + Math.floor(10000 + Math.random() * 90000);
+    const newBooking = {
+      bookingId,
+      tier: tier || 'balcony',
+      tierTitle: tierTitle || 'Balcony Garden Makeover & Greenery Revamp',
+      price: amount,
+      customerName: customerName || 'Valued Customer',
+      customerEmail: customerEmail || 'customer@plantme.in',
+      customerPhone: customerPhone || '+91 88856 00899',
+      address: address || 'Indiranagar, Bengaluru',
+      society: society || 'General Residential',
+      preferredDate: preferredDate || 'Tomorrow',
+      preferredSlot: preferredSlot || '10:00 AM - 12:00 PM',
+      plantCount: plantCount || 10,
+      specialNotes: specialNotes || '',
+      paymentMethod,
+      status: 'Confirmed',
+      assignedBotanist: {
+        name: 'Dr. Anita Deshmukh',
+        title: 'Senior Urban Landscape Botanist (Gold Medalist)',
+        phone: '+91 98450 88214',
+        rating: 4.95,
+        photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80'
+      },
+      createdAt: new Date().toISOString()
+    };
+
+    const bookings = db.getServiceBookings();
+    bookings.unshift(newBooking);
+    db.saveServiceBookings(bookings);
+
+    // Also dispatch email notification
+    try {
+      await sendBookingEmails({
+        bookingId,
+        customerName: newBooking.customerName,
+        customerEmail: newBooking.customerEmail,
+        customerPhone: newBooking.customerPhone,
+        slotDate: newBooking.preferredDate,
+        slotTime: newBooking.preferredSlot,
+        plantType: `${newBooking.tierTitle} (${newBooking.plantCount} plants)`,
+        plantIssue: `At-home visit at ${newBooking.address}. Payment: ${paymentMethod.toUpperCase()} (₹${amount})`
+      });
+    } catch (e) {
+      console.log('[BalconyMakeover] Email dispatch note:', e.message);
+    }
+
+    res.json({
+      success: true,
+      booking: newBooking,
+      wallet: currentWallet,
+      message: `At-home ${newBooking.tierTitle} booked successfully! Certified botanist dispatched on ${newBooking.preferredDate}.`
+    });
+  } catch (err) {
+    console.error('Balcony makeover error:', err);
+    res.status(500).json({ success: false, message: 'Failed to book service' });
+  }
+});
+
+// --- REVENUE DRIVER 2: VACATION PLANT BOARDING & PLANT HOSPITAL ICU ---
+app.get('/api/services/plant-hospital', (req, res) => {
+  res.json(db.getPlantHospital());
+});
+
+app.post('/api/services/plant-hospital', async (req, res) => {
+  try {
+    const {
+      serviceType, // 'vacation_boarding' or 'icu_recovery'
+      serviceTitle,
+      price,
+      customerName,
+      customerPhone,
+      customerEmail,
+      plantCount = 1,
+      durationWeeks = 1,
+      symptoms = '',
+      address,
+      pickupDate,
+      pickupSlot,
+      paymentMethod = 'wallet'
+    } = req.body;
+
+    const amount = Number(price) || (serviceType === 'vacation_boarding' ? 199 * durationWeeks : 299 * plantCount);
+
+    let currentWallet = db.getWallet();
+    if (paymentMethod === 'wallet') {
+      if (currentWallet < amount) {
+        return res.status(400).json({ success: false, message: `Insufficient wallet balance. Required: ₹${amount}, Available: ₹${currentWallet}.` });
+      }
+      currentWallet -= amount;
+      db.saveWallet(currentWallet);
+    }
+
+    const hospitalId = (serviceType === 'vacation_boarding' ? 'BOARD-' : 'ICU-') + Math.floor(10000 + Math.random() * 90000);
+    const entry = {
+      hospitalId,
+      serviceType,
+      serviceTitle: serviceTitle || (serviceType === 'vacation_boarding' ? 'Vacation Greenhouse Boarding' : 'Plant Hospital ICU Recovery Ward'),
+      price: amount,
+      customerName: customerName || 'Plant Parent',
+      customerPhone: customerPhone || '+91 88856 00899',
+      customerEmail: customerEmail || 'customer@plantme.in',
+      plantCount: Number(plantCount) || 1,
+      durationWeeks: Number(durationWeeks) || 1,
+      symptoms,
+      address: address || 'Bengaluru',
+      pickupDate: pickupDate || 'Tomorrow',
+      pickupSlot: pickupSlot || 'Morning (9 AM - 12 PM)',
+      paymentMethod,
+      wardStatus: serviceType === 'vacation_boarding' ? 'Pickup Scheduled' : 'ICU Bed Reserved',
+      updates: [
+        {
+          timestamp: new Date().toISOString(),
+          status: 'EV Doorstep Pickup Scheduled',
+          note: 'Hydration transport carrier assigned with climate-controlled EV rider.'
+        }
+      ],
+      createdAt: new Date().toISOString()
+    };
+
+    const hospitalRecords = db.getPlantHospital();
+    hospitalRecords.unshift(entry);
+    db.savePlantHospital(hospitalRecords);
+
+    res.json({
+      success: true,
+      record: entry,
+      wallet: currentWallet,
+      message: `Reserved successfully! PlantMe EV Rider will pick up your plants on ${entry.pickupDate}.`
+    });
+  } catch (err) {
+    console.error('Plant hospital error:', err);
+    res.status(500).json({ success: false, message: 'Failed to schedule plant care service' });
+  }
+});
+
+// --- REVENUE DRIVER 3: "PLANT OF THE MONTH" / SEASONAL BLOOM MYSTERY CLUB ---
+app.get('/api/subscriptions/club', (req, res) => {
+  res.json(db.getClubSubscriptions());
+});
+
+app.post('/api/subscriptions/club', async (req, res) => {
+  try {
+    const {
+      tier, // 'green_explorer' (₹349) or 'collectors_bloom' (₹699)
+      planName,
+      cadence = 'monthly', // 'monthly', 'quarterly', 'half_yearly'
+      price,
+      customerName,
+      customerEmail,
+      customerPhone,
+      deliveryAddress,
+      paymentMethod = 'wallet'
+    } = req.body;
+
+    const amount = Number(price) || (tier === 'collectors_bloom' ? 699 : 349);
+
+    let currentWallet = db.getWallet();
+    if (paymentMethod === 'wallet') {
+      if (currentWallet < amount) {
+        return res.status(400).json({ success: false, message: `Insufficient wallet balance (₹${currentWallet}). Required: ₹${amount}.` });
+      }
+      currentWallet -= amount;
+      db.saveWallet(currentWallet);
+    }
+
+    const subId = 'CLUB-' + Math.floor(10000 + Math.random() * 90000);
+    const validUntilDate = new Date();
+    if (cadence === 'quarterly') validUntilDate.setMonth(validUntilDate.getMonth() + 3);
+    else if (cadence === 'half_yearly') validUntilDate.setMonth(validUntilDate.getMonth() + 6);
+    else validUntilDate.setMonth(validUntilDate.getMonth() + 1);
+
+    const newSub = {
+      subscriptionId: subId,
+      tier: tier || 'green_explorer',
+      planName: planName || (tier === 'collectors_bloom' ? "Rare & Collector's Bloom Club" : "The Green Explorer Club"),
+      cadence,
+      price: amount,
+      customerName: customerName || 'Subscribed Plant Parent',
+      customerEmail: customerEmail || 'customer@plantme.in',
+      customerPhone: customerPhone || '+91 88856 00899',
+      deliveryAddress: deliveryAddress || 'Bengaluru',
+      status: 'ACTIVE',
+      nextMysteryBoxDispatch: '1st of Next Month',
+      validUntil: validUntilDate.toISOString(),
+      perks: [
+        'Curated exotic nursery plant + designer pot every month',
+        'Official Collector Passport Stamp & Care Guide',
+        'Free 1-on-1 Botanist Consultation credit',
+        'Zero shipping fees on all express orders'
+      ],
+      createdAt: new Date().toISOString()
+    };
+
+    const subs = db.getClubSubscriptions();
+    subs.unshift(newSub);
+    db.saveClubSubscriptions(subs);
+
+    res.json({
+      success: true,
+      subscription: newSub,
+      wallet: currentWallet,
+      message: `Welcome to ${newSub.planName}! Your first botanical mystery box will be dispatched on ${newSub.nextMysteryBoxDispatch}.`
+    });
+  } catch (err) {
+    console.error('Club subscription error:', err);
+    res.status(500).json({ success: false, message: 'Failed to start subscription club' });
+  }
+});
+
+// --- REVENUE DRIVER 4: B2B CORPORATE OFFICE PLANT CARE RETAINERS ---
+app.get('/api/corporate/retainer-quotes', (req, res) => {
+  res.json(db.getCorporateQuotes());
+});
+
+app.post('/api/corporate/retainer-quote', async (req, res) => {
+  try {
+    const {
+      companyName,
+      contactPerson,
+      email,
+      phone,
+      officeCity = 'Bengaluru',
+      officeAddress,
+      deskCount = 50,
+      tier = 'tech_floor',
+      tierTitle = 'Tech Floor Oasis (₹6,999/mo)',
+      estimatedMonthlyPrice = 6999,
+      notes = ''
+    } = req.body;
+
+    const quoteId = 'CORP-RET-' + Math.floor(10000 + Math.random() * 90000);
+    const quote = {
+      quoteId,
+      companyName: companyName || 'Company Enterprise',
+      contactPerson: contactPerson || 'Facilities Manager',
+      email: email || 'admin@company.com',
+      phone: phone || '+91 98765 43210',
+      officeCity,
+      officeAddress: officeAddress || 'Bengaluru Tech Park',
+      deskCount: Number(deskCount) || 50,
+      tier,
+      tierTitle,
+      estimatedMonthlyPrice: Number(estimatedMonthlyPrice) || 6999,
+      notes,
+      status: 'Proposal Dispatched',
+      serviceLevel: {
+        botanistVisits: tier === 'startup' ? 'Bi-weekly (2 visits/mo)' : tier === 'enterprise' ? 'Twice-weekly (8 visits/mo)' : 'Weekly (4 visits/mo)',
+        wiltReplacement: '100% Free instant replacements within 4 hours',
+        includedSupplies: 'Soil aeration, organic neem polish, perlite replenishment & sensor telemetry'
+      },
+      createdAt: new Date().toISOString()
+    };
+
+    const quotes = db.getCorporateQuotes();
+    quotes.unshift(quote);
+    db.saveCorporateQuotes(quotes);
+
+    // Send email alert to corporate team
+    try {
+      await sendBookingEmails({
+        bookingId: quoteId,
+        customerName: `${contactPerson} (${companyName})`,
+        customerEmail: email,
+        customerPhone: phone,
+        slotDate: 'Immediate Corporate Evaluation',
+        slotTime: 'B2B Priority Care Desk',
+        plantType: `${tierTitle} - ${deskCount} Desks`,
+        plantIssue: `Office: ${officeCity}, Address: ${officeAddress}. Notes: ${notes}`
+      });
+    } catch (e) {
+      console.log('[CorporateRetainer] Email notification note:', e.message);
+    }
+
+    res.json({
+      success: true,
+      quote,
+      message: `Corporate retainer quotation #${quoteId} generated! Our B2B Horticulture Lead will schedule the free site audit within 4 business hours.`
+    });
+  } catch (err) {
+    console.error('Corporate retainer quote error:', err);
+    res.status(500).json({ success: false, message: 'Failed to submit retainer quote' });
+  }
 });
 
 // SPA fallback

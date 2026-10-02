@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: 'var(--glass-bg-dark)', color: 'var(--white)', padding: '56px 24px 24px', marginTop: '56px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+    <footer className="app-footer" style={{ backgroundColor: 'var(--glass-bg-dark)', color: 'var(--white)', padding: '56px 24px 24px', marginTop: '56px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '40px' }}>
         <div>
           <Link to="/" className="logo" style={{ color: 'var(--white)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
@@ -56,8 +56,16 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1400px', margin: '0 auto', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px', textAlign: 'center', fontSize: '12px', color: '#888' }}>
-        © 2026 PlantMe.in (Future Forbes Pvt Ltd). All Rights Reserved. India's #1 Hyperlocal Live Plant Delivery Platform.
+      <div style={{ maxWidth: '1400px', margin: '0 auto', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px', textAlign: 'center', fontSize: '12.5px', color: '#888', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.06)', padding: '6px 18px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 2px 10px rgba(0,0,0,0.25)' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e', display: 'inline-block' }}></span>
+          <span style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', letterSpacing: '0.3px' }}>
+            Powered by <strong style={{ color: '#ffffff', fontWeight: 800, letterSpacing: '0.5px' }}>Future Forbes Pvt Ltd</strong>
+          </span>
+        </div>
+        <div style={{ fontSize: '11.5px', color: '#718096' }}>
+          © 2026 PlantMe.in • All Rights Reserved • India's #1 Hyperlocal Live Plant & Botanical Care Platform
+        </div>
       </div>
     </footer>
   );

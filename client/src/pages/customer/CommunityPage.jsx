@@ -37,7 +37,7 @@ export default function CommunityPage() {
     <div id="view-community" className="page-view active" style={{ display: 'block' }}>
       <div className="section-title-row" style={{ marginBottom: '30px' }}>
         <div>
-          <h2 className="section-title">PLANTO Gardening Community Hub</h2>
+          <h2 className="section-title">PlantMe Gardening Community</h2>
           <p className="section-subtitle">Share gardening diaries, explore workshop calendars, or read professional guidelines.</p>
         </div>
         {isLoggedIn && (

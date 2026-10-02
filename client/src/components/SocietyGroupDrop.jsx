@@ -60,7 +60,7 @@ export default function SocietyGroupDrop() {
             </span>
           </div>
           <h3 style={{ fontSize: '20px', fontFamily: 'var(--font-serif)', color: '#14532d', margin: '6px 0 2px 0' }}>
-            Apartment Society & Tech Park Hub Drop
+            Apartment Society & Tech Park Group Drop
           </h3>
           <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
             Order together with neighbors to cut carbon footprint, unlock bulk discounts & free organic compost!

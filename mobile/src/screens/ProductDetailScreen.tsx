@@ -185,7 +185,7 @@ export default function ProductDetailScreen({ route, navigation }: any) {
           {activeTab === 'reviews' && (
             <View style={styles.tabContent}>
               {[
-                { name: 'Priya M.', rating: 5, date: 'Sep 28', text: 'Absolutely gorgeous plant! Arrived in perfect condition with a lovely care card. The 20-min delivery is real!' },
+                { name: 'Ananya M.', rating: 5, date: 'Sep 28', text: 'Absolutely gorgeous plant! Arrived in perfect condition with a lovely care card. The 20-min delivery is real!' },
                 { name: 'Arjun K.', rating: 5, date: 'Sep 25', text: 'Third plant I have ordered from PlantMe. Always fresh and healthy. Will never go back to offline nurseries.' },
                 { name: 'Sneha R.', rating: 4, date: 'Sep 20', text: 'Beautiful monstera, slightly smaller than I expected from photos, but very healthy. Customer support resolved it instantly.' },
               ].map((r, i) => (

@@ -206,7 +206,7 @@ export const api = {
   },
 
   // Customer Experience (CX) APIs
-  getWeatherCareTip: async (city = 'Bengaluru') => {
+  getWeatherCareTip: async (city = 'Hyderabad') => {
     const res = await fetch(`${API_BASE}/weather/care-tip?city=${encodeURIComponent(city)}`);
     return handleResponse(res);
   },
@@ -267,6 +267,62 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ plantId })
     });
+    return handleResponse(res);
+  },
+
+  // Revenue Feature 3: At-Home Balcony Makeover & Plant Doctor Triage
+  bookBalconyMakeover: async (data) => {
+    const res = await fetch(`${API_BASE}/services/balcony-makeover`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  getBalconyBookings: async () => {
+    const res = await fetch(`${API_BASE}/services/balcony-makeover`);
+    return handleResponse(res);
+  },
+
+  // Revenue Feature 6: Vacation Plant Boarding & Plant Hospital ICU
+  bookPlantHospital: async (data) => {
+    const res = await fetch(`${API_BASE}/services/plant-hospital`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  getPlantHospitalRecords: async () => {
+    const res = await fetch(`${API_BASE}/services/plant-hospital`);
+    return handleResponse(res);
+  },
+
+  // Revenue Feature 4: "Plant of the Month" Mystery Box Club
+  joinMysteryClub: async (data) => {
+    const res = await fetch(`${API_BASE}/subscriptions/club`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  getClubSubscriptions: async () => {
+    const res = await fetch(`${API_BASE}/subscriptions/club`);
+    return handleResponse(res);
+  },
+
+  // Revenue Feature 5: B2B Corporate Retainers
+  submitCorporateRetainerQuote: async (data) => {
+    const res = await fetch(`${API_BASE}/corporate/retainer-quote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  getCorporateRetainerQuotes: async () => {
+    const res = await fetch(`${API_BASE}/corporate/retainer-quotes`);
     return handleResponse(res);
   }
 };

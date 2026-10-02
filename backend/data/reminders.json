@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "r1",
+    "active": true,
+    "title": "Ficus Bonsai (Bonsai Buddy)",
+    "type": "Water",
+    "frequency": "Every 7 days",
+    "nextDate": "2026-10-09",
+    "health": "100% Thriving"
+  }
+]

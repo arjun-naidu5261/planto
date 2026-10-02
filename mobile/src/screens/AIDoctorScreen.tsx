@@ -34,7 +34,7 @@ function getFallbackResponse(query: string) {
   if (q.includes('brown')) return FALLBACK_RESPONSES.brown;
   if (q.includes('overwater')) return FALLBACK_RESPONSES.overwater;
   if (q.includes('bug') || q.includes('pest') || q.includes('insect')) return FALLBACK_RESPONSES.pest;
-  return '🌱 Based on your description, ensure your plant has adequate light, proper watering schedule, and good drainage. If the issue persists, try a live consultation with our botanist Dr. Priya Nair!';
+  return '🌱 Based on your description, ensure your plant has adequate light, proper watering schedule, and good drainage. If the issue persists, try a live consultation with our certified senior botanist!';
 }
 
 export default function AIDoctorScreen() {
@@ -82,7 +82,7 @@ export default function AIDoctorScreen() {
       <View style={styles.botanistBanner}>
         <View style={styles.onlineDot} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.botanistTitle}>Dr. Priya Nair is online now</Text>
+          <Text style={styles.botanistTitle}>Senior Botanist is online now</Text>
           <Text style={styles.botanistSub}>Book a 5-min live video consultation</Text>
         </View>
         <TouchableOpacity style={styles.botanistBtn}>

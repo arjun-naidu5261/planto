@@ -2,7 +2,7 @@
   "expo": {
     "name": "PlantMe.in",
     "slug": "plantme",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
         "backgroundColor": "#1b4332"
       },
       "package": "in.plantme.app",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"

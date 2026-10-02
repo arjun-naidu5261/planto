@@ -164,21 +164,6 @@ export default function ProfileScreen({ navigation }: any) {
           >
             <Text style={styles.loginBtnText}>{loading ? 'Signing in...' : 'Sign In to PlantMe →'}</Text>
           </TouchableOpacity>
-
-          <View style={styles.demoLoginBox}>
-            <Text style={styles.demoLoginTitle}>Quick Demo Sign In</Text>
-            <Text style={styles.demoLoginSub}>Tap below to fill demo customer credentials:</Text>
-            <TouchableOpacity
-              style={styles.fillDemoBtn}
-              onPress={() => {
-                setEmail('customer@plantme.in');
-                setPassword('plantme123');
-              }}
-            >
-              <Ionicons name="flash-outline" size={14} color={Colors.primary} />
-              <Text style={styles.fillDemoText}>customer@plantme.in / plantme123</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </View>
     );
@@ -230,8 +215,50 @@ export default function ProfileScreen({ navigation }: any) {
             <TouchableOpacity
               style={styles.carePassBtn}
               onPress={() => {
-                setHasCarePass(!hasCarePass);
-                Alert.alert(hasCarePass ? 'Paused' : 'Activated!', hasCarePass ? 'PlantMe Care Pass paused.' : 'PlantMe Care Pass is now ACTIVE! Enjoy VIP perks.');
+                if (hasCarePass) {
+                  Alert.alert(
+                    'PlantMe Care Pass',
+                    'Your VIP membership is currently ACTIVE (₹99/mo).',
+                    [
+                      { text: 'Keep Active', style: 'cancel' },
+                      {
+                        text: 'Pause Pass',
+                        style: 'destructive',
+                        onPress: () => {
+                          setHasCarePass(false);
+                          Alert.alert('Care Pass Paused', 'Your VIP benefits are paused.');
+                        }
+                      }
+                    ]
+                  );
+                } else {
+                  Alert.alert(
+                    'Subscribe to PlantMe Care Pass (₹99/mo)',
+                    'Includes unlimited 1-click replacements, 2 free botanist calls/mo, quarterly organic vermicompost, and express transit.\n\nChoose payment method:',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      {
+                        text: `Pay ₹99 from Wallet (Bal: ₹${Math.round(wallet)})`,
+                        onPress: () => {
+                          if (wallet < 99) {
+                            Alert.alert('Low Wallet Balance', `Your wallet balance is ₹${Math.round(wallet)}. Please recharge or choose Razorpay.`);
+                            return;
+                          }
+                          addFundsToWallet(-99);
+                          setHasCarePass(true);
+                          Alert.alert('Payment Successful! 🎉', '₹99 paid from PlantMe Green Wallet.\n\nPlantMe Care Pass is now ACTIVE!');
+                        }
+                      },
+                      {
+                        text: 'Pay ₹99 via Razorpay',
+                        onPress: () => {
+                          setHasCarePass(true);
+                          Alert.alert('Payment Successful! 💳', `Transaction ID: TXN-RZP-${Math.floor(100000 + Math.random() * 900000)}\n\nPlantMe Care Pass is now ACTIVE!`);
+                        }
+                      }
+                    ]
+                  );
+                }
               }}
             >
               <Text style={styles.carePassBtnText}>
@@ -552,7 +579,7 @@ export default function ProfileScreen({ navigation }: any) {
               <Ionicons name="videocam" size={32} color="#fff" />
             </View>
             <Text style={styles.botanistModalTitle}>Live Botanist Consultation</Text>
-            <Text style={styles.botanistModalDoc}>Dr. Priya Nair • Senior Horticulturist</Text>
+            <Text style={styles.botanistModalDoc}>Senior Horticulturist & Plant Specialist</Text>
             <Text style={styles.botanistModalSub}>
               Show your plants live on camera for 5-minute instant diagnosis on leaf yellowing, soil fungal check, and optimal repotting guidance.
             </Text>
@@ -564,7 +591,7 @@ export default function ProfileScreen({ navigation }: any) {
               style={styles.startCallBtn}
               onPress={() => {
                 setBotanistModalVisible(false);
-                Alert.alert('Connecting Video Call... 🌿', 'Connecting you to Dr. Priya Nair. Please allow camera access.');
+                Alert.alert('Connecting Video Call... 🌿', 'Connecting you to a certified Senior Horticulturist. Please allow camera access.');
               }}
             >
               <Ionicons name="videocam" size={18} color="#fff" />
@@ -597,11 +624,6 @@ const styles = StyleSheet.create({
   textInput: { flex: 1, fontSize: 14, color: Colors.text },
   loginBtn: { backgroundColor: Colors.primary, borderRadius: Radius.lg, paddingVertical: 16, alignItems: 'center', marginTop: 8 },
   loginBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
-  demoLoginBox: { marginTop: 24, padding: 16, backgroundColor: '#f0fdf4', borderRadius: Radius.md, borderWidth: 1, borderColor: '#bbf7d0' },
-  demoLoginTitle: { fontSize: 13, fontWeight: '800', color: Colors.primary, marginBottom: 4 },
-  demoLoginSub: { fontSize: 11, color: Colors.textMuted, marginBottom: 10 },
-  fillDemoBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#fff', padding: 10, borderRadius: Radius.sm, borderWidth: 1, borderColor: Colors.primary },
-  fillDemoText: { fontSize: 12, fontWeight: '700', color: Colors.primary },
   header: { paddingTop: 50, paddingHorizontal: Spacing.md, paddingBottom: Spacing.lg, alignItems: 'center' },
   profileAvatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(255,255,255,0.25)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   avatarText: { fontSize: 26, fontWeight: '800', color: '#fff' },

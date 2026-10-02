@@ -781,17 +781,6 @@ export default function App() {
               />
             </div>
 
-            <div style={{ background: '#f8faf9', padding: '10px 14px', borderRadius: '12px', fontSize: '11px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#1b4332', fontWeight: 700 }}>Demo Root Account:</span>
-              <button 
-                type="button" 
-                onClick={() => { setAdminEmail('admin@planto.in'); setAdminPassword('admin123'); }}
-                style={{ background: '#e8f5e9', color: '#1b4332', border: 'none', padding: '4px 10px', borderRadius: '6px', fontWeight: 800, fontSize: '11px', cursor: 'pointer' }}
-              >
-                Auto Fill Credentials
-              </button>
-            </div>
-
             <button type="submit" className="btn" style={{ width: '100%', justifyContent: 'center', height: '48px', background: '#1b4332', color: '#ffffff', borderRadius: '12px', border: 'none', fontWeight: 800, fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 14px rgba(27,67,50,0.2)' }}>
               Access Super Admin Operations →
             </button>

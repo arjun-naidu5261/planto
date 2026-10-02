@@ -503,5 +503,106 @@
       "fertilizer": "Includes flower food",
       "potType": "Satin Ribbon Premium Wrap"
     }
+  },
+  {
+    "id": "bq3",
+    "name": "Sunlit Daisy & Golden Chrysanthemum Bouquet",
+    "category": "Bouquets & Flowers",
+    "tag": "Fresh Flower Bouquets",
+    "type": "bouquet",
+    "price": 399,
+    "vendorId": "v1",
+    "rating": 4.8,
+    "reviewsCount": 29,
+    "description": "Bright and cheerful hand-tied bunch of farm-fresh yellow daisies, golden chrysanthemums and lush eucalyptus sprigs with moisture gel stem wrap.",
+    "height": "40 cm",
+    "weight": "0.5 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 5,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "Standard (10 Stems)",
+      "Deluxe (20 Stems)"
+    ],
+    "quantity": 18,
+    "images": [
+      "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=600&q=80"
+    ],
+    "careInstructions": {
+      "waterLevel": "Trim stems diagonally by 1 inch and place in cold fresh water",
+      "sunlight": "Cool shaded indoor spot away from direct heat",
+      "temperature": "16°C - 22°C",
+      "humidity": "N/A",
+      "fertilizer": "Includes 1 sachet floral preservative",
+      "potType": "Handcrafted Eco Jute Wrap"
+    }
+  },
+  {
+    "id": "bq4",
+    "name": "Pastel Carnations & Baby's Breath Elegance",
+    "category": "Bouquets & Flowers",
+    "tag": "Fresh Flower Bouquets",
+    "type": "bouquet",
+    "price": 549,
+    "vendorId": "v2",
+    "rating": 4.9,
+    "reviewsCount": 36,
+    "description": "Romantic handcrafted bouquet of soft peach and pink carnations intertwined with cloud-like white baby's breath (gypsophila) and velvet tissue finish.",
+    "height": "45 cm",
+    "weight": "0.6 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 6,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "Classic (12 Stems)",
+      "Grand (24 Stems)"
+    ],
+    "quantity": 22,
+    "images": [
+      "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80"
+    ],
+    "careInstructions": {
+      "waterLevel": "Keep in clean vase and replenish water daily",
+      "sunlight": "Indirect ambient indoor light",
+      "temperature": "18°C - 24°C",
+      "humidity": "N/A",
+      "fertilizer": "Includes plant-safe floral preservative",
+      "potType": "Pastel Korean Matte Paper Wrap"
+    }
+  },
+  {
+    "id": "bq5",
+    "name": "Royal Dutch Red Rose & White Lily Symphony",
+    "category": "Bouquets & Flowers",
+    "tag": "Fresh Flower Bouquets",
+    "type": "bouquet",
+    "price": 799,
+    "vendorId": "v3",
+    "rating": 5.0,
+    "reviewsCount": 51,
+    "description": "Grand luxury celebration bouquet featuring long-stem Dutch red roses, fragrant oriental white lilies, and fresh asparagus foliage. Perfect for anniversaries and birthdays.",
+    "height": "55 cm",
+    "weight": "0.9 kg",
+    "growthRate": "N/A",
+    "petFriendly": true,
+    "airPurificationScore": 7,
+    "potSize": "N/A",
+    "sizesAvailable": [
+      "Signature Luxury"
+    ],
+    "quantity": 14,
+    "images": [
+      "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=600&q=80"
+    ],
+    "careInstructions": {
+      "waterLevel": "Snip stems under running water and place in fresh vase",
+      "sunlight": "Cool ambient spot",
+      "temperature": "18°C - 23°C",
+      "humidity": "N/A",
+      "fertilizer": "Includes 2 sachets flower food",
+      "potType": "Double-Layer Velvet & Satin Ribbon Wrap"
+    }
   }
 ]
