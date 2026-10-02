@@ -25,6 +25,7 @@ function HomeStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Shop" component={ShopScreen} />
+      <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="Wishlist" component={WishlistScreen} />
       <Stack.Screen name="Orders" component={OrdersScreen} />
@@ -37,6 +38,7 @@ function ShopStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Shop" component={ShopScreen} />
+      <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="Wishlist" component={WishlistScreen} />
       <Stack.Screen name="Orders" component={OrdersScreen} />
@@ -63,6 +65,7 @@ function ProfileStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Shop" component={ShopScreen} />
+      <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Wishlist" component={WishlistScreen} />
       <Stack.Screen name="Orders" component={OrdersScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />

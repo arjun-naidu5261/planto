@@ -91,6 +91,21 @@ export default function HomeScreen({ navigation }: any) {
     navigation.navigate('Shop');
   };
 
+  const handleGoToCart = () => {
+    try {
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.navigate('CartTab');
+        return;
+      }
+    } catch {}
+    try {
+      navigation.navigate('CartTab');
+      return;
+    } catch {}
+    navigation.navigate('Cart');
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
@@ -124,7 +139,7 @@ export default function HomeScreen({ navigation }: any) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerIconBtn}
-              onPress={() => navigation.navigate('CartTab')}
+              onPress={handleGoToCart}
               accessibilityLabel="My Cart"
             >
               <Ionicons name="bag-outline" size={22} color="#fff" />

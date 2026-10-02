@@ -26,9 +26,24 @@ const FILTERS = ['All', 'Indoor', 'Outdoor', 'Air Purifier', 'Pet-Safe', 'Low-Li
 const CARD_W = (width - Spacing.md * 2 - Spacing.sm) / 2;
 
 export default function ShopScreen({ navigation }: any) {
-  const { addToCart, wishlist, toggleWishlist } = useApp();
+  const { addToCart, wishlist, toggleWishlist, cart } = useApp();
   const [activeFilter, setActiveFilter] = useState('All');
   const [sortBy, setSortBy] = useState<'price_asc' | 'price_desc' | 'popular'>('popular');
+
+  const handleGoToCart = () => {
+    try {
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.navigate('CartTab');
+        return;
+      }
+    } catch {}
+    try {
+      navigation.navigate('CartTab');
+      return;
+    } catch {}
+    navigation.navigate('Cart');
+  };
 
   const filteredPlants = SAMPLE_PLANTS
     .filter(p => activeFilter === 'All' || p.category === activeFilter || p.tag === activeFilter)
@@ -59,6 +74,18 @@ export default function ShopScreen({ navigation }: any) {
               {wishlist.length > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{wishlist.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={handleGoToCart}
+              accessibilityLabel="My Cart"
+            >
+              <Ionicons name="bag-outline" size={22} color="#fff" />
+              {cart.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{cart.length}</Text>
                 </View>
               )}
             </TouchableOpacity>

@@ -18,11 +18,26 @@ export default function ProductDetailScreen({ route, navigation }: any) {
   const inWishlist = wishlist.includes(product.id);
   const inCart = cart.find(c => c.id === product.id);
 
+  const goToCart = () => {
+    try {
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.navigate('CartTab');
+        return;
+      }
+    } catch {}
+    try {
+      navigation.navigate('CartTab');
+      return;
+    } catch {}
+    navigation.navigate('Cart');
+  };
+
   const handleAddToCart = () => {
     addToCart(product, qty);
     Alert.alert('Added to Cart!', `${qty}x ${product.name} added to your cart.`, [
       { text: 'Continue Shopping', style: 'cancel' },
-      { text: 'Go to Cart →', onPress: () => navigation.navigate('CartTab') },
+      { text: 'Go to Cart →', onPress: goToCart },
     ]);
   };
 
@@ -35,13 +50,23 @@ export default function ProductDetailScreen({ route, navigation }: any) {
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={22} color="#fff" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.heartBtn} onPress={() => toggleWishlist(product.id)}>
-          <Ionicons
-            name={inWishlist ? 'heart' : 'heart-outline'}
-            size={22}
-            color={inWishlist ? '#ef4444' : '#fff'}
-          />
-        </TouchableOpacity>
+        <View style={styles.topRightActions}>
+          <TouchableOpacity style={styles.headerIconCircle} onPress={() => toggleWishlist(product.id)}>
+            <Ionicons
+              name={inWishlist ? 'heart' : 'heart-outline'}
+              size={20}
+              color={inWishlist ? '#ef4444' : '#fff'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.headerIconCircle} onPress={goToCart}>
+            <Ionicons name="bag-outline" size={20} color="#fff" />
+            {cart.length > 0 && (
+              <View style={styles.badgeSmall}>
+                <Text style={styles.badgeTextSmall}>{cart.length}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
         <Image source={{ uri: product.image || product.images?.[0] }} style={styles.heroImage} resizeMode="cover" />
       </View>
 
@@ -217,7 +242,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   imageSection: { height: width * 0.75, position: 'relative' },
   backBtn: { position: 'absolute', top: 50, left: 16, zIndex: 10, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.35)', alignItems: 'center', justifyContent: 'center' },
-  heartBtn: { position: 'absolute', top: 50, right: 16, zIndex: 10, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.35)', alignItems: 'center', justifyContent: 'center' },
+  topRightActions: { position: 'absolute', top: 50, right: 16, zIndex: 10, flexDirection: 'row', gap: 8 },
+  headerIconCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.35)', alignItems: 'center', justifyContent: 'center' },
+  badgeSmall: { position: 'absolute', top: -3, right: -3, backgroundColor: Colors.accent, borderRadius: 9, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
+  badgeTextSmall: { color: '#fff', fontSize: 10, fontWeight: '800' },
   heroImage: { width: '100%', height: '100%' },
   scroll: { flex: 1 },
   content: { padding: Spacing.md },

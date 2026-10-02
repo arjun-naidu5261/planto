@@ -30,6 +30,21 @@ export default function WishlistScreen({ navigation }: any) {
     Alert.alert('Moved to Cart! 🌿', `${plant.name} is now in your cart. You can proceed to checkout anytime!`);
   };
 
+  const handleGoToCart = () => {
+    try {
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.navigate('CartTab');
+        return;
+      }
+    } catch {}
+    try {
+      navigation.navigate('CartTab');
+      return;
+    } catch {}
+    navigation.navigate('Cart');
+  };
+
   const handleMoveAllToCart = () => {
     wishlistedPlants.forEach(plant => {
       addToCart({
@@ -41,7 +56,7 @@ export default function WishlistScreen({ navigation }: any) {
       removeFromWishlist(plant.id);
     });
     Alert.alert('All Added! 🌿', 'All wishlist plants were moved to your cart!');
-    navigation.navigate('CartTab');
+    handleGoToCart();
   };
 
   const totalWishlistVal = wishlistedPlants.reduce((s, p) => s + p.price, 0);
@@ -68,7 +83,7 @@ export default function WishlistScreen({ navigation }: any) {
           </View>
           <TouchableOpacity
             style={styles.cartIconBtn}
-            onPress={() => navigation.navigate('CartTab')}
+            onPress={handleGoToCart}
           >
             <Ionicons name="bag-outline" size={22} color="#fff" />
             {cart.length > 0 && (
