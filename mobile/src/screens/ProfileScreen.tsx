@@ -11,8 +11,8 @@ import { api } from '../services/api';
 
 export default function ProfileScreen({ navigation }: any) {
   const { isLoggedIn, currentUser, logout, wallet, orders, hasCarePass, setHasCarePass, cart } = useApp();
-  const [email, setEmail] = useState('customer@plantme.in');
-  const [password, setPassword] = useState('plantme123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useApp();
 
@@ -22,7 +22,7 @@ export default function ProfileScreen({ navigation }: any) {
     const ok = await login(email, password);
     setLoading(false);
     if (!ok) {
-      Alert.alert('Login Failed', 'Invalid email or password. Try customer@plantme.in / plantme123');
+      Alert.alert('Login Failed', 'Invalid email or password.');
     }
   };
 
@@ -44,7 +44,7 @@ export default function ProfileScreen({ navigation }: any) {
                 style={styles.textInput}
                 value={email}
                 onChangeText={setEmail}
-                placeholder="customer@plantme.in"
+                placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -58,7 +58,7 @@ export default function ProfileScreen({ navigation }: any) {
                 style={styles.textInput}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="plantme123"
+                placeholder="••••••••"
                 secureTextEntry
               />
             </View>
@@ -70,7 +70,6 @@ export default function ProfileScreen({ navigation }: any) {
           >
             <Text style={styles.loginBtnText}>{loading ? 'Signing in...' : 'Sign In to PlantMe →'}</Text>
           </TouchableOpacity>
-          <Text style={styles.loginHint}>Demo: customer@plantme.in / plantme123</Text>
         </View>
       </View>
     );

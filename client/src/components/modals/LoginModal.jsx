@@ -7,8 +7,8 @@ export default function LoginModal() {
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'signup'
   
   // Login State
-  const [email, setEmail] = useState('customer@plantme.in');
-  const [password, setPassword] = useState('plantme123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -20,9 +20,8 @@ export default function LoginModal() {
 
   useEffect(() => {
     if (showLogin) {
-      const preset = loginPresetEmail || 'customer@plantme.in';
-      setEmail(preset);
-      setPassword('plantme123');
+      setEmail(loginPresetEmail || '');
+      setPassword('');
       setErrorMsg('');
     }
   }, [showLogin, loginPresetEmail]);
@@ -56,7 +55,7 @@ export default function LoginModal() {
     }
     
     // Auto sign up & log in customer
-    const res = await loginUser('customer@plantme.in', 'plantme123');
+    const res = await loginUser(signUpEmail, signUpPassword);
     if (res.success) {
       alert(`Welcome to PlantMe, ${signUpName}! Account created successfully.`);
       setShowLogin(false);
@@ -179,7 +178,7 @@ export default function LoginModal() {
                 required 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                placeholder="customer@plantme.in" 
+                placeholder="Enter your email" 
                 style={{ 
                   width: '100%', 
                   padding: '12px 14px', 
@@ -199,7 +198,7 @@ export default function LoginModal() {
                   required 
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="••••••••" 
+                  placeholder="Enter your password" 
                   style={{ 
                     width: '100%', 
                     padding: '12px 38px 12px 14px', 
