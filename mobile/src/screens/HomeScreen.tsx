@@ -76,6 +76,21 @@ export default function HomeScreen({ navigation }: any) {
   const displayPlants = (products.length > 0 ? products : FEATURED_PLANTS)
     .filter((p: any) => !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
+  const handleGoToShop = () => {
+    try {
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.navigate('ShopTab');
+        return;
+      }
+    } catch {}
+    try {
+      navigation.navigate('ShopTab');
+      return;
+    } catch {}
+    navigation.navigate('Shop');
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
@@ -169,7 +184,7 @@ export default function HomeScreen({ navigation }: any) {
             <Text style={styles.heroBannerTag}>LIMITED TIME OFFER</Text>
             <Text style={styles.heroBannerTitle}>Get your first{'\n'}plant delivered{'\n'}in 20 minutes</Text>
             <Text style={styles.heroBannerSub}>Use code FIRSTPLANT for 20% off</Text>
-            <TouchableOpacity style={styles.heroBannerBtn} onPress={() => navigation.navigate('ShopTab')}>
+            <TouchableOpacity style={styles.heroBannerBtn} onPress={handleGoToShop}>
               <Text style={styles.heroBannerBtnText}>Shop Now →</Text>
             </TouchableOpacity>
           </View>
@@ -202,7 +217,7 @@ export default function HomeScreen({ navigation }: any) {
         {/* Plant Grid */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Trending Plants</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('ShopTab')}>
+          <TouchableOpacity onPress={handleGoToShop}>
             <Text style={styles.seeAll}>See All →</Text>
           </TouchableOpacity>
         </View>
