@@ -444,7 +444,11 @@ export const AppProvider = ({ children }) => {
         deleteProduct,
         updateOrderStatus,
         loadAllData,
-        refreshVendors
+        refreshVendors,
+        refreshProducts,
+        refreshOrders,
+        refreshReminders,
+        refreshWallet
       }}
     >
       {children}

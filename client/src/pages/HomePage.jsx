@@ -8,6 +8,7 @@ import SocietyGroupDrop from '../components/SocietyGroupDrop';
 
 export default function HomePage() {
   const { 
+    currentUser,
     vendors, 
     products, 
     categories: apiCategories, 
