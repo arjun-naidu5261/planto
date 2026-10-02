@@ -44,7 +44,7 @@ export default function PlantBirthCertificateModal() {
     try {
       setWaSending(true);
       await api.sendWhatsAppCareCard({
-        phone: "+91 98856 00899",
+        phone: "+91 88856 00899",
         plantName: `${plantName} ("${plantNickname}")`,
         orderId: certId
       });

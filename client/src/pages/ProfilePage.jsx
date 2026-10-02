@@ -1546,7 +1546,11 @@ export default function ProfilePage({ defaultTab }) {
         {activeTab === 'help' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>Help & Support</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>Got questions? Email us directly at **care@plantme.in** or tap our AI diagnostician for help with plant health conditions.</p>
+            <p style={{ fontSize: '13px', color: '#666', lineHeight: '1.6' }}>
+              Got questions? Reach our botanical care desk anytime:<br />
+              • <strong>Email:</strong> <a href="mailto:info@futureforbes.in" style={{ color: '#2d6a4f' }}>info@futureforbes.in</a><br />
+              • <strong>Hotline & WhatsApp:</strong> <a href="tel:+918885600899" style={{ color: '#2d6a4f' }}>+91 88856 00899</a>
+            </p>
           </div>
         )}
 

@@ -196,7 +196,7 @@ export default function ProfileScreen({ navigation }: any) {
             { icon: 'notifications-outline', label: 'Watering Reminders', onPress: () => Alert.alert('Reminders', 'Set watering reminders for your plants.') },
             { icon: 'location-outline', label: 'Delivery Addresses', onPress: () => Alert.alert('Addresses', 'Manage your delivery addresses.') },
             { icon: 'card-outline', label: 'Wallet & Payments', onPress: () => Alert.alert('Wallet', `Current balance: ₹${Math.round(wallet)}`) },
-            { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => Alert.alert('Support', 'Contact us: support@plantme.in') },
+            { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => Alert.alert('Contact & Support', 'Email: info@futureforbes.in\nPlant Care Hotline: +91 88856 00899\nWhatsApp Concierge: +91 88856 00899') },
             { icon: 'log-out-outline', label: 'Logout', onPress: () => logout(), danger: true },
           ].map((item, i) => (
             <TouchableOpacity key={i} style={styles.menuItem} onPress={item.onPress}>

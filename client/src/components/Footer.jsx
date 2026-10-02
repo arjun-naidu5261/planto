@@ -37,9 +37,21 @@ export default function Footer() {
         <div>
           <h4 style={{ fontSize: '16px', marginBottom: '16px', fontWeight: 700 }}>Contact & Support</h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', color: '#ccc', padding: 0 }}>
-            <li>Email: care@plantme.in</li>
-            <li>Plant Care Hotline: +91 80 4455 6677</li>
-            <li>WhatsApp Concierge: +91 98856 00899</li>
+            <li>
+              <a href="mailto:info@futureforbes.in" style={{ color: '#ccc', textDecoration: 'none' }}>
+                Email: info@futureforbes.in
+              </a>
+            </li>
+            <li>
+              <a href="tel:+918885600899" style={{ color: '#ccc', textDecoration: 'none' }}>
+                Plant Care Hotline: +91 88856 00899
+              </a>
+            </li>
+            <li>
+              <a href="https://wa.me/918885600899" target="_blank" rel="noreferrer" style={{ color: '#ccc', textDecoration: 'none' }}>
+                WhatsApp Concierge: +91 88856 00899
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -338,7 +338,7 @@ app.post('/api/orders', (req, res) => {
     address: address || 'Flat 402, Green Heights, Indiranagar, Bengaluru',
     buildingImage: buildingImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80',
     recipientName: recipientName || 'Arjun Patel',
-    phone: phone || '+91 98856 00899',
+    phone: phone || '+91 88856 00899',
     landmark: landmark || 'Near Gate 2 Security Cabin',
     deliveryInstruction: deliveryInstruction || 'Eco-friendly hydration wrap requested.',
     deliveryOtp: otp,
@@ -809,7 +809,7 @@ app.post("/api/notifications/whatsapp-care-card", (req, res) => {
   const { phone, plantName, orderId } = req.body;
   res.json({
     success: true,
-    sentTo: phone || "+91 98856 00899",
+    sentTo: phone || "+91 88856 00899",
     channel: "WhatsApp Business API",
     template: "plantme_care_card_v1",
     message: `🌿 PlantMe Care Card for your ${plantName || 'Plant'} has been sent to WhatsApp with watering schedule & unboxing tips!`
