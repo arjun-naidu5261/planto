@@ -15,10 +15,7 @@ export default function MobileBottomNav() {
 
   const getDashboardRoute = () => {
     if (!isLoggedIn) return "/profile";
-    if (currentUser?.role === 'Customer') return "/profile";
-    if (currentUser?.role === 'Vendor') return "/vendor";
     if (currentUser?.role === 'Admin') return "/admin";
-    if (currentUser?.role === 'Delivery Partner') return "/delivery";
     return "/profile";
   };
 
@@ -51,20 +48,6 @@ export default function MobileBottomNav() {
             <span>Cart</span>
           </NavLink>
         </>
-      )}
-
-      {isLoggedIn && currentUser?.role === 'Vendor' && (
-        <NavLink to="/vendor" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
-          <svg width="20" height="20"><use href="#icon-vendor"></use></svg>
-          <span>Vendor</span>
-        </NavLink>
-      )}
-
-      {isLoggedIn && currentUser?.role === 'Delivery Partner' && (
-        <NavLink to="/delivery" className={({ isActive }) => isActive ? "mobile-bottom-nav-item active" : "mobile-bottom-nav-item"}>
-          <svg width="20" height="20"><use href="#icon-gps"></use></svg>
-          <span>Delivery</span>
-        </NavLink>
       )}
 
       {isLoggedIn && currentUser?.role === 'Admin' && (

@@ -54,9 +54,7 @@ import MapPage from './pages/MapPage';
 import StallPage from './pages/StallPage';
 import ProductPage from './pages/ProductPage';
 import AIDiagnosticsPage from './pages/AIDiagnosticsPage';
-import VendorDashboardPage from './pages/VendorDashboardPage';
 import AdminPortalPage from './pages/AdminPortalPage';
-import DeliveryDashboardPage from './pages/DeliveryDashboardPage';
 import CommunityPage from './pages/CommunityPage';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
@@ -88,16 +86,19 @@ export default function App() {
             <Route path="/stall/:id" element={<Navigate to="/" replace />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/ai" element={<AIDiagnosticsPage />} />
-            <Route path="/vendor" element={<VendorDashboardPage />} />
             <Route path="/admin" element={<AdminPortalPage />} />
-            <Route path="/delivery" element={<DeliveryDashboardPage />} />
+            <Route path="/vendor" element={<Navigate to="/" replace />} />
+            <Route path="/delivery" element={<Navigate to="/" replace />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/profile" element={<ProfilePage defaultTab="dashboard" />} />
+            <Route path="/address" element={<ProfilePage defaultTab="addresses" />} />
+            <Route path="/addresses" element={<ProfilePage defaultTab="addresses" />} />
             <Route path="/wishlist" element={<ProfilePage defaultTab="wishlist" />} />
             <Route path="/seasonal/:season" element={<SeasonalPage />} />
             <Route path="/garden" element={<VirtualGardenPage />} />
             <Route path="/corporate" element={<CorporateGiftingPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
 

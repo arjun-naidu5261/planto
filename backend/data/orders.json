@@ -1,50 +1,286 @@
 [
   {
-    "id": "ORD-7290",
-    "date": "Sep 11, 2026",
+    "id": "ORD-8920",
+    "date": "Oct 03, 2026",
     "items": [
       {
-        "name": "Ficus Bonsai",
-        "price": 10,
+        "id": "p1",
+        "name": "Exotic Fiddle Leaf Fig (Large)",
+        "price": 349,
+        "quantity": 1
+      },
+      {
+        "id": "p3",
+        "name": "Self-Watering Ceramic Planter (Sage)",
+        "price": 199,
         "quantity": 1
       }
     ],
-    "status": "Confirmed",
-    "deliveryType": "PlantMe Express Delivery",
-    "total": 10,
-    "vendorName": "PlantMe Certified Local Nursery",
-    "address": "Flat 402, Green Heights, Indiranagar",
-    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00",
-    "recipientName": "Arjun Patel",
+    "status": "Placed",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 548,
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery - Indiranagar",
+    "address": "Flat 402, Green Heights, 100ft Road, Indiranagar, Bengaluru",
+    "recipientName": "Suhas K.",
     "phone": "+91 88856 00899",
-    "landmark": "Gate 2 Security",
-    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
-    "deliveryOtp": "6506",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-hydration wrap. Please do not invert pot.",
+    "pickupPin": "2918",
+    "deliveryOtp": "8401",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
     "rider": {
-      "name": "Ramu K.",
-      "phone": "+91 98450 12345",
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
       "rating": 4.9,
-      "vehicle": "PlantMe Eco EV-Cargo 12 • KA-01-EV-4421",
+      "vehicle": "Hero Electric Scooter • KA-05-EQ-8821",
       "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
     },
-    "nurseryOrigin": "PlantMe Certified Local Nursery",
-    "etaMinutes": 18,
-    "createdAt": "2026-09-11T19:35:06.017Z"
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 402, Green Heights, Indiranagar"
+    },
+    "riderCoords": {
+      "lat": 12.977742274115002,
+      "lng": 77.6414,
+      "heading": 45,
+      "updatedAt": "2026-10-03T15:54:19.831Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-03T15:30:00.000Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed",
+        "desc": "Customer confirmed 20-min express plant delivery",
+        "time": "08:50 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting fresh healthy plant & inspecting root ball",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Awaiting Delivery Partner Ramu Prasad for 4-digit PIN handover",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched",
+        "desc": "Pickup PIN verified; Rider en-route via EV cargo bike",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Secure doorstep handover with 30-Day Thrive Guarantee",
+        "time": "",
+        "completed": false
+      }
+    ]
   },
   {
-    "id": "ORD-9824",
-    "date": "02 Aug 2026",
+    "id": "ORD-7290",
+    "date": "Oct 03, 2026",
     "items": [
       {
         "id": "p1",
         "name": "Premium Golden Pothos (Money Plant)",
         "price": 180,
         "quantity": 1
+      },
+      {
+        "id": "p2",
+        "name": "Organic Neem Soil Mix (2kg)",
+        "price": 99,
+        "quantity": 1
       }
     ],
-    "status": "Out for Delivery",
-    "deliveryType": "PlantMe Express Delivery",
-    "total": 180,
-    "vendorName": "PlantMe Certified Local Nursery"
+    "status": "Delivered",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 279,
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Flat 402, Green Heights, 100ft Road, Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Suhas K.",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested. Handle with care.",
+    "pickupPin": "4819",
+    "deliveryOtp": "8204",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
+      "rating": 4.9,
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 402, Green Heights, Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.976,
+      "lng": 77.641,
+      "heading": 45,
+      "updatedAt": "2026-10-03T15:27:06.454Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-03T11:00:00.000Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed",
+        "desc": "Customer confirmed 20-min express plant delivery",
+        "time": "11:00 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Checking soil moisture, root ball & biodegradable pot packaging",
+        "time": "11:04 AM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Awaiting Delivery Partner Ramu Prasad for 4-digit PIN handover",
+        "time": "08:54 PM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched",
+        "desc": "Pickup PIN verified; Rider en-route via EV cargo bike",
+        "time": "08:55 PM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Secure doorstep handover with 30-Day Thrive Guarantee",
+        "time": "08:59 PM",
+        "completed": true
+      }
+    ]
+  },
+  {
+    "id": "ORD-9824",
+    "date": "Oct 03, 2026",
+    "items": [
+      {
+        "id": "p3",
+        "name": "Ficus Bonsai Live Indoor Tree",
+        "price": 420,
+        "quantity": 1
+      }
+    ],
+    "status": "Picked Up",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 420,
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Villa 18, Palm Meadows, Indiranagar Sector 2, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anitha M.",
+    "phone": "+91 98112 44556",
+    "landmark": "Near Main Clubhouse",
+    "deliveryInstruction": "Please keep pot upright during transit.",
+    "pickupPin": "2918",
+    "deliveryOtp": "6506",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
+      "rating": 4.9,
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9812,
+      "lng": 77.6435,
+      "address": "Villa 18, Palm Meadows, Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9765,
+      "lng": 77.6421,
+      "heading": 70
+    },
+    "etaMinutes": 8,
+    "createdAt": "2026-10-03T10:30:00.000Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed",
+        "desc": "Customer confirmed 20-min express plant delivery",
+        "time": "10:30 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Checking soil moisture, root ball & biodegradable pot packaging",
+        "time": "10:34 AM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Order ready in Nursery dispatch stall",
+        "time": "10:40 AM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Pickup PIN 2918 verified at nursery; Rider live on map",
+        "time": "10:44 AM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Share OTP 6506 with rider upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
   }
 ]

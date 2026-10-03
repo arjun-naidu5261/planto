@@ -32,10 +32,25 @@ export default function ProfileModal() {
   if (!showProfileModal || !isLoggedIn || currentUser?.role !== 'Customer') return null;
 
   // Address list
-  const userAddresses = currentUser?.addresses || [
-    'Indiranagar Sector 3, Bengaluru, KA - 560038'
-  ];
-  const activeAddressIdx = currentUser?.activeAddressIdx || 0;
+  const userAddresses = (currentUser?.addresses && Array.isArray(currentUser.addresses) && currentUser.addresses.length > 0)
+    ? currentUser.addresses
+    : ['Indiranagar Sector 3, Bengaluru, KA - 560038'];
+  const activeAddressIdx = (typeof currentUser?.activeAddressIdx === 'number' && currentUser.activeAddressIdx < userAddresses.length)
+    ? currentUser.activeAddressIdx
+    : 0;
+
+  const formatAddressSummary = (addr) => {
+    if (!addr) return '';
+    if (typeof addr === 'string') return addr;
+    const parts = [];
+    const line1 = [addr.doorNo, addr.floor, addr.buildingName].filter(Boolean).join(', ');
+    if (line1) parts.push(line1);
+    const line2 = [addr.street, addr.landmark ? `(Near ${addr.landmark})` : null].filter(Boolean).join(', ');
+    if (line2) parts.push(line2);
+    const line3 = [addr.city, addr.state, addr.pincode ? `- ${addr.pincode}` : null].filter(Boolean).join(', ');
+    if (line3) parts.push(line3);
+    return parts.join(', ') || 'Saved Address';
+  };
 
   const handleClose = () => {
     setShowProfileModal(false);
@@ -217,7 +232,7 @@ export default function ProfileModal() {
             <div>
               <span style={{ color: '#888', display: 'block', fontSize: '11px' }}>ACTIVE DELIVERY ADDRESS</span>
               <strong style={{ display: 'block', lineHeight: '1.4', color: 'var(--dark)' }}>
-                {userAddresses[activeAddressIdx]}
+                {formatAddressSummary(userAddresses[activeAddressIdx]) || 'Indiranagar Sector 3, Bengaluru, KA - 560038'}
               </strong>
             </div>
           </div>
@@ -251,7 +266,7 @@ export default function ProfileModal() {
                     <div>
                       <textarea 
                         rows="2" 
-                        value={editingAddressText} 
+                        value={editingAddressText || (typeof addr === 'object' ? formatAddressSummary(addr) : addr)} 
                         onChange={(e) => setEditingAddressText(e.target.value)} 
                         style={{ width: '100%', padding: '6px', fontSize: '12px', border: '1px solid #ccc', borderRadius: '4px', outline: 'none', fontFamily: 'var(--font-main)' }}
                       />
@@ -280,7 +295,7 @@ export default function ProfileModal() {
                           style={{ marginTop: '3px', cursor: 'pointer' }}
                         />
                         <span style={{ fontSize: '12px', lineHeight: '1.4', flex: 1, color: isActive ? 'var(--dark)' : '#555' }}>
-                          {addr}
+                          {formatAddressSummary(addr)}
                         </span>
                       </div>
                       

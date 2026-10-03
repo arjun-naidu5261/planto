@@ -53,10 +53,7 @@ export default function Header() {
 
   const getDashboardRoute = () => {
     if (!isLoggedIn) return "/profile";
-    if (currentUser?.role === 'Customer') return "/profile";
-    if (currentUser?.role === 'Vendor') return "/vendor";
     if (currentUser?.role === 'Admin') return "/admin";
-    if (currentUser?.role === 'Delivery Partner') return "/delivery";
     return "/profile";
   };
 
@@ -90,14 +87,6 @@ export default function Header() {
               <NavLink to="/corporate" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>B2B Retainers</NavLink>
               <NavLink to="/community" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Community</NavLink>
             </>
-          )}
-
-          {isLoggedIn && currentUser?.role === 'Vendor' && (
-            <NavLink to="/vendor" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Nursery Vendor Desk</NavLink>
-          )}
-
-          {isLoggedIn && currentUser?.role === 'Delivery Partner' && (
-            <NavLink to="/delivery" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Delivery Desk</NavLink>
           )}
 
           {isLoggedIn && currentUser?.role === 'Admin' && (

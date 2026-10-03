@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import AddressMapPicker from '../components/AddressMapPicker';
+import LiveOrderTrackerModal from '../components/modals/LiveOrderTrackerModal';
 
 export default function ProfilePage({ defaultTab }) {
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const [selectedTrackingOrderId, setSelectedTrackingOrderId] = useState(null);
   const navigate = useNavigate();
   const { 
     wishlist, 
@@ -53,18 +56,24 @@ export default function ProfilePage({ defaultTab }) {
   };
 
   // Active tab state
-  const [activeTab, setActiveTab] = useState(defaultTab || (isLoggedIn && currentUser?.role === 'Customer' ? 'dashboard' : 'wishlist'));
+  const [searchParams] = useSearchParams();
+  const urlTab = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(
+    urlTab || defaultTab || (isLoggedIn && currentUser?.role === 'Customer' ? 'dashboard' : 'wishlist')
+  );
   
-  // Sync activeTab when defaultTab or auth status changes
+  // Sync activeTab when defaultTab, urlTab, or auth status changes
   React.useEffect(() => {
-    if (defaultTab) {
+    if (urlTab) {
+      setActiveTab(urlTab);
+    } else if (defaultTab) {
       setActiveTab(defaultTab);
     } else if (isLoggedIn && currentUser?.role === 'Customer') {
       setActiveTab('dashboard');
     } else {
       setActiveTab('wishlist');
     }
-  }, [defaultTab, isLoggedIn, currentUser]);
+  }, [urlTab, defaultTab, isLoggedIn, currentUser]);
   
   // Profile editing
   const [isEditing, setIsEditing] = useState(false);
@@ -311,6 +320,29 @@ export default function ProfilePage({ defaultTab }) {
   const [addrState, setAddrState] = useState('Karnataka');
   const [addrPincode, setAddrPincode] = useState('560038');
   const [addrCoords, setAddrCoords] = useState({ lat: 12.9716, lng: 77.5946 });
+
+  // Saved user addresses and active default address index
+  const userAddresses = (currentUser?.addresses && Array.isArray(currentUser.addresses) && currentUser.addresses.length > 0)
+    ? currentUser.addresses
+    : [
+        {
+          id: 'addr_default_1',
+          tag: 'Home',
+          doorNo: 'Flat 402',
+          floor: '4th Floor',
+          buildingName: 'Green Meadows Apartments',
+          street: '12th Main, Indiranagar',
+          landmark: 'Near BDA Complex',
+          city: 'Bengaluru',
+          state: 'Karnataka',
+          pincode: '560038',
+          lat: 12.9716,
+          lng: 77.5946
+        }
+      ];
+  const activeAddressIdx = (typeof currentUser?.activeAddressIdx === 'number' && currentUser.activeAddressIdx < userAddresses.length)
+    ? currentUser.activeAddressIdx
+    : 0;
 
   // Address formatting helper
   const formatAddressSummary = (addr) => {
@@ -1256,6 +1288,28 @@ export default function ProfilePage({ defaultTab }) {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', flexWrap: 'wrap', gap: '10px' }}>
                       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                         <button 
+                          onClick={() => {
+                            setSelectedTrackingOrderId(ord.id);
+                            setShowTrackingModal(true);
+                          }}
+                          style={{
+                            background: '#15803d',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '6px 14px',
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            boxShadow: '0 2px 8px rgba(21, 128, 61, 0.25)'
+                          }}
+                        >
+                          📍 Live GPS Track & OTP
+                        </button>
+                        <button 
                           onClick={() => openCertificate(ord.id)}
                           style={{
                             background: '#fff3e0',
@@ -1324,48 +1378,164 @@ export default function ProfilePage({ defaultTab }) {
           </div>
         )}
 
-        {/* Tab 3: Track Package detailed */}
+        {/* Tab 3: Track Package detailed (3-Way Ecosystem) */}
         {activeTab === 'track' && (
-          <div style={{ background: '#ffffff', padding: '24px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
-            <h3 style={{ fontSize: '18px', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-              Package Dispatch Tracker
-            </h3>
+          <div style={{ background: '#ffffff', padding: '28px', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '14px', borderBottom: '1px solid #f1f5f9', paddingBottom: '16px' }}>
+              <div>
+                <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '11px', fontWeight: 900, padding: '3px 10px', borderRadius: '8px' }}>
+                  ● LIVE HYPERLOCAL 20-MIN TRACKING
+                </span>
+                <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '6px 0 0 0' }}>
+                  Live Plant Delivery & Handshake Tracker
+                </h3>
+              </div>
+
+              {activeOrder && (
+                <button
+                  onClick={() => {
+                    setSelectedTrackingOrderId(activeOrder.id);
+                    setShowTrackingModal(true);
+                  }}
+                  style={{
+                    background: '#15803d',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '10px 20px',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 14px rgba(21, 128, 61, 0.25)'
+                  }}
+                >
+                  <span>📍</span> Open Interactive Fullscreen Map
+                </button>
+              )}
+            </div>
+
             {activeOrder ? (
-              <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px 0' }}>
-                <div style={{ background: 'var(--light-green)', padding: '20px', borderRadius: '12px', border: '1px solid var(--primary-green)', marginBottom: '30px' }}>
-                  <h4 style={{ fontSize: '16px', color: 'var(--primary-green)', marginBottom: '8px' }}>
-                    Package is currently: <strong>{activeOrder.status}</strong>
-                  </h4>
-                  <p style={{ fontSize: '12px', color: '#333' }}>
-                    Our delivery partner Ramu Prasad is driving your plants directly to Indiranagar Sector 3.
-                  </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                
+                {/* 1. Live OTP Security Card */}
+                <div style={{
+                  background: 'linear-gradient(135deg, #064e3b 0%, #047857 100%)',
+                  color: '#ffffff',
+                  borderRadius: '20px',
+                  padding: '24px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '16px',
+                  boxShadow: '0 8px 24px rgba(6, 78, 59, 0.2)'
+                }}>
+                  <div>
+                    <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800, color: '#a7f3d0' }}>
+                      🔐 Security Handshake
+                    </span>
+                    <h4 style={{ fontSize: '18px', fontWeight: 800, margin: '4px 0 2px 0' }}>
+                      Doorstep Delivery OTP: {activeOrder.deliveryOtp || '8204'}
+                    </h4>
+                    <p style={{ fontSize: '12.5px', color: '#cbd5e1', margin: 0 }}>
+                      Share this code with rider Ramu Prasad only after verifying that your plant foliage is intact and soil is moist.
+                    </p>
+                  </div>
+
+                  <div style={{
+                    background: '#ffffff',
+                    color: '#064e3b',
+                    fontSize: '28px',
+                    fontWeight: 900,
+                    letterSpacing: '8px',
+                    padding: '10px 22px',
+                    borderRadius: '14px',
+                    fontFamily: 'monospace'
+                  }}>
+                    {activeOrder.deliveryOtp || '8204'}
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative', paddingLeft: '30px' }}>
-                  {/* Vertical timeline line */}
-                  <div style={{ position: 'absolute', top: '10px', left: '10px', width: '2px', height: '80%', background: 'var(--primary-green)' }} />
+                {/* 2. Visual Route Map Canvas */}
+                <div style={{
+                  background: '#f8fafc',
+                  border: '1.5px solid #cbd5e1',
+                  borderRadius: '20px',
+                  padding: '24px',
+                  position: 'relative',
+                  height: '200px',
+                  overflow: 'hidden'
+                }}>
+                  <svg width="100%" height="100%" viewBox="0 0 500 160">
+                    <line x1="40" y1="80" x2="460" y2="80" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="8 6" />
+                    
+                    {/* Nursery pin */}
+                    <g transform="translate(60, 80)">
+                      <circle cx="0" cy="0" r="16" fill="#15803d" />
+                      <text x="0" y="5" fill="#fff" fontSize="14" textAnchor="middle">🌿</text>
+                      <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">NURSERY</text>
+                    </g>
 
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: '-25px', top: '2px', width: '12px', height: '12px', borderRadius: '50%', background: 'var(--primary-green)' }} />
-                    <strong style={{ fontSize: '13px' }}>Order Placed</strong>
-                    <span style={{ fontSize: '11px', color: '#666', display: 'block' }}>Aug 02, 10:30 AM - Wallet payment confirmed</span>
-                  </div>
+                    {/* Rider Scooter */}
+                    <g transform="translate(250, 80)">
+                      <circle cx="0" cy="0" r="18" fill="#0284c7" />
+                      <circle cx="0" cy="0" r="26" fill="#38bdf8" opacity="0.3">
+                        <animate attributeName="r" values="18;30;18" dur="1.5s" repeatCount="indefinite" />
+                      </circle>
+                      <text x="0" y="6" fill="#fff" fontSize="15" textAnchor="middle">🛵</text>
+                      <text x="0" y="-24" fill="#0f172a" fontSize="10" fontWeight="800" textAnchor="middle">RAMU (RIDER)</text>
+                    </g>
 
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: '-25px', top: '2px', width: '12px', height: '12px', borderRadius: '50%', background: activeOrder.status !== 'Confirmed' && activeOrder.status !== 'Pending' ? 'var(--primary-green)' : '#ccc' }} />
-                    <strong style={{ fontSize: '13px', color: activeOrder.status !== 'Confirmed' && activeOrder.status !== 'Pending' ? 'var(--dark)' : '#888' }}>Package Dispatched</strong>
-                    <span style={{ fontSize: '11px', color: '#666', display: 'block' }}>Aug 03, 09:20 AM - Handed to Ramu Prasad (Delivery Partner)</span>
-                  </div>
+                    {/* Customer pin */}
+                    <g transform="translate(440, 80)">
+                      <circle cx="0" cy="0" r="16" fill="#dc2626" />
+                      <text x="0" y="5" fill="#fff" fontSize="14" textAnchor="middle">🏡</text>
+                      <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">YOUR HOME</text>
+                    </g>
+                  </svg>
 
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: '-25px', top: '2px', width: '12px', height: '12px', borderRadius: '50%', background: activeOrder.status === 'Delivered' ? 'var(--primary-green)' : '#ccc' }} />
-                    <strong style={{ fontSize: '13px', color: activeOrder.status === 'Delivered' ? 'var(--dark)' : '#888' }}>Package Delivered</strong>
-                    <span style={{ fontSize: '11px', color: '#666', display: 'block' }}>Expected Aug 04 - Secure drop-off at default address</span>
+                  <div style={{ position: 'absolute', top: '14px', left: '16px', background: 'rgba(255,255,255,0.95)', padding: '6px 14px', borderRadius: '16px', fontSize: '12px', fontWeight: 800, color: '#15803d', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                    ⚡ Status: {activeOrder.status} • ETA: ~{activeOrder.etaMinutes || 12} mins
                   </div>
                 </div>
+
+                {/* 3. Rider & Contact Cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Delivery Partner</span>
+                    <strong style={{ display: 'block', fontSize: '14px', color: '#0f172a', margin: '4px 0 2px 0' }}>
+                      {activeOrder.rider?.name || 'Ramu Prasad'} (4.9 ★)
+                    </strong>
+                    <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '10px' }}>
+                      {activeOrder.rider?.vehicle || 'Hero Electric Scooter • KA-05-EQ-8821'}
+                    </span>
+                    <a href={'tel:' + (activeOrder.rider?.phone || '+919845011223')} style={{ color: '#15803d', fontSize: '12px', fontWeight: 800, textDecoration: 'none' }}>
+                      📞 Call Delivery Hero
+                    </a>
+                  </div>
+
+                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Certified Local Nursery</span>
+                    <strong style={{ display: 'block', fontSize: '14px', color: '#0f172a', margin: '4px 0 2px 0' }}>
+                      {activeOrder.vendorName || 'PlantMe Certified Local Nursery'}
+                    </strong>
+                    <span style={{ fontSize: '12px', color: '#16a34a', display: 'block', marginBottom: '10px' }}>
+                      ● Botanist Inspection Passed
+                    </span>
+                    <a href="tel:+918885600899" style={{ color: '#15803d', fontSize: '12px', fontWeight: 800, textDecoration: 'none' }}>
+                      📞 Contact Nursery
+                    </a>
+                  </div>
+                </div>
+
               </div>
             ) : (
-              <div style={{ color: '#888', textAlign: 'center', padding: '30px' }}>No active packages to track right now.</div>
+              <div style={{ color: '#888', textAlign: 'center', padding: '40px' }}>
+                No active express delivery orders placed yet. Place an order from the cart to track in real-time!
+              </div>
             )}
           </div>
         )}

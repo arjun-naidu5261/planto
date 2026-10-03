@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
+import LiveOrderTrackerModal from '../components/modals/LiveOrderTrackerModal';
 
 export default function CartPage() {
   const { 
@@ -26,6 +27,7 @@ export default function CartPage() {
   const [trackerStage, setTrackerStage] = useState(1);
   const [placedOrder, setPlacedOrder] = useState(null);
   const [addCarePass, setAddCarePass] = useState(false);
+  const [showInteractiveModal, setShowInteractiveModal] = useState(false);
 
   // Personalized Eco-Gifting States
   const [isGift, setIsGift] = useState(false);
@@ -299,6 +301,14 @@ export default function CartPage() {
                 WhatsApp Care
               </button>
             </div>
+
+            <button 
+              className="btn" 
+              style={{ width: '100%', justifyContent: 'center', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, #15803d 0%, #166534 100%)', color: '#fff', fontSize: '14px', fontWeight: 800, marginBottom: '10px', boxShadow: '0 4px 14px rgba(22,101,52,0.3)' }}
+              onClick={() => setShowInteractiveModal(true)}
+            >
+              📍 Open Live GPS Map & Delivery OTP →
+            </button>
 
             <button 
               className="btn" 
@@ -800,6 +810,12 @@ export default function CartPage() {
           </button>
         </div>
       </div>
+
+      <LiveOrderTrackerModal
+        isOpen={showInteractiveModal}
+        onClose={() => setShowInteractiveModal(false)}
+        orderId={placedOrder?.id || 'ORD-7290'}
+      />
     </div>
   );
 }

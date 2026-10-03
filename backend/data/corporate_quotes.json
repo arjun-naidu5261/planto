@@ -1,5 +1,26 @@
 [
   {
+    "quoteId": "CORP-RET-73737",
+    "companyName": "TechCorp Bangalore",
+    "contactPerson": "Divya Sharma",
+    "email": "facilities@techcorp.in",
+    "phone": "+91 98450 12345",
+    "officeCity": "Bengaluru",
+    "officeAddress": "Tower 3, RMZ Ecoworld, Bellandur, Bengaluru",
+    "deskCount": 75,
+    "tier": "tech_floor",
+    "tierTitle": "Tech Floor Oasis",
+    "estimatedMonthlyPrice": 6999,
+    "notes": "Want weekly plant maintenance and 2 reception Ficus statement trees.",
+    "status": "Proposal Dispatched",
+    "serviceLevel": {
+      "botanistVisits": "Weekly (4 visits/mo)",
+      "wiltReplacement": "100% Free instant replacements within 4 hours",
+      "includedSupplies": "Soil aeration, organic neem polish, perlite replenishment & sensor telemetry"
+    },
+    "createdAt": "2026-10-02T19:29:15.941Z"
+  },
+  {
     "quoteId": "CORP-RET-95544",
     "companyName": "Google Bengaluru",
     "contactPerson": "Facilities Lead",

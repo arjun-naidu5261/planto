@@ -134,16 +134,27 @@ export default function OrdersScreen({ navigation }: any) {
                         <Ionicons name="person" size={14} color="#fff" />
                       </View>
                       <View style={{ flex: 1 }}>
-                        <Text style={styles.riderName}>{ord.heroName || 'Ramu Prasad'} • EV Delivery Partner</Text>
-                        <Text style={styles.riderEta}>Arriving in ~15 mins in electric vehicle with root protection</Text>
+                        <Text style={styles.riderName}>{ord.heroName || ord.rider?.name || 'Ramu Prasad'} • EV Delivery Partner</Text>
+                        <Text style={styles.riderEta}>Arriving in ~{ord.etaMinutes || 15} mins in electric vehicle with root protection</Text>
                       </View>
                       <TouchableOpacity
                         style={styles.callRiderBtn}
-                        onPress={() => callHero(ord.heroPhone || '+91 88856 00899')}
+                        onPress={() => callHero(ord.heroPhone || ord.rider?.phone || '+91 88856 00899')}
                       >
                         <Ionicons name="call" size={14} color="#fff" />
                         <Text style={styles.callRiderText}>Call</Text>
                       </TouchableOpacity>
+                    </View>
+
+                    {/* Delivery OTP Card */}
+                    <View style={styles.otpCard}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.otpLabel}>🔐 DOORSTEP DELIVERY OTP</Text>
+                        <Text style={styles.otpSub}>Share with rider upon arrival after plant inspection</Text>
+                      </View>
+                      <View style={styles.otpBadge}>
+                        <Text style={styles.otpCode}>{ord.deliveryOtp || '8204'}</Text>
+                      </View>
                     </View>
                   </View>
                 )}
@@ -277,6 +288,11 @@ const styles = StyleSheet.create({
   riderEta: { fontSize: 10, color: '#3b82f6', marginTop: 1 },
   callRiderBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#2563eb', paddingHorizontal: 10, paddingVertical: 6, borderRadius: Radius.sm },
   callRiderText: { color: '#fff', fontSize: 11, fontWeight: '800' },
+  otpCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#064e3b', padding: 12, borderRadius: Radius.sm, marginTop: 10 },
+  otpLabel: { fontSize: 10, fontWeight: '800', color: '#a7f3d0', letterSpacing: 0.5 },
+  otpSub: { fontSize: 10, color: '#e2e8f0', marginTop: 2 },
+  otpBadge: { backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 6, borderRadius: Radius.sm },
+  otpCode: { fontSize: 18, fontWeight: '900', color: '#064e3b', letterSpacing: 3, fontFamily: 'monospace' },
   itemsList: { paddingVertical: 12 },
   itemRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
   leafBullet: { width: 20, height: 20, borderRadius: 10, backgroundColor: '#dcfce7', alignItems: 'center', justifyContent: 'center' },

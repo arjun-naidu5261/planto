@@ -324,6 +324,91 @@ export const api = {
   getCorporateRetainerQuotes: async () => {
     const res = await fetch(`${API_BASE}/corporate/retainer-quotes`);
     return handleResponse(res);
+  },
+
+  // 🌿 3-WAY ECOSYSTEM: CUSTOMER LIVE TRACKING
+  getLiveTracking: async (orderId) => {
+    const res = await fetch(`${API_BASE}/orders/${orderId}/live-tracking`);
+    return handleResponse(res);
+  },
+
+  // 🏪 3-WAY ECOSYSTEM: VENDOR STORE DASHBOARD
+  getVendorOrders: async (vendorId) => {
+    const res = await fetch(`${API_BASE}/vendor/orders?vendorId=${vendorId || ''}`);
+    return handleResponse(res);
+  },
+  acceptVendorOrder: async (orderId) => {
+    const res = await fetch(`${API_BASE}/vendor/orders/${orderId}/accept`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return handleResponse(res);
+  },
+  markOrderReady: async (orderId) => {
+    const res = await fetch(`${API_BASE}/vendor/orders/${orderId}/ready`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return handleResponse(res);
+  },
+  verifyPickupPin: async (orderId, pickupPin) => {
+    const res = await fetch(`${API_BASE}/vendor/orders/${orderId}/verify-pickup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pickupPin })
+    });
+    return handleResponse(res);
+  },
+  getVendorPayouts: async () => {
+    const res = await fetch(`${API_BASE}/vendor/payouts`);
+    return handleResponse(res);
+  },
+
+  // 🛵 3-WAY ECOSYSTEM: DELIVERY PARTNER (RIDER)
+  getRiderStatus: async (riderId) => {
+    const res = await fetch(`${API_BASE}/rider/status?riderId=${riderId || ''}`);
+    return handleResponse(res);
+  },
+  setRiderStatus: async (riderId, isOnline) => {
+    const res = await fetch(`${API_BASE}/rider/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ riderId, isOnline })
+    });
+    return handleResponse(res);
+  },
+  getAvailableRiderOrders: async () => {
+    const res = await fetch(`${API_BASE}/rider/orders/available`);
+    return handleResponse(res);
+  },
+  acceptRiderOrder: async (orderId, riderId) => {
+    const res = await fetch(`${API_BASE}/rider/orders/${orderId}/accept`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ riderId })
+    });
+    return handleResponse(res);
+  },
+  updateRiderLocation: async (orderId, lat, lng, heading) => {
+    const res = await fetch(`${API_BASE}/rider/orders/${orderId}/location`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lng, heading })
+    });
+    return handleResponse(res);
+  },
+  verifyDeliveryOtp: async (orderId, deliveryOtp, riderId) => {
+    const res = await fetch(`${API_BASE}/rider/orders/${orderId}/verify-delivery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, deliveryOtp, riderId })
+    });
+    return handleResponse(res);
+  },
+  getRiderEarnings: async (riderId) => {
+    const res = await fetch(`${API_BASE}/rider/earnings?riderId=${riderId || ''}`);
+    return handleResponse(res);
   }
 };
+
 

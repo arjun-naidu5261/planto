@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Delivery Partner",
+    "slug": "delivery-partner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "in.plantme.delivery",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "PlantMe Hero uses your location to broadcast live GPS delivery coordinates to customers and calculate optimal nursery routes.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "PlantMe Hero uses background GPS to ensure seamless live plant tracking during transit."
+      }
+    },
+    "android": {
+      "package": "in.plantme.delivery",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"
+      ]
+    }
+  }
+}

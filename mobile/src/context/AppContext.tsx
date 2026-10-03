@@ -29,6 +29,7 @@ interface AppContextType {
   addFundsToWallet: (amt: number) => void;
   checkout: (type: string, total: number) => Promise<any>;
   setHasCarePass: (v: boolean) => void;
+  updateUser: (data: Partial<any>) => void;
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -79,11 +80,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setIsLoggedIn(true);
         const usr = res.user || {
           email: em,
-          name: em.includes('customer') ? 'Suhas K.' : em.split('@')[0],
+          name: 'Suhas K.',
           role: 'Customer',
           wallet: 1690,
         };
         setCurrentUser(usr);
+
         try {
           const walletData = await api.getWallet();
           if (walletData && typeof walletData.wallet === 'number') {
@@ -106,7 +108,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       console.log('Login API network fallback', e);
     }
 
-    // Offline / fallback customer credentials check so user is never blocked
+    // Fallback credentials for Customer
     if (
       (em === 'customer@plantme.in' || em === 'customer@planto.in' || em.includes('@')) &&
       (password === 'plantme123' || password === 'planto123' || password.length >= 4)
@@ -114,7 +116,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setIsLoggedIn(true);
       const usr = {
         email: em,
-        name: em.includes('customer') ? 'Suhas K.' : (em.split('@')[0] || 'Plant Lover'),
+        name: 'Suhas K.',
         role: 'Customer',
         wallet: 1690,
       };
@@ -186,11 +188,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setWallet(w => w + amt);
   };
 
+  const updateUser = (data: Partial<any>) => {
+    setCurrentUser((prev: any) => ({ ...(prev || {}), ...data }));
+    try {
+      api.updateProfile(data);
+    } catch {}
+  };
+
   return (
     <AppContext.Provider value={{
       isLoggedIn, currentUser, cart, wishlist, wallet, orders, products, hasCarePass,
       login, logout, addToCart, removeFromCart, updateQty, clearCart,
       toggleWishlist, removeFromWishlist, addFundsToWallet, checkout, setHasCarePass,
+      updateUser,
     }}>
       {children}
     </AppContext.Provider>

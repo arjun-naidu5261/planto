@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Nursery Store",
+    "slug": "nursery-store",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#064e3b"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "in.plantme.vendor",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PlantMe Partner requires camera access to photograph plants, pots, and incoming crates for your nursery catalog.",
+        "NSPhotoLibraryUsageDescription": "PlantMe Partner needs access to your photo library to select nursery product images."
+      }
+    },
+    "android": {
+      "package": "in.plantme.vendor",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PlantMe Partner requires access to your photos to upload plant listings.",
+          "cameraPermission": "PlantMe Partner requires access to your camera to capture plant photos."
+        }
+      ]
+    ]
+  }
+}

@@ -79,49 +79,57 @@ export default function AddressMapPicker({
     const startLat = currentCoords.lat || 12.9716;
     const startLng = currentCoords.lng || 77.5946;
 
-    const map = L.map(mapContainerRef.current, {
-      center: [startLat, startLng],
-      zoom: 15,
-      zoomControl: false
-    });
+    try {
+      const map = L.map(mapContainerRef.current, {
+        center: [startLat, startLng],
+        zoom: 15,
+        zoomControl: false
+      });
 
-    // Clean OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+      // Clean OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
 
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Draggable Pin Marker
-    const marker = L.marker([startLat, startLng], {
-      icon: createPinIcon(),
-      draggable: true
-    }).addTo(map);
+      // Draggable Pin Marker
+      const marker = L.marker([startLat, startLng], {
+        icon: createPinIcon(),
+        draggable: true
+      }).addTo(map);
 
-    marker.on('dragend', (e) => {
-      const pos = e.target.getLatLng();
-      setCurrentCoords({ lat: pos.lat, lng: pos.lng });
-      reverseGeocode(pos.lat, pos.lng);
-    });
+      marker.on('dragend', (e) => {
+        const pos = e.target.getLatLng();
+        setCurrentCoords({ lat: pos.lat, lng: pos.lng });
+        reverseGeocode(pos.lat, pos.lng);
+      });
 
-    // Click anywhere on map to reposition pin
-    map.on('click', (e) => {
-      const { lat, lng } = e.latlng;
-      marker.setLatLng([lat, lng]);
-      setCurrentCoords({ lat, lng });
-      reverseGeocode(lat, lng);
-    });
+      // Click anywhere on map to reposition pin
+      map.on('click', (e) => {
+        const { lat, lng } = e.latlng;
+        marker.setLatLng([lat, lng]);
+        setCurrentCoords({ lat, lng });
+        reverseGeocode(lat, lng);
+      });
 
-    mapInstanceRef.current = map;
-    markerRef.current = marker;
+      mapInstanceRef.current = map;
+      markerRef.current = marker;
 
-    // Trigger initial reverse geocode
-    reverseGeocode(startLat, startLng);
+      // Trigger initial reverse geocode
+      reverseGeocode(startLat, startLng);
+    } catch (err) {
+      console.warn("Leaflet map initialization notice:", err);
+    }
 
     return () => {
-      map.remove();
-      mapInstanceRef.current = null;
+      if (mapInstanceRef.current) {
+        try {
+          mapInstanceRef.current.remove();
+        } catch {}
+        mapInstanceRef.current = null;
+      }
     };
   }, []);
 

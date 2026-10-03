@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Radius } from './src/constants/theme';
+import { Colors } from './src/constants/theme';
 import { AppProvider, useApp } from './src/context/AppContext';
 
 import HomeScreen from './src/screens/HomeScreen';

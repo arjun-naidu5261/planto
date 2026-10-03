@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
   StyleSheet, StatusBar, Alert, Modal, Dimensions,
+  KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,24 +14,66 @@ const { width } = Dimensions.get('window');
 export default function ProfileScreen({ navigation }: any) {
   const {
     isLoggedIn, currentUser, logout, wallet, orders, hasCarePass,
-    setHasCarePass, cart, wishlist, addFundsToWallet,
+    setHasCarePass, cart, wishlist, addFundsToWallet, updateUser,
+    login,
   } = useApp();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useApp();
 
   // Modals state
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [remindersModalVisible, setRemindersModalVisible] = useState(false);
   const [addressModalVisible, setAddressModalVisible] = useState(false);
   const [walletModalVisible, setWalletModalVisible] = useState(false);
   const [botanistModalVisible, setBotanistModalVisible] = useState(false);
 
+  // Profile Edit Form State
+  const [editName, setEditName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editAddress, setEditAddress] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [editGardenStyle, setEditGardenStyle] = useState('Balcony Jungle');
+  const [editAvatarColor, setEditAvatarColor] = useState('#047857');
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  const openEditProfileModal = () => {
+    setEditName(currentUser?.name || 'Suhas K.');
+    setEditPhone(currentUser?.phone || '+91 88856 00899');
+    setEditEmail(currentUser?.email || email || 'customer@plantme.in');
+    setEditAddress(currentUser?.address || 'Indiranagar 100ft Rd, Bengaluru');
+    setEditBio(currentUser?.bio || 'Urban plant lover & green space designer');
+    setEditGardenStyle(currentUser?.gardenStyle || 'Balcony Jungle');
+    setEditAvatarColor(currentUser?.avatarColor || '#047857');
+    setProfileModalVisible(true);
+  };
+
+  const handleSaveProfile = async () => {
+    if (!editName.trim()) {
+      Alert.alert('Required', 'Please enter your full name.');
+      return;
+    }
+    setSavingProfile(true);
+    updateUser({
+      name: editName.trim(),
+      phone: editPhone.trim(),
+      email: editEmail.trim(),
+      address: editAddress.trim(),
+      bio: editBio.trim(),
+      gardenStyle: editGardenStyle,
+      avatarColor: editAvatarColor,
+    });
+    setSavingProfile(false);
+    setProfileModalVisible(false);
+    Alert.alert('Profile Updated', 'Your profile details have been successfully saved.');
+  };
+
   // Watering reminders data
   const [reminders, setReminders] = useState([
     { id: '1', name: 'Monstera Deliciosa', frequency: 'Every 7 days', lastWatered: 'Yesterday', dueIn: 'Due in 6 days', done: false },
-    { id: '2', name: 'Peace Lily', frequency: 'Every 4 days', lastWatered: '3 days ago', dueIn: 'Water Today 💧', done: false },
+    { id: '2', name: 'Peace Lily', frequency: 'Every 4 days', lastWatered: '3 days ago', dueIn: 'Water Today', done: false },
     { id: '3', name: 'Snake Plant (Laurentii)', frequency: 'Every 14 days', lastWatered: '10 days ago', dueIn: 'Due in 4 days', done: false },
   ]);
 
@@ -164,6 +207,29 @@ export default function ProfileScreen({ navigation }: any) {
           >
             <Text style={styles.loginBtnText}>{loading ? 'Signing in...' : 'Sign In to PlantMe →'}</Text>
           </TouchableOpacity>
+
+          {/* Quick 1-Tap Customer Login */}
+          <View style={{ marginTop: 24, padding: 14, backgroundColor: '#f0fdf4', borderRadius: 14, borderWidth: 1, borderColor: '#bbf7d0' }}>
+            <Text style={{ fontSize: 12, fontWeight: '800', color: '#166534', textTransform: 'uppercase', marginBottom: 10, textAlign: 'center' }}>
+              🌿 1-Tap Quick Customer Login
+            </Text>
+
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#ffffff', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#86efac' }}
+              onPress={() => {
+                setEmail('customer@plantme.in');
+                setPassword('plantme123');
+                login('customer@plantme.in', 'plantme123');
+              }}
+            >
+              <Text style={{ fontSize: 22, marginRight: 10 }}>🌱</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 13, fontWeight: '800', color: '#166534' }}>Plant Lover (Customer Account)</Text>
+                <Text style={{ fontSize: 11, color: '#15803d' }}>customer@plantme.in • Shop, AI Dr & Orders</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color="#16a34a" />
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     );
@@ -173,11 +239,31 @@ export default function ProfileScreen({ navigation }: any) {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={[Colors.primary, Colors.primaryLight]} style={styles.header}>
-        <View style={styles.profileAvatar}>
-          <Text style={styles.avatarText}>{currentUser?.name?.[0] || 'U'}</Text>
-        </View>
+        <TouchableOpacity
+          style={[styles.profileAvatar, { backgroundColor: currentUser?.avatarColor || 'rgba(255,255,255,0.25)' }]}
+          onPress={openEditProfileModal}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.avatarText}>{(currentUser?.name || 'U')[0].toUpperCase()}</Text>
+          <View style={styles.avatarEditBadge}>
+            <Ionicons name="camera" size={11} color="#fff" />
+          </View>
+        </TouchableOpacity>
         <Text style={styles.profileName}>{currentUser?.name || 'PlantMe Customer'}</Text>
         <Text style={styles.profileEmail}>{currentUser?.email || email}</Text>
+
+        {currentUser?.gardenStyle ? (
+          <View style={styles.personaBadge}>
+            <Ionicons name="leaf-outline" size={12} color="#86efac" />
+            <Text style={styles.personaText}>{currentUser.gardenStyle}</Text>
+          </View>
+        ) : null}
+
+        <TouchableOpacity style={styles.editProfileBtn} onPress={openEditProfileModal} activeOpacity={0.85}>
+          <Ionicons name="create-outline" size={13} color="#fff" />
+          <Text style={styles.editProfileBtnText}>Edit Profile</Text>
+        </TouchableOpacity>
+
         <View style={styles.headerStats}>
           <TouchableOpacity style={styles.statBox} onPress={() => navigation.navigate('Orders')}>
             <Text style={styles.statValue}>{orders.length}</Text>
@@ -246,14 +332,14 @@ export default function ProfileScreen({ navigation }: any) {
                           }
                           addFundsToWallet(-99);
                           setHasCarePass(true);
-                          Alert.alert('Payment Successful! 🎉', '₹99 paid from PlantMe Green Wallet.\n\nPlantMe Care Pass is now ACTIVE!');
+                          Alert.alert('Payment Successful!', '₹99 paid from PlantMe Green Wallet.\n\nPlantMe Care Pass is now ACTIVE!');
                         }
                       },
                       {
                         text: 'Pay ₹99 via Razorpay',
                         onPress: () => {
                           setHasCarePass(true);
-                          Alert.alert('Payment Successful! 💳', `Transaction ID: TXN-RZP-${Math.floor(100000 + Math.random() * 900000)}\n\nPlantMe Care Pass is now ACTIVE!`);
+                          Alert.alert('Payment Successful!', `Transaction ID: TXN-RZP-${Math.floor(100000 + Math.random() * 900000)}\n\nPlantMe Care Pass is now ACTIVE!`);
                         }
                       }
                     ]
@@ -266,7 +352,9 @@ export default function ProfileScreen({ navigation }: any) {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontSize: 40 }}>🛡️</Text>
+          <View style={styles.shieldIconWrapper}>
+            <Ionicons name="shield-checkmark" size={32} color="#34d399" />
+          </View>
         </LinearGradient>
 
         {/* Feature Quick Actions */}
@@ -332,6 +420,12 @@ export default function ProfileScreen({ navigation }: any) {
         <View style={styles.menuSection}>
           {[
             {
+              icon: 'person-circle-outline',
+              label: 'Edit Profile & Preferences',
+              badge: 'Edit',
+              onPress: openEditProfileModal,
+            },
+            {
               icon: 'heart-outline',
               label: 'Wishlist',
               badge: `${wishlist.length}`,
@@ -386,16 +480,211 @@ export default function ProfileScreen({ navigation }: any) {
           ))}
         </View>
 
-        <Text style={styles.versionText}>PlantMe v1.0.0 • Made with 🌿 in India</Text>
+        <Text style={styles.versionText}>PlantMe v1.0.5 • Certified Nursery</Text>
         <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* --- EDIT PROFILE MODAL (Android & iOS) --- */}
+      <Modal
+        visible={profileModalVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setProfileModalVisible(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.modalBg}
+        >
+          <View style={[styles.modalContainer, styles.editProfileContainer]}>
+            <View style={styles.modalBar}>
+              <View style={styles.modalTitleRow}>
+                <Ionicons name="create-outline" size={20} color={Colors.primary} />
+                <Text style={styles.modalTitleText}>Edit Profile</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setProfileModalVisible(false)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="close-circle" size={26} color={Colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+              {/* Avatar Preview & Theme Picker */}
+              <View style={styles.avatarPreviewSection}>
+                <View style={[styles.avatarLargePreview, { backgroundColor: editAvatarColor }]}>
+                  <Text style={styles.avatarLargeText}>{(editName || 'U')[0]?.toUpperCase() || 'U'}</Text>
+                </View>
+                <Text style={styles.avatarHint}>Choose Avatar Theme Color</Text>
+                <View style={styles.colorPaletteRow}>
+                  {[
+                    { color: '#047857', label: 'Emerald' },
+                    { color: '#0284c7', label: 'Sky' },
+                    { color: '#7c3aed', label: 'Violet' },
+                    { color: '#b45309', label: 'Amber' },
+                    { color: '#be123c', label: 'Berry' },
+                    { color: '#334155', label: 'Slate' },
+                  ].map((item) => (
+                    <TouchableOpacity
+                      key={item.color}
+                      style={[
+                        styles.colorCircle,
+                        { backgroundColor: item.color },
+                        editAvatarColor === item.color && styles.colorCircleActive,
+                      ]}
+                      onPress={() => setEditAvatarColor(item.color)}
+                      accessibilityLabel={item.label}
+                    >
+                      {editAvatarColor === item.color && (
+                        <Ionicons name="checkmark" size={14} color="#fff" />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Name Input */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>Full Name</Text>
+                <View style={styles.editFieldRow}>
+                  <Ionicons name="person-outline" size={18} color={Colors.textMuted} />
+                  <TextInput
+                    style={styles.editInput}
+                    value={editName}
+                    onChangeText={setEditName}
+                    placeholder="Enter full name"
+                    placeholderTextColor={Colors.textMuted}
+                  />
+                </View>
+              </View>
+
+              {/* Phone Input */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>Phone Number</Text>
+                <View style={styles.editFieldRow}>
+                  <Ionicons name="call-outline" size={18} color={Colors.textMuted} />
+                  <TextInput
+                    style={styles.editInput}
+                    value={editPhone}
+                    onChangeText={setEditPhone}
+                    placeholder="+91 88856 00899"
+                    placeholderTextColor={Colors.textMuted}
+                    keyboardType="phone-pad"
+                  />
+                </View>
+              </View>
+
+              {/* Email Input */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>Email Address</Text>
+                <View style={styles.editFieldRow}>
+                  <Ionicons name="mail-outline" size={18} color={Colors.textMuted} />
+                  <TextInput
+                    style={styles.editInput}
+                    value={editEmail}
+                    onChangeText={setEditEmail}
+                    placeholder="customer@plantme.in"
+                    placeholderTextColor={Colors.textMuted}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
+              </View>
+
+              {/* City / Area */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>City / Location</Text>
+                <View style={styles.editFieldRow}>
+                  <Ionicons name="location-outline" size={18} color={Colors.textMuted} />
+                  <TextInput
+                    style={styles.editInput}
+                    value={editAddress}
+                    onChangeText={setEditAddress}
+                    placeholder="e.g. Indiranagar, Bengaluru"
+                    placeholderTextColor={Colors.textMuted}
+                  />
+                </View>
+              </View>
+
+              {/* Gardening Style / Preference */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>Plant Parent Preference</Text>
+                <View style={styles.gardenStyleWrap}>
+                  {[
+                    'Balcony Jungle',
+                    'Indoor Air Purifiers',
+                    'Succulents & Cacti',
+                    'Kitchen Herbs',
+                    'Bonsai & Exotic',
+                  ].map((style) => (
+                    <TouchableOpacity
+                      key={style}
+                      style={[
+                        styles.styleChip,
+                        editGardenStyle === style && styles.styleChipActive,
+                      ]}
+                      onPress={() => setEditGardenStyle(style)}
+                    >
+                      <Text
+                        style={[
+                          styles.styleChipText,
+                          editGardenStyle === style && styles.styleChipTextActive,
+                        ]}
+                      >
+                        {style}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Plant Bio / Notes */}
+              <View style={styles.editFieldGroup}>
+                <Text style={styles.editFieldLabel}>Plant Parent Bio</Text>
+                <View style={[styles.editFieldRow, { alignItems: 'flex-start', paddingTop: 10 }]}>
+                  <Ionicons name="document-text-outline" size={18} color={Colors.textMuted} style={{ marginTop: 2 }} />
+                  <TextInput
+                    style={[styles.editInput, { height: 60, textAlignVertical: 'top' }]}
+                    value={editBio}
+                    onChangeText={setEditBio}
+                    placeholder="Tell us about your green space journey..."
+                    placeholderTextColor={Colors.textMuted}
+                    multiline
+                  />
+                </View>
+              </View>
+
+              {/* Save & Cancel CTA */}
+              <TouchableOpacity
+                style={[styles.modalPrimaryBtn, savingProfile && { opacity: 0.7 }]}
+                onPress={handleSaveProfile}
+                disabled={savingProfile}
+              >
+                <Ionicons name="checkmark-circle-outline" size={18} color="#fff" />
+                <Text style={styles.modalPrimaryBtnText}>
+                  {savingProfile ? 'Saving Changes...' : 'Save Profile Changes'}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.cancelEditBtn}
+                onPress={() => setProfileModalVisible(false)}
+              >
+                <Text style={styles.cancelEditText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <View style={{ height: 28 }} />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
 
       {/* --- WATERING REMINDERS MODAL --- */}
       <Modal visible={remindersModalVisible} animationType="slide" transparent>
         <View style={styles.modalBg}>
           <View style={styles.modalContainer}>
             <View style={styles.modalBar}>
-              <Text style={styles.modalTitleText}>🌿 Plant Hydration Reminders</Text>
+              <Text style={styles.modalTitleText}>Plant Hydration Reminders</Text>
               <TouchableOpacity onPress={() => setRemindersModalVisible(false)}>
                 <Ionicons name="close-circle" size={26} color={Colors.textMuted} />
               </TouchableOpacity>
@@ -439,7 +728,7 @@ export default function ProfileScreen({ navigation }: any) {
         <View style={styles.modalBg}>
           <View style={styles.modalContainer}>
             <View style={styles.modalBar}>
-              <Text style={styles.modalTitleText}>📍 Saved Delivery Addresses</Text>
+              <Text style={styles.modalTitleText}>Saved Delivery Addresses</Text>
               <TouchableOpacity onPress={() => setAddressModalVisible(false)}>
                 <Ionicons name="close-circle" size={26} color={Colors.textMuted} />
               </TouchableOpacity>
@@ -516,7 +805,7 @@ export default function ProfileScreen({ navigation }: any) {
         <View style={styles.modalBg}>
           <View style={styles.modalContainer}>
             <View style={styles.modalBar}>
-              <Text style={styles.modalTitleText}>💳 PlantMe Green Wallet</Text>
+              <Text style={styles.modalTitleText}>PlantMe Green Wallet</Text>
               <TouchableOpacity onPress={() => setWalletModalVisible(false)}>
                 <Ionicons name="close-circle" size={26} color={Colors.textMuted} />
               </TouchableOpacity>
@@ -732,4 +1021,32 @@ const styles = StyleSheet.create({
   startCallText: { color: '#fff', fontSize: 14, fontWeight: '800' },
   closeCallBtn: { marginTop: 10, paddingVertical: 8 },
   closeCallText: { fontSize: 13, color: Colors.textMuted, fontWeight: '700' },
+
+  // Edit Profile Styles
+  avatarEditBadge: { position: 'absolute', bottom: -2, right: -2, backgroundColor: Colors.primary, width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: '#fff' },
+  personaBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(255,255,255,0.18)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: Radius.full, marginTop: 4, marginBottom: 8 },
+  personaText: { fontSize: 11, fontWeight: '700', color: '#86efac' },
+  editProfileBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(255,255,255,0.22)', paddingHorizontal: 14, paddingVertical: 7, borderRadius: Radius.full, marginTop: 2, marginBottom: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
+  editProfileBtnText: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  shieldIconWrapper: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' },
+  editProfileContainer: { maxHeight: '92%', paddingBottom: 16 },
+  modalTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  avatarPreviewSection: { alignItems: 'center', marginBottom: 18, paddingTop: 4 },
+  avatarLargePreview: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 3 },
+  avatarLargeText: { fontSize: 32, fontWeight: '800', color: '#fff' },
+  avatarHint: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary, marginBottom: 10 },
+  colorPaletteRow: { flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center' },
+  colorCircle: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  colorCircleActive: { borderWidth: 2.5, borderColor: '#fff', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3, elevation: 4 },
+  editFieldGroup: { marginBottom: 14 },
+  editFieldLabel: { fontSize: 12, fontWeight: '700', color: Colors.textSecondary, marginBottom: 6, textTransform: 'uppercase' },
+  editFieldRow: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1.5, borderColor: Colors.border, borderRadius: Radius.md, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: '#f8fafc' },
+  editInput: { flex: 1, fontSize: 14, color: Colors.text, padding: 0 },
+  gardenStyleWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+  styleChip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: Radius.full, backgroundColor: '#f1f5f9', borderWidth: 1, borderColor: Colors.border },
+  styleChipActive: { backgroundColor: '#f0fdf4', borderColor: Colors.primary },
+  styleChipText: { fontSize: 12, fontWeight: '600', color: Colors.textSecondary },
+  styleChipTextActive: { color: Colors.primary, fontWeight: '800' },
+  cancelEditBtn: { alignItems: 'center', paddingVertical: 12, marginTop: 4 },
+  cancelEditText: { fontSize: 13, fontWeight: '700', color: Colors.textMuted },
 });
