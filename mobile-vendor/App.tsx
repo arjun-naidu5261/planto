@@ -6,14 +6,27 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 import { Colors, Spacing, Radius } from './src/constants/theme';
 import { api } from './src/services/api';
 
 const { width } = Dimensions.get('window');
 
+// Curated high-res plant image options for nursery catalog
+const PRESET_PLANT_IMAGES = [
+  { name: 'Monstera Deliciosa', url: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Fiddle Leaf Fig', url: 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Snake Plant Sansevieria', url: 'https://images.unsplash.com/photo-1593691509543-c55fb32e7355?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Ficus Ginseng Bonsai', url: 'https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Golden Money Plant', url: 'https://images.unsplash.com/photo-1604762524889-3e2fccbc95f8?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Peace Lily Spathiphyllum', url: 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Jade Plant Succulent', url: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Areca Palm Air Purifier', url: 'https://images.unsplash.com/photo-1597055181300-e3633a917c9c?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Ceramic Handcrafted Pot', url: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=600&auto=format&fit=crop&q=80' },
+  { name: 'Organic Vermicompost Mix', url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&auto=format&fit=crop&q=80' },
+];
+
 export default function App() {
-  // Auth state - default to false so Welcome / Login screen appears on first open
+  // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'signup'>('login');
   const [loginEmail, setLoginEmail] = useState('vendor@plantme.in');
@@ -27,33 +40,41 @@ export default function App() {
   const [nurseryAddress, setNurseryAddress] = useState('');
   const [nurseryGst, setNurseryGst] = useState('');
 
-  // Vendor Dashboard state
-  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'payouts'>('products');
+  // Dashboard tabs
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'payouts' | 'profile'>('orders');
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [payouts, setPayouts] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isStoreOpen, setIsStoreOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Add Product Modal States
+  // Add Product Modal
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState('Indoor Plants');
   const [newPrice, setNewPrice] = useState('');
-  const [newStock, setNewStock] = useState('15');
+  const [newStock, setNewStock] = useState('20');
   const [newDesc, setNewDesc] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string>(PRESET_PLANT_IMAGES[0].url);
+  const [customImageUrl, setCustomImageUrl] = useState('');
   const [submittingProduct, setSubmittingProduct] = useState(false);
 
-  // Handshake Pickup PIN Modal States
+  // Handshake Pickup PIN Modal
   const [pinModalVisible, setPinModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [pickupPinInput, setPickupPinInput] = useState('');
   const [pinError, setPinError] = useState('');
   const [submittingPin, setSubmittingPin] = useState(false);
 
-  const categories = ['Indoor Plants', 'Flowering Plants', 'Bonsai & Ficus', 'Succulents', 'Pots & Planters', 'Organic Soil & Care'];
+  // Payout Modal
+  const [payoutModalVisible, setPayoutModalVisible] = useState(false);
+  const [payoutUpi, setPayoutUpi] = useState('nursery@upi');
+  const [payoutAmount, setPayoutAmount] = useState('4500');
+  const [requestingPayout, setRequestingPayout] = useState(false);
+
+  const categories = ['All', 'Indoor Plants', 'Flowering Plants', 'Bonsai & Ficus', 'Succulents', 'Pots & Planters', 'Organic Soil & Care'];
 
   // Load Vendor Data
   const loadData = async () => {
@@ -74,7 +95,7 @@ export default function App() {
   useEffect(() => {
     if (isAuthenticated) {
       loadData();
-      const interval = setInterval(loadData, 4000);
+      const interval = setInterval(loadData, 5000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
@@ -99,205 +120,142 @@ export default function App() {
 
   const handleSignup = () => {
     if (!nurseryName.trim() || !ownerName.trim() || !nurseryPhone.trim()) {
-      Alert.alert('Required Fields', 'Please fill Nursery Name, Owner Name, and Contact Phone.');
+      Alert.alert('Required Fields', 'Please enter your Nursery Store Name, Owner Name, and Contact Number.');
       return;
     }
-    Alert.alert('Nursery Registered! 🌿', `${nurseryName} has been approved and listed on PlantMe.`, [
-      { text: 'Open Console', onPress: () => setIsAuthenticated(true) }
+    Alert.alert('Registration Submitted! 🪴', 'Welcome to PlantMe Nursery Partner Network! Your store is active.', [
+      { text: 'Open Store Console', onPress: () => setIsAuthenticated(true) }
     ]);
   };
 
-  // 📸 Camera Image Capture
-  const handleLaunchCamera = async () => {
-    try {
-      const permission = await ImagePicker.requestCameraPermissionsAsync();
-      if (!permission.granted) {
-        Alert.alert('Permission Required', 'Camera access is required to snap foliage photos for your nursery listing.');
-        return;
-      }
-
-      const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets && result.assets[0]?.uri) {
-        setSelectedImage(result.assets[0].uri);
-      }
-    } catch (err) {
-      Alert.alert('Camera Error', 'Could not open device camera.');
-    }
+  const handleToggleStore = () => {
+    setIsStoreOpen(prev => !prev);
+    Alert.alert(
+      !isStoreOpen ? 'Store is Now OPEN 🟢' : 'Store is Now CLOSED 🔴',
+      !isStoreOpen
+        ? 'Your nursery is live to receive 20-min express plant orders.'
+        : 'Your nursery is offline. Incoming orders are paused.'
+    );
   };
 
-  // 🖼️ Pick Image from Gallery
-  const handlePickFromGallery = async () => {
-    try {
-      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permission.granted) {
-        Alert.alert('Permission Required', 'Photo library access is needed to select existing plant photos.');
-        return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets && result.assets[0]?.uri) {
-        setSelectedImage(result.assets[0].uri);
-      }
-    } catch (err) {
-      Alert.alert('Gallery Error', 'Could not select photo.');
-    }
-  };
-
-  // ➕ Save New Plant Product
-  const handleAddProductSubmit = async () => {
-    if (!newTitle.trim()) {
-      Alert.alert('Required', 'Please enter plant product name.');
+  const handleAddProduct = async () => {
+    if (!newTitle.trim() || !newPrice.trim()) {
+      Alert.alert('Error', 'Please enter a product name and price.');
       return;
     }
-    if (!newPrice.trim() || isNaN(Number(newPrice))) {
-      Alert.alert('Required', 'Please enter a valid price in ₹.');
-      return;
-    }
-
     setSubmittingProduct(true);
     try {
-      const fallbackImage = 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=600&auto=format&fit=crop&q=80';
+      const imageUrl = customImageUrl.trim() || selectedImage;
       const newProd = {
+        title: newTitle.trim(),
         name: newTitle.trim(),
         category: newCategory,
-        price: Number(newPrice),
-        stock: Number(newStock) || 10,
-        description: newDesc.trim() || 'Freshly nurtured nursery live plant in nursery potting mix.',
-        image: selectedImage || fallbackImage,
-        images: [selectedImage || fallbackImage],
+        price: parseFloat(newPrice) || 399,
+        stock: parseInt(newStock) || 15,
+        description: newDesc.trim() || 'Premium nursery-grown live healthy plant.',
+        imageUrl,
+        image: imageUrl,
         vendorId: 'v1',
-        rating: 5.0,
+        vendorName: 'Indiranagar Botanical Nursery',
+        rating: 4.8,
         reviewsCount: 1,
-        botanicalName: `${newTitle.trim()} Variegata`,
-        light: 'Bright Indirect',
-        water: 'Every 5-7 days',
-        isOrganic: true,
-        nurseryOrigin: 'PlantMe Certified Nursery - Indiranagar',
+        inStock: true,
       };
 
-      const res = await api.addProduct(newProd);
-      if (res && res.success) {
-        Alert.alert('Product Published! 🌿', `${newProd.name} is now LIVE on PlantMe 20-min express catalog.`);
-        setAddModalVisible(false);
-        setNewTitle('');
-        setNewPrice('');
-        setNewStock('15');
-        setNewDesc('');
-        setSelectedImage(null);
-        await loadData();
-      } else {
-        Alert.alert('Success', 'Product saved to catalog.');
-        setAddModalVisible(false);
-        await loadData();
-      }
+      await api.addProduct(newProd).catch(() => {});
+      Alert.alert('Success 🎉', 'New plant added to your nursery catalog!');
+      setAddModalVisible(false);
+      setNewTitle('');
+      setNewPrice('');
+      setNewDesc('');
+      setCustomImageUrl('');
+      await loadData();
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Failed to publish product.');
+      Alert.alert('Error', err.message || 'Failed to add product');
     } finally {
       setSubmittingProduct(false);
     }
   };
 
-  // 🗑️ Delete Plant Product
-  const handleDeleteProduct = (productId: string, productName: string) => {
-    Alert.alert(
-      'Delete Listing?',
-      `Are you sure you want to remove "${productName}" from your active nursery catalog?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete Plant',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const res = await api.deleteProduct(productId);
-              if (res && res.success) {
-                Alert.alert('Deleted', 'Plant listing removed successfully.');
-                setProducts(prev => prev.filter(p => p.id !== productId));
-              } else {
-                setProducts(prev => prev.filter(p => p.id !== productId));
-                Alert.alert('Removed', 'Plant listing deleted.');
-              }
-            } catch {
-              setProducts(prev => prev.filter(p => p.id !== productId));
-              Alert.alert('Removed', 'Plant listing deleted.');
-            }
-          }
-        }
-      ]
-    );
+  const handleUpdateStock = (productId: string, delta: number) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId || p._id === productId) {
+        const curStock = p.stock ?? 10;
+        const nextStock = Math.max(0, curStock + delta);
+        return { ...p, stock: nextStock, inStock: nextStock > 0 };
+      }
+      return p;
+    }));
   };
 
-  // Open Handshake Modal for an order
-  const handleOpenPinModal = (order: any) => {
-    setSelectedOrder(order);
-    setPickupPinInput('');
-    setPinError('');
-    setPinModalVisible(true);
-  };
-
-  // Verify Rider Handshake PIN
-  const handleVerifyPin = async () => {
+  const handleVerifyPickupPin = async () => {
     if (!pickupPinInput || pickupPinInput.trim().length !== 4) {
-      setPinError('Please enter the 4-digit PIN shown on the rider phone.');
+      setPinError('Please enter the 4-digit Pickup PIN shown by the delivery rider.');
       return;
     }
-
     setSubmittingPin(true);
     setPinError('');
     try {
       const res = await api.verifyPickupPin(selectedOrder.id, pickupPinInput.trim());
       if (res && res.success) {
-        Alert.alert('Handshake Complete! 🛵', 'Rider Pickup PIN verified. Plant crate safely handed to Rider Ramu Prasad.');
+        Alert.alert('Handshake Successful! 🤝🌿', 'Pickup PIN verified. Plant crate safely handed to Rider Hero.');
         setPinModalVisible(false);
+        setPickupPinInput('');
+        setSelectedOrder(null);
         await loadData();
       } else {
-        setPinError(res?.message || 'Invalid Pickup PIN. Please re-check with Rider.');
+        setPinError(res.message || 'Invalid Pickup PIN. Please check code with rider.');
       }
     } catch (err: any) {
-      setPinError(err.message || 'Incorrect PIN. Ask Rider to show 4-digit code in their app.');
+      setPinError(err.message || 'Incorrect PIN. Verify 4-digit code on rider screen.');
     } finally {
       setSubmittingPin(false);
     }
   };
 
-  // ---------------- WELCOME NURSERY PARTNER LOGIN / SIGNUP SCREEN ---------------- //
+  const handleRequestPayout = () => {
+    setRequestingPayout(true);
+    setTimeout(() => {
+      setRequestingPayout(false);
+      setPayoutModalVisible(false);
+      Alert.alert('Payout Initiated! 💰', `₹${payoutAmount} will be transferred to ${payoutUpi} within 15 minutes via IMPS.`);
+    }, 1200);
+  };
+
+  // Filtered products
+  const filteredProducts = products.filter(p => {
+    const titleMatch = (p.title || p.name || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const catMatch = selectedCategory === 'All' || p.category === selectedCategory;
+    return titleMatch && catMatch;
+  });
+
+  // ---------------- 1. WELCOME LOGIN / REGISTRATION SCREEN ---------------- //
   if (!isAuthenticated) {
     return (
       <SafeAreaView style={styles.loginContainer}>
-        <StatusBar barStyle="light-content" backgroundColor="#064e3b" />
-        <LinearGradient colors={['#064e3b', '#047857']} style={styles.loginHeader}>
-          <View style={styles.partnerHeroBadge}>
-            <Ionicons name="storefront" size={20} color="#a7f3d0" />
-            <Text style={styles.partnerHeroBadgeText}>PLANTME NURSERY PARTNER</Text>
+        <StatusBar barStyle="light-content" backgroundColor="#143425" />
+        <LinearGradient colors={['#143425', '#1b4332', '#2d6a4f']} style={styles.loginHeader}>
+          <View style={styles.vendorBadge}>
+            <Ionicons name="storefront" size={20} color="#bbf7d0" />
+            <Text style={styles.vendorBadgeText}>OFFICIAL NURSERY CONSOLE</Text>
           </View>
-          <Text style={styles.loginHeaderTitle}>Welcome, Nursery Partner! 🏬</Text>
-          <Text style={styles.loginHeaderSub}>
-            Snap live plant photos, manage stock inventory, & dispatch 20-min express orders
+          <Text style={styles.loginTitle}>Nursery Store 🏬</Text>
+          <Text style={styles.loginSub}>
+            Direct-to-customer 20-min plant dispatch • Inventory management • Fast bank payouts
           </Text>
 
-          {/* Auth Tab Switcher */}
           <View style={styles.authTabRow}>
             <TouchableOpacity
               style={[styles.authTabBtn, authTab === 'login' && styles.authTabBtnActive]}
               onPress={() => setAuthTab('login')}
             >
-              <Text style={[styles.authTabText, authTab === 'login' && styles.authTabTextActive]}>Nursery Sign In</Text>
+              <Text style={[styles.authTabText, authTab === 'login' && styles.authTabTextActive]}>Vendor Sign In</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.authTabBtn, authTab === 'signup' && styles.authTabBtnActive]}
               onPress={() => setAuthTab('signup')}
             >
-              <Text style={[styles.authTabText, authTab === 'signup' && styles.authTabTextActive]}>Register Stall</Text>
+              <Text style={[styles.authTabText, authTab === 'signup' && styles.authTabTextActive]}>Register Nursery</Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>
@@ -312,13 +270,13 @@ export default function App() {
                 activeOpacity={0.85}
               >
                 <View style={styles.quickLoginIcon}>
-                  <Ionicons name="flash" size={20} color="#10b981" />
+                  <Ionicons name="flash" size={20} color="#1b4332" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.quickLoginTitle}>⚡ 1-Tap Nursery Partner Login</Text>
-                  <Text style={styles.quickLoginSub}>Indiranagar Central Nursery (ID: v1)</Text>
+                  <Text style={styles.quickLoginTitle}>⚡ 1-Tap Quick Vendor Login</Text>
+                  <Text style={styles.quickLoginSub}>Indiranagar Botanical Nursery • ID: v1</Text>
                 </View>
-                <Ionicons name="arrow-forward-circle" size={24} color="#10b981" />
+                <Ionicons name="arrow-forward-circle" size={24} color="#1b4332" />
               </TouchableOpacity>
 
               <View style={styles.dividerRow}>
@@ -328,7 +286,7 @@ export default function App() {
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Partner Email</Text>
+                <Text style={styles.inputLabel}>Registered Merchant Email</Text>
                 <View style={styles.inputRow}>
                   <Ionicons name="mail-outline" size={18} color="#64748b" />
                   <TextInput
@@ -336,7 +294,7 @@ export default function App() {
                     value={loginEmail}
                     onChangeText={setLoginEmail}
                     placeholder="vendor@plantme.in"
-                    placeholderTextColor="#64748b"
+                    placeholderTextColor="#94a3b8"
                     keyboardType="email-address"
                     autoCapitalize="none"
                   />
@@ -352,7 +310,7 @@ export default function App() {
                     value={loginPassword}
                     onChangeText={setLoginPassword}
                     placeholder="vendor123"
-                    placeholderTextColor="#64748b"
+                    placeholderTextColor="#94a3b8"
                     secureTextEntry
                   />
                 </View>
@@ -363,12 +321,12 @@ export default function App() {
                 onPress={() => handleLogin()}
                 disabled={loginLoading}
               >
-                <Text style={styles.loginBtnText}>{loginLoading ? 'Authenticating...' : 'Enter Nursery Store Console →'}</Text>
+                <Text style={styles.loginBtnText}>{loginLoading ? 'Opening Console...' : 'Enter Nursery Console →'}</Text>
               </TouchableOpacity>
             </>
           ) : (
             <>
-              {/* Nursery Register Form */}
+              {/* Registration Form */}
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Nursery / Store Name *</Text>
                 <View style={styles.inputRow}>
@@ -377,51 +335,65 @@ export default function App() {
                     style={styles.textInput}
                     value={nurseryName}
                     onChangeText={setNurseryName}
-                    placeholder="e.g. Green Paradise Nursery"
-                    placeholderTextColor="#64748b"
+                    placeholder="e.g. Green Paradise Botanical Nursery"
+                    placeholderTextColor="#94a3b8"
                   />
                 </View>
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Owner / Manager Name *</Text>
+                <Text style={styles.inputLabel}>Owner / Manager Full Name *</Text>
                 <View style={styles.inputRow}>
                   <Ionicons name="person-outline" size={18} color="#64748b" />
                   <TextInput
                     style={styles.textInput}
                     value={ownerName}
                     onChangeText={setOwnerName}
-                    placeholder="e.g. Suresh Rao"
-                    placeholderTextColor="#64748b"
+                    placeholder="e.g. Anand Sharma"
+                    placeholderTextColor="#94a3b8"
                   />
                 </View>
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Contact Phone *</Text>
+                <Text style={styles.inputLabel}>Store Contact Number *</Text>
                 <View style={styles.inputRow}>
                   <Ionicons name="call-outline" size={18} color="#64748b" />
                   <TextInput
                     style={styles.textInput}
                     value={nurseryPhone}
                     onChangeText={setNurseryPhone}
-                    placeholder="+91 98860 11223"
-                    placeholderTextColor="#64748b"
+                    placeholder="+91 98450 44556"
+                    placeholderTextColor="#94a3b8"
                     keyboardType="phone-pad"
                   />
                 </View>
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Stall Address / Location</Text>
+                <Text style={styles.inputLabel}>Nursery Physical Address</Text>
                 <View style={styles.inputRow}>
                   <Ionicons name="location-outline" size={18} color="#64748b" />
                   <TextInput
                     style={styles.textInput}
                     value={nurseryAddress}
                     onChangeText={setNurseryAddress}
-                    placeholder="100ft Road, Indiranagar, Bengaluru"
-                    placeholderTextColor="#64748b"
+                    placeholder="12th Main Road, Indiranagar, Bengaluru"
+                    placeholderTextColor="#94a3b8"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>GSTIN / Business Registration (Optional)</Text>
+                <View style={styles.inputRow}>
+                  <Ionicons name="document-text-outline" size={18} color="#64748b" />
+                  <TextInput
+                    style={styles.textInput}
+                    value={nurseryGst}
+                    onChangeText={setNurseryGst}
+                    placeholder="29AAAAA0000A1Z5"
+                    placeholderTextColor="#94a3b8"
                   />
                 </View>
               </View>
@@ -430,26 +402,16 @@ export default function App() {
                 style={styles.loginBtn}
                 onPress={handleSignup}
               >
-                <Text style={styles.loginBtnText}>Register Nursery Stall →</Text>
+                <Text style={styles.loginBtnText}>Register Nursery on PlantMe →</Text>
               </TouchableOpacity>
             </>
           )}
 
-          {/* Vendor features card */}
-          <View style={styles.vendorPerksCard}>
-            <Text style={styles.vendorPerksTitle}>🌿 Nursery Partner Features</Text>
-            <View style={styles.perkItem}>
-              <Text style={{ fontSize: 16 }}>📸</Text>
-              <Text style={styles.perkText}><Text style={{ fontWeight: '800', color: '#065f46' }}>Live Camera Listings</Text> — Snap fresh foliage & publish in 1 tap</Text>
-            </View>
-            <View style={styles.perkItem}>
-              <Text style={{ fontSize: 16 }}>🔐</Text>
-              <Text style={styles.perkText}><Text style={{ fontWeight: '800', color: '#065f46' }}>Pickup PIN Handshake</Text> — Zero crate mixups with delivery riders</Text>
-            </View>
-            <View style={styles.perkItem}>
-              <Text style={{ fontSize: 16 }}>💰</Text>
-              <Text style={styles.perkText}>Automated daily batch settlements directly to bank account</Text>
-            </View>
+          <View style={styles.perksCard}>
+            <Text style={styles.perksTitle}>🏬 Why Partner with PlantMe?</Text>
+            <Text style={styles.perkText}>• <Text style={{ fontWeight: '700' }}>20-Minute Express Dispatch:</Text> PlantMe Rider arrives directly at your nursery desk to pick up packed plants.</Text>
+            <Text style={styles.perkText}>• <Text style={{ fontWeight: '700' }}>Secure Pickup PIN Handshake:</Text> Zero confusion. Release crates only after rider confirms the 4-digit PIN.</Text>
+            <Text style={styles.perkText}>• <Text style={{ fontWeight: '700' }}>Zero Inventory Risk:</Text> Manage stock live, receive daily bank payouts without deduction.</Text>
           </View>
           <View style={{ height: 40 }} />
         </ScrollView>
@@ -457,40 +419,36 @@ export default function App() {
     );
   }
 
-  // ---------------- MAIN NURSERY PARTNER DASHBOARD (WHEN LOGGED IN) ---------------- //
-  const filteredProducts = products.filter(p =>
-    !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  // ---------------- 2. MAIN VENDOR CONSOLE (AUTHENTICATED) ---------------- //
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#064e3b" />
+      <StatusBar barStyle="light-content" backgroundColor="#143425" />
 
-      {/* Header */}
-      <LinearGradient colors={['#064e3b', '#047857']} style={styles.header}>
-        <View style={styles.headerNav}>
+      {/* Top Header */}
+      <LinearGradient colors={['#143425', '#1b4332']} style={styles.header}>
+        <View style={styles.headerTop}>
           <View>
-            <View style={styles.partnerTagRow}>
-              <Text style={styles.partnerAppPill}>🏬 NURSERY STORE CONSOLE</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Text style={styles.storeName}>Indiranagar Botanical</Text>
+              <Ionicons name="checkmark-circle" size={16} color="#86efac" />
             </View>
-            <Text style={styles.headerTitle}>PlantMe Certified Nursery</Text>
-            <Text style={styles.headerSub}>Indiranagar Central Stall • ID: v1</Text>
+            <Text style={styles.storeSub}>ID: v1 • Bengaluru • 4.9 ★ (1,420 Reviews)</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
             <TouchableOpacity
-              style={[styles.storeStatusBtn, isStoreOpen ? styles.storeOpen : styles.storeClosed]}
-              onPress={() => setIsStoreOpen(!isStoreOpen)}
+              style={[styles.storeToggle, isStoreOpen ? styles.storeOpen : styles.storeClosed]}
+              onPress={handleToggleStore}
             >
-              <Text style={styles.storeStatusText}>{isStoreOpen ? '🟢 OPEN' : '🔴 CLOSED'}</Text>
+              <Text style={styles.storeToggleText}>{isStoreOpen ? '🟢 STORE OPEN' : '🔴 CLOSED'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.logoutBtn}
+              style={styles.logoutIcon}
               onPress={() => {
-                Alert.alert('Sign Out', 'Sign out of Nursery Partner console?', [
+                Alert.alert('Sign Out', 'Sign out of Nursery Store console?', [
                   { text: 'Cancel', style: 'cancel' },
-                  { text: 'Sign Out', style: 'destructive', onPress: () => setIsAuthenticated(false) },
+                  { text: 'Sign Out', style: 'destructive', onPress: () => setIsAuthenticated(false) }
                 ]);
               }}
             >
@@ -499,343 +457,442 @@ export default function App() {
           </View>
         </View>
 
-        {/* Tab Switcher */}
-        <View style={styles.tabBar}>
-          <TouchableOpacity
-            style={[styles.tabBtn, activeTab === 'products' && styles.tabBtnActive]}
-            onPress={() => setActiveTab('products')}
-          >
-            <Ionicons name="leaf" size={16} color={activeTab === 'products' ? '#064e3b' : '#a7f3d0'} />
-            <Text style={[styles.tabText, activeTab === 'products' && styles.tabTextActive]}>
-              Plant Stock ({products.length})
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.tabBtn, activeTab === 'orders' && styles.tabBtnActive]}
-            onPress={() => setActiveTab('orders')}
-          >
-            <Ionicons name="cart" size={16} color={activeTab === 'orders' ? '#064e3b' : '#a7f3d0'} />
-            <Text style={[styles.tabText, activeTab === 'orders' && styles.tabTextActive]}>
-              Live Orders ({orders.length})
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.tabBtn, activeTab === 'payouts' && styles.tabBtnActive]}
-            onPress={() => setActiveTab('payouts')}
-          >
-            <Ionicons name="cash" size={16} color={activeTab === 'payouts' ? '#064e3b' : '#a7f3d0'} />
-            <Text style={[styles.tabText, activeTab === 'payouts' && styles.tabTextActive]}>
-              Payouts
-            </Text>
-          </TouchableOpacity>
+        {/* Quick Ticker */}
+        <View style={styles.tickerRow}>
+          <View style={styles.tickerItem}>
+            <Text style={styles.tickerVal}>{orders.filter(o => o.status !== 'Delivered').length}</Text>
+            <Text style={styles.tickerLbl}>Pending Orders</Text>
+          </View>
+          <View style={styles.tickerDivider} />
+          <View style={styles.tickerItem}>
+            <Text style={styles.tickerVal}>{products.length}</Text>
+            <Text style={styles.tickerLbl}>Live Plants</Text>
+          </View>
+          <View style={styles.tickerDivider} />
+          <View style={styles.tickerItem}>
+            <Text style={[styles.tickerVal, { color: '#86efac' }]}>₹{payouts?.availableBalance || '4,520'}</Text>
+            <Text style={styles.tickerLbl}>Settlement Ready</Text>
+          </View>
         </View>
       </LinearGradient>
 
-      {/* ---------------- TAB 1: PLANT PRODUCTS & CAMERA ADD ---------------- */}
-      {activeTab === 'products' && (
-        <View style={{ flex: 1 }}>
-          {/* Action Bar */}
-          <View style={styles.actionBar}>
-            <View style={styles.searchBar}>
-              <Ionicons name="search" size={16} color="#64748b" />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search inventory..."
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
+      {/* Main Body per Tab */}
+      <View style={{ flex: 1 }}>
+        {/* TAB 1: ORDERS & HANDSHAKE */}
+        {activeTab === 'orders' && (
+          <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+            <View style={styles.sectionHeaderRow}>
+              <View>
+                <Text style={styles.sectionTitle}>Incoming Plant Orders</Text>
+                <Text style={styles.sectionSub}>Live 20-min express transit handovers</Text>
+              </View>
+              <TouchableOpacity style={styles.refreshBtn} onPress={loadData}>
+                <Ionicons name="refresh" size={16} color="#1b4332" />
+                <Text style={styles.refreshBtnText}>Refresh</Text>
+              </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={styles.addProductBtn}
-              onPress={() => setAddModalVisible(true)}
-              activeOpacity={0.85}
-            >
-              <Ionicons name="add-circle" size={18} color="#fff" />
-              <Text style={styles.addProductBtnText}>+ Add Plant</Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-            <View style={styles.plantGrid}>
-              {filteredProducts.map(plant => (
-                <View key={plant.id} style={styles.productCard}>
-                  <Image
-                    source={{ uri: plant.image || plant.images?.[0] || 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=400' }}
-                    style={styles.productImage}
-                  />
-                  <View style={styles.productBadge}>
-                    <Text style={styles.productBadgeText}>Stock: {plant.stock || 12}</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    style={styles.deleteIconBtn}
-                    onPress={() => handleDeleteProduct(plant.id, plant.name)}
-                    activeOpacity={0.8}
-                  >
-                    <Ionicons name="trash-outline" size={16} color="#ef4444" />
-                  </TouchableOpacity>
-
-                  <View style={styles.productBody}>
-                    <Text style={styles.productCategory}>{plant.category}</Text>
-                    <Text style={styles.productName} numberOfLines={1}>{plant.name}</Text>
-                    <View style={styles.productFooter}>
-                      <Text style={styles.productPrice}>₹{plant.price}</Text>
-                      <View style={styles.verifiedTag}>
-                        <Ionicons name="checkmark-circle" size={12} color="#16a34a" />
-                        <Text style={styles.verifiedText}>Live</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
-            <View style={{ height: 80 }} />
-          </ScrollView>
-        </View>
-      )}
-
-      {/* ---------------- TAB 2: LIVE ORDERS & PICKUP HANDSHAKE PIN ---------------- */}
-      {activeTab === 'orders' && (
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          <View style={styles.ordersContainer}>
-            <Text style={styles.sectionHeaderTitle}>⚡ Incoming Express Dispatch Queue</Text>
             {orders.length === 0 ? (
               <View style={styles.emptyCard}>
-                <Text style={{ fontSize: 40, marginBottom: 8 }}>🪴</Text>
-                <Text style={{ fontSize: 16, fontWeight: '700', color: '#1e293b' }}>No Active Orders</Text>
-                <Text style={{ fontSize: 12, color: '#64748b', textAlign: 'center', marginTop: 4 }}>
-                  Incoming 20-min express customer orders will chime here live.
-                </Text>
+                <Text style={{ fontSize: 36, marginBottom: 8 }}>🪴</Text>
+                <Text style={styles.emptyTitle}>No Pending Orders</Text>
+                <Text style={styles.emptySub}>Your nursery is ready. New orders from PlantMe customers will show here automatically.</Text>
               </View>
             ) : (
-              orders.map(order => {
-                const isPickedUp = order.status === 'Picked Up' || order.status === 'Delivered';
+              orders.map((ord: any) => {
+                const isReady = ord.status === 'Ready for Pickup';
+                const isDelivered = ord.status === 'Delivered';
+                const isPickedUp = ord.status === 'Picked Up';
+
                 return (
-                  <View key={order.id} style={styles.orderCard}>
+                  <View key={ord.id} style={styles.orderCard}>
                     <View style={styles.orderCardHeader}>
                       <View>
-                        <Text style={styles.orderIdText}>Order #{order.id}</Text>
-                        <Text style={styles.orderTimeText}>{order.date || 'Today'} • Express 20-Min</Text>
+                        <Text style={styles.orderId}>Order #{ord.id}</Text>
+                        <Text style={styles.orderTime}>{ord.date || 'Today, 20-Min Express'}</Text>
                       </View>
-                      <View style={[styles.statusBadge, isPickedUp ? styles.statusBadgeGreen : styles.statusBadgeAmber]}>
-                        <Text style={[styles.statusBadgeText, isPickedUp ? styles.statusTextGreen : styles.statusTextAmber]}>
-                          {order.status}
-                        </Text>
+                      <View style={[styles.orderStatusPill, isDelivered ? styles.statusDelivered : (isPickedUp ? styles.statusTransit : styles.statusPickup)]}>
+                        <Text style={styles.orderStatusText}>{ord.status || 'Preparing'}</Text>
                       </View>
                     </View>
 
-                    <View style={styles.orderItemsList}>
-                      {order.items?.map((it: any, idx: number) => (
+                    {/* Items */}
+                    <View style={styles.orderItemsBox}>
+                      {(ord.items || []).map((it: any, idx: number) => (
                         <View key={idx} style={styles.orderItemRow}>
-                          <Text style={styles.orderItemQty}>{it.quantity}x</Text>
-                          <Text style={styles.orderItemName}>{it.name}</Text>
-                          <Text style={styles.orderItemPrice}>₹{it.price}</Text>
+                          <Text style={styles.orderItemDot}>🌿</Text>
+                          <Text style={styles.orderItemName}>{it.name || it.title || 'Indoor Plant'}</Text>
+                          <Text style={styles.orderItemQty}>x{it.quantity || 1}</Text>
+                          <Text style={styles.orderItemPrice}>₹{(it.price || 399) * (it.quantity || 1)}</Text>
                         </View>
                       ))}
                     </View>
 
-                    <View style={styles.orderDivider} />
+                    {/* Delivery Destination */}
+                    <View style={styles.addressBox}>
+                      <Ionicons name="location-outline" size={16} color="#1b4332" />
+                      <Text style={styles.addressText} numberOfLines={1}>{ord.address || 'HSR Layout, Bengaluru'}</Text>
+                    </View>
 
-                    <View style={styles.riderRow}>
-                      <Image
-                        source={{ uri: order.rider?.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200' }}
-                        style={styles.riderAvatar}
-                      />
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.riderName}>{order.rider?.name || 'Ramu Prasad (Hero Rider)'}</Text>
-                        <Text style={styles.riderSub}>{order.rider?.vehicle || 'Hero Electric Scooter'}</Text>
-                      </View>
-
-                      {!isPickedUp ? (
+                    {/* Handshake Pickup Action */}
+                    {!isDelivered && !isPickedUp && (
+                      <View style={styles.handshakeBox}>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.handshakePrompt}>Rider Arrived at Desk?</Text>
+                          <Text style={styles.handshakeSub}>Ask rider for their 4-Digit Pickup PIN</Text>
+                        </View>
                         <TouchableOpacity
                           style={styles.verifyPinBtn}
-                          onPress={() => handleOpenPinModal(order)}
+                          onPress={() => {
+                            setSelectedOrder(ord);
+                            setPinModalVisible(true);
+                            setPinError('');
+                            setPickupPinInput('');
+                          }}
                         >
-                          <Ionicons name="keypad" size={14} color="#fff" />
-                          <Text style={styles.verifyPinBtnText}>Verify PIN Handover</Text>
+                          <Ionicons name="key-outline" size={16} color="#fff" />
+                          <Text style={styles.verifyPinBtnText}>Verify PIN Handshake</Text>
                         </TouchableOpacity>
-                      ) : (
-                        <View style={styles.handedOverBadge}>
-                          <Ionicons name="checkmark-done" size={14} color="#059669" />
-                          <Text style={styles.handedOverText}>Dispatched</Text>
-                        </View>
-                      )}
-                    </View>
+                      </View>
+                    )}
+
+                    {isPickedUp && (
+                      <View style={styles.transitBanner}>
+                        <Ionicons name="bicycle-outline" size={16} color="#2563eb" />
+                        <Text style={styles.transitText}>Ramu Prasad is in transit to customer doorstep</Text>
+                      </View>
+                    )}
                   </View>
                 );
               })
             )}
-          </View>
-          <View style={{ height: 80 }} />
-        </ScrollView>
-      )}
+            <View style={{ height: 100 }} />
+          </ScrollView>
+        )}
 
-      {/* ---------------- TAB 3: PAYOUTS & SETTLEMENTS ---------------- */}
-      {activeTab === 'payouts' && (
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          <View style={styles.payoutsContainer}>
-            {/* Balance Card */}
-            <LinearGradient colors={['#064e3b', '#047857']} style={styles.balanceCard}>
-              <Text style={styles.balanceLabel}>Total Available Payout</Text>
-              <Text style={styles.balanceAmount}>₹{payouts?.availableBalance || 18450}</Text>
-              <Text style={styles.balanceSub}>Next automated batch settlement: Tonight at 11:59 PM</Text>
+        {/* TAB 2: PRODUCTS CATALOG */}
+        {activeTab === 'products' && (
+          <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+            <View style={styles.sectionHeaderRow}>
+              <View>
+                <Text style={styles.sectionTitle}>Plant Catalog & Stock</Text>
+                <Text style={styles.sectionSub}>{products.length} live varieties in stock</Text>
+              </View>
               <TouchableOpacity
-                style={styles.withdrawBtn}
-                onPress={() => Alert.alert('Instant Transfer', '₹18,450 successfully transferred to HDFC Bank (A/C ending in 4921).')}
+                style={styles.addBtn}
+                onPress={() => setAddModalVisible(true)}
               >
-                <Text style={styles.withdrawBtnText}>⚡ Request Instant Bank Transfer</Text>
+                <Ionicons name="add" size={18} color="#fff" />
+                <Text style={styles.addBtnText}>Add Plant</Text>
               </TouchableOpacity>
-            </LinearGradient>
+            </View>
 
-            {/* Stats Row */}
-            <View style={styles.statsRow}>
-              <View style={styles.statCard}>
-                <Text style={styles.statCardLabel}>Today's Sales</Text>
-                <Text style={styles.statCardValue}>₹{payouts?.todaySales || 4280}</Text>
-                <Text style={styles.statCardSub}>+18% from yesterday</Text>
+            {/* Search Input */}
+            <View style={styles.searchBar}>
+              <Ionicons name="search-outline" size={18} color="#64748b" />
+              <TextInput
+                style={styles.searchInput}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder="Search catalog plants..."
+                placeholderTextColor="#94a3b8"
+              />
+            </View>
+
+            {/* Category Filter Pills */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll}>
+              {categories.map((c) => (
+                <TouchableOpacity
+                  key={c}
+                  style={[styles.catPill, selectedCategory === c && styles.catPillActive]}
+                  onPress={() => setSelectedCategory(c)}
+                >
+                  <Text style={[styles.catPillText, selectedCategory === c && styles.catPillTextActive]}>{c}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Products List */}
+            {filteredProducts.map((p) => (
+              <View key={p.id || p._id} style={styles.productCard}>
+                <Image
+                  source={{ uri: p.imageUrl || p.image || PRESET_PLANT_IMAGES[0].url }}
+                  style={styles.productThumb}
+                />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productTitle} numberOfLines={1}>{p.title || p.name}</Text>
+                  <Text style={styles.productCat}>{p.category || 'Indoor Plants'}</Text>
+                  <Text style={styles.productPrice}>₹{p.price}</Text>
+
+                  {/* Stock counter */}
+                  <View style={styles.stockRow}>
+                    <Text style={styles.stockLabel}>Stock:</Text>
+                    <TouchableOpacity
+                      style={styles.stockBtn}
+                      onPress={() => handleUpdateStock(p.id || p._id, -1)}
+                    >
+                      <Ionicons name="remove" size={14} color="#1b4332" />
+                    </TouchableOpacity>
+                    <Text style={styles.stockCount}>{p.stock ?? 15}</Text>
+                    <TouchableOpacity
+                      style={styles.stockBtn}
+                      onPress={() => handleUpdateStock(p.id || p._id, 1)}
+                    >
+                      <Ionicons name="add" size={14} color="#1b4332" />
+                    </TouchableOpacity>
+                    <View style={[styles.stockPill, (p.stock ?? 15) > 0 ? styles.stockPillIn : styles.stockPillOut]}>
+                      <Text style={styles.stockPillText}>{(p.stock ?? 15) > 0 ? 'In Stock' : 'Out'}</Text>
+                    </View>
+                  </View>
+                </View>
               </View>
-              <View style={styles.statCard}>
-                <Text style={styles.statCardLabel}>Completed Orders</Text>
-                <Text style={styles.statCardValue}>{payouts?.totalOrders || 28}</Text>
-                <Text style={styles.statCardSub}>0 returns</Text>
+            ))}
+            <View style={{ height: 100 }} />
+          </ScrollView>
+        )}
+
+        {/* TAB 3: PAYOUTS & REVENUE */}
+        {activeTab === 'payouts' && (
+          <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+            <View style={styles.revenueCard}>
+              <LinearGradient colors={['#143425', '#2d6a4f']} style={styles.revenueGradient}>
+                <Text style={styles.revLabel}>Total Available Settlement</Text>
+                <Text style={styles.revAmount}>₹{payouts?.availableBalance || '4,520.00'}</Text>
+                <Text style={styles.revSub}>Daily payout to registered Bank / UPI account</Text>
+
+                <TouchableOpacity
+                  style={styles.withdrawBtn}
+                  onPress={() => setPayoutModalVisible(true)}
+                >
+                  <Ionicons name="flash" size={16} color="#1b4332" />
+                  <Text style={styles.withdrawBtnText}>Instant Payout to UPI / Bank</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+
+            {/* Breakdown */}
+            <View style={styles.ledgerCard}>
+              <Text style={styles.ledgerHeader}>Weekly Performance</Text>
+              <View style={styles.ledgerRow}>
+                <Text style={styles.ledgerLabel}>Gross Plant Sales</Text>
+                <Text style={styles.ledgerVal}>₹{payouts?.grossSales || '24,800.00'}</Text>
+              </View>
+              <View style={styles.ledgerRow}>
+                <Text style={styles.ledgerLabel}>PlantMe Platform Fee (10%)</Text>
+                <Text style={[styles.ledgerVal, { color: '#ef4444' }]}>-₹{payouts?.commission || '2,480.00'}</Text>
+              </View>
+              <View style={styles.ledgerRow}>
+                <Text style={styles.ledgerLabel}>Completed Dispatches</Text>
+                <Text style={styles.ledgerVal}>{orders.length + 18} Orders</Text>
+              </View>
+              <View style={[styles.ledgerRow, { borderTopWidth: 1, borderColor: '#e2e8f0', paddingTop: 10, marginTop: 6 }]}>
+                <Text style={[styles.ledgerLabel, { fontWeight: '800', color: '#1b4332' }]}>Net Transferred</Text>
+                <Text style={[styles.ledgerVal, { fontWeight: '800', color: '#1b4332' }]}>₹22,320.00</Text>
               </View>
             </View>
 
-            {/* Bank details */}
-            <View style={styles.bankCard}>
-              <Text style={styles.bankTitle}>Settlement Account</Text>
-              <Text style={styles.bankName}>HDFC Bank Ltd • Indiranagar Branch</Text>
-              <Text style={styles.bankAcc}>A/C: **********4921 • IFSC: HDFC0001284</Text>
-              <View style={styles.verifiedBankBadge}>
-                <Ionicons name="shield-checkmark" size={14} color="#059669" />
-                <Text style={styles.verifiedBankText}>KYC & Nursery GST Verified</Text>
+            <View style={{ height: 100 }} />
+          </ScrollView>
+        )}
+
+        {/* TAB 4: STORE PROFILE */}
+        {activeTab === 'profile' && (
+          <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+            <View style={styles.profileCard}>
+              <View style={styles.avatarRow}>
+                <View style={styles.storeAvatar}>
+                  <Ionicons name="storefront" size={32} color="#1b4332" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.profileStoreName}>Indiranagar Botanical Nursery</Text>
+                  <Text style={styles.profileOwner}>Managed by Anand Sharma</Text>
+                  <View style={styles.verifiedTag}>
+                    <Ionicons name="shield-checkmark" size={14} color="#16a34a" />
+                    <Text style={styles.verifiedTagText}>GST & KYC Verified Merchant</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.profileDivider} />
+
+              <View style={styles.profileDetailRow}>
+                <Ionicons name="call-outline" size={18} color="#64748b" />
+                <Text style={styles.profileDetailText}>+91 98450 44556</Text>
+              </View>
+              <View style={styles.profileDetailRow}>
+                <Ionicons name="location-outline" size={18} color="#64748b" />
+                <Text style={styles.profileDetailText}>12th Main Road, Indiranagar, Bengaluru - 560038</Text>
+              </View>
+              <View style={styles.profileDetailRow}>
+                <Ionicons name="time-outline" size={18} color="#64748b" />
+                <Text style={styles.profileDetailText}>Operating Hours: 07:00 AM - 09:30 PM (Daily)</Text>
+              </View>
+              <View style={styles.profileDetailRow}>
+                <Ionicons name="document-text-outline" size={18} color="#64748b" />
+                <Text style={styles.profileDetailText}>GSTIN: 29AAAAA0000A1Z5</Text>
               </View>
             </View>
-          </View>
-          <View style={{ height: 80 }} />
-        </ScrollView>
-      )}
 
-      {/* ---------------- 📸 ADD PLANT MODAL (CAMERA & GALLERY) ---------------- */}
+            {/* Packing Guidelines Card */}
+            <View style={styles.packingCard}>
+              <Text style={styles.packingTitle}>🌱 Express Plant Packing Standard</Text>
+              <Text style={styles.packingRule}>1. Wrap root ball in moisture retention bag to prevent dry-out during 20-min scooter transit.</Text>
+              <Text style={styles.packingRule}>2. Affix PlantMe barcode sticker on pot rim.</Text>
+              <Text style={styles.packingRule}>3. Confirm 4-digit Pickup PIN with Rider before releasing crates.</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.signOutBtn}
+              onPress={() => setIsAuthenticated(false)}
+            >
+              <Ionicons name="log-out-outline" size={18} color="#ef4444" />
+              <Text style={styles.signOutBtnText}>Sign Out of Nursery Console</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: 100 }} />
+          </ScrollView>
+        )}
+      </View>
+
+      {/* ---------------- 3. BOTTOM TAB NAVIGATION ---------------- */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={[styles.tabItem, activeTab === 'orders' && styles.tabItemActive]}
+          onPress={() => setActiveTab('orders')}
+        >
+          <Ionicons name={activeTab === 'orders' ? 'cube' : 'cube-outline'} size={22} color={activeTab === 'orders' ? '#1b4332' : '#94a3b8'} />
+          <Text style={[styles.tabText, activeTab === 'orders' && styles.tabTextActive]}>Orders</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tabItem, activeTab === 'products' && styles.tabItemActive]}
+          onPress={() => setActiveTab('products')}
+        >
+          <Ionicons name={activeTab === 'products' ? 'leaf' : 'leaf-outline'} size={22} color={activeTab === 'products' ? '#1b4332' : '#94a3b8'} />
+          <Text style={[styles.tabText, activeTab === 'products' && styles.tabTextActive]}>Catalog</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tabItem, activeTab === 'payouts' && styles.tabItemActive]}
+          onPress={() => setActiveTab('payouts')}
+        >
+          <Ionicons name={activeTab === 'payouts' ? 'wallet' : 'wallet-outline'} size={22} color={activeTab === 'payouts' ? '#1b4332' : '#94a3b8'} />
+          <Text style={[styles.tabText, activeTab === 'payouts' && styles.tabTextActive]}>Earnings</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tabItem, activeTab === 'profile' && styles.tabItemActive]}
+          onPress={() => setActiveTab('profile')}
+        >
+          <Ionicons name={activeTab === 'profile' ? 'storefront' : 'storefront-outline'} size={22} color={activeTab === 'profile' ? '#1b4332' : '#94a3b8'} />
+          <Text style={[styles.tabText, activeTab === 'profile' && styles.tabTextActive]}>Profile</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* ---------------- 4. ADD PRODUCT MODAL ---------------- */}
       <Modal visible={addModalVisible} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>🌿 Add Plant to Live Catalog</Text>
+              <Text style={styles.modalTitle}>Add New Plant to Catalog</Text>
               <TouchableOpacity onPress={() => setAddModalVisible(false)}>
                 <Ionicons name="close-circle" size={24} color="#64748b" />
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Photo selector (Camera or Gallery) */}
-              <View style={styles.imageSelectorBox}>
-                {selectedImage ? (
-                  <View style={styles.previewImageContainer}>
-                    <Image source={{ uri: selectedImage }} style={styles.previewImage} />
-                    <TouchableOpacity
-                      style={styles.removeImageBtn}
-                      onPress={() => setSelectedImage(null)}
-                    >
-                      <Ionicons name="trash" size={16} color="#fff" />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={styles.photoActionsRow}>
-                    <TouchableOpacity
-                      style={styles.photoActionBtn}
-                      onPress={handleLaunchCamera}
-                    >
-                      <Ionicons name="camera" size={24} color="#065f46" />
-                      <Text style={styles.photoActionText}>📸 Snap Photo</Text>
-                      <Text style={styles.photoActionSub}>Live camera capture</Text>
-                    </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 480 }}>
+              <Text style={styles.modalFieldLabel}>Select Plant Image</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageSelectorScroll}>
+                {PRESET_PLANT_IMAGES.map((img, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    style={[styles.imageOptionBox, selectedImage === img.url && styles.imageOptionBoxSelected]}
+                    onPress={() => {
+                      setSelectedImage(img.url);
+                      setCustomImageUrl('');
+                    }}
+                  >
+                    <Image source={{ uri: img.url }} style={styles.imageOptionThumb} />
+                    <Text style={styles.imageOptionLabel} numberOfLines={1}>{img.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
 
-                    <TouchableOpacity
-                      style={[styles.photoActionBtn, { backgroundColor: '#eff6ff', borderColor: '#bfdbfe' }]}
-                      onPress={handlePickFromGallery}
-                    >
-                      <Ionicons name="images" size={24} color="#1e40af" />
-                      <Text style={[styles.photoActionText, { color: '#1e40af' }]}>🖼️ Gallery</Text>
-                      <Text style={[styles.photoActionSub, { color: '#3b82f6' }]}>Choose from device</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
+              <Text style={styles.modalFieldLabel}>Or Custom Image URL</Text>
+              <TextInput
+                style={styles.modalInput}
+                placeholder="https://images.unsplash.com/..."
+                value={customImageUrl}
+                onChangeText={setCustomImageUrl}
+                placeholderTextColor="#94a3b8"
+              />
 
-              {/* Plant Form Fields */}
-              <View style={styles.formGroup}>
-                <Text style={styles.formLabel}>Plant Product Name *</Text>
-                <TextInput
-                  style={styles.formInput}
-                  placeholder="e.g. Variegated Monstera Deliciosa"
-                  value={newTitle}
-                  onChangeText={setNewTitle}
-                />
-              </View>
+              <Text style={styles.modalFieldLabel}>Plant Species / Title *</Text>
+              <TextInput
+                style={styles.modalInput}
+                placeholder="e.g. Variegated Monstera Albo"
+                value={newTitle}
+                onChangeText={setNewTitle}
+                placeholderTextColor="#94a3b8"
+              />
 
-              <View style={styles.formGroup}>
-                <Text style={styles.formLabel}>Category *</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 6 }}>
-                  {categories.map(cat => (
-                    <TouchableOpacity
-                      key={cat}
-                      style={[styles.catPill, newCategory === cat && styles.catPillActive]}
-                      onPress={() => setNewCategory(cat)}
-                    >
-                      <Text style={[styles.catPillText, newCategory === cat && styles.catPillTextActive]}>{cat}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
+              <Text style={styles.modalFieldLabel}>Category</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 12 }}>
+                {categories.filter(c => c !== 'All').map(c => (
+                  <TouchableOpacity
+                    key={c}
+                    style={[styles.catPillSmall, newCategory === c && styles.catPillSmallActive]}
+                    onPress={() => setNewCategory(c)}
+                  >
+                    <Text style={[styles.catPillSmallText, newCategory === c && styles.catPillSmallTextActive]}>{c}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
 
-              <View style={{ flexDirection: 'row', gap: 10 }}>
-                <View style={[styles.formGroup, { flex: 1 }]}>
-                  <Text style={styles.formLabel}>Price (₹) *</Text>
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.modalFieldLabel}>Price (₹) *</Text>
                   <TextInput
-                    style={styles.formInput}
-                    placeholder="e.g. 499"
-                    keyboardType="numeric"
+                    style={styles.modalInput}
+                    placeholder="499"
                     value={newPrice}
-                    onChangeText={setPrice => setNewPrice(setPrice)}
+                    onChangeText={setNewPrice}
+                    keyboardType="numeric"
+                    placeholderTextColor="#94a3b8"
                   />
                 </View>
-
-                <View style={[styles.formGroup, { flex: 1 }]}>
-                  <Text style={styles.formLabel}>Available Stock *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.modalFieldLabel}>Initial Stock</Text>
                   <TextInput
-                    style={styles.formInput}
+                    style={styles.modalInput}
                     placeholder="15"
-                    keyboardType="numeric"
                     value={newStock}
                     onChangeText={setNewStock}
+                    keyboardType="numeric"
+                    placeholderTextColor="#94a3b8"
                   />
                 </View>
               </View>
 
-              <View style={styles.formGroup}>
-                <Text style={styles.formLabel}>Plant Care Description</Text>
-                <TextInput
-                  style={[styles.formInput, { height: 70, textAlignVertical: 'top' }]}
-                  placeholder="e.g. Root-ball inspected, pest-free, potted in nutrient-rich compost."
-                  multiline
-                  value={newDesc}
-                  onChangeText={setNewDesc}
-                />
-              </View>
+              <Text style={styles.modalFieldLabel}>Care & Light Description</Text>
+              <TextInput
+                style={[styles.modalInput, { height: 70 }]}
+                placeholder="Thrives in indirect bright light. Water once a week."
+                value={newDesc}
+                onChangeText={setNewDesc}
+                multiline
+                placeholderTextColor="#94a3b8"
+              />
 
               <TouchableOpacity
-                style={[styles.publishBtn, submittingProduct && { opacity: 0.7 }]}
-                onPress={handleAddProductSubmit}
+                style={[styles.saveProductBtn, submittingProduct && { opacity: 0.7 }]}
+                onPress={handleAddProduct}
                 disabled={submittingProduct}
               >
                 {submittingProduct ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={styles.publishBtnText}>🚀 Publish to PlantMe Express Catalog</Text>
+                  <Text style={styles.saveProductBtnText}>Save & Publish Plant 🌿</Text>
                 )}
               </TouchableOpacity>
             </ScrollView>
@@ -843,16 +900,16 @@ export default function App() {
         </View>
       </Modal>
 
-      {/* ---------------- 🔐 RIDER 4-DIGIT PICKUP PIN VERIFY MODAL ---------------- */}
+      {/* ---------------- 5. HANDSHAKE PICKUP PIN MODAL ---------------- */}
       <Modal visible={pinModalVisible} animationType="fade" transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.pinModalContent}>
-            <View style={styles.pinIconCircle}>
-              <Ionicons name="keypad" size={28} color="#059669" />
+        <View style={styles.modalBackdrop}>
+          <View style={styles.pinModalCard}>
+            <View style={styles.pinModalIconCircle}>
+              <Ionicons name="key" size={32} color="#1b4332" />
             </View>
-            <Text style={styles.pinModalTitle}>Rider Pickup PIN Verification</Text>
+            <Text style={styles.pinModalTitle}>Verify Pickup PIN Handshake</Text>
             <Text style={styles.pinModalSub}>
-              Ask Rider <Text style={{ fontWeight: '800', color: '#1e293b' }}>{selectedOrder?.rider?.name || 'Ramu Prasad'}</Text> to show the 4-Digit Pickup PIN on their Rider App.
+              Ask the delivery rider to show the 4-digit Pickup PIN generated on their screen.
             </Text>
 
             <TextInput
@@ -863,25 +920,79 @@ export default function App() {
               maxLength={4}
               value={pickupPinInput}
               onChangeText={setPickupPinInput}
-              autoFocus
             />
 
             {pinError ? <Text style={styles.pinErrorText}>{pinError}</Text> : null}
 
-            <View style={styles.pinModalButtons}>
+            <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
               <TouchableOpacity
                 style={styles.pinCancelBtn}
                 onPress={() => setPinModalVisible(false)}
               >
-                <Text style={styles.pinCancelText}>Cancel</Text>
+                <Text style={styles.pinCancelBtnText}>Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.pinConfirmBtn, submittingPin && { opacity: 0.7 }]}
-                onPress={handleVerifyPin}
+                onPress={handleVerifyPickupPin}
                 disabled={submittingPin}
               >
-                <Text style={styles.pinConfirmText}>{submittingPin ? 'Verifying...' : 'Confirm Handover'}</Text>
+                {submittingPin ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.pinConfirmBtnText}>Verify & Handover</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ---------------- 6. WITHDRAW PAYOUT MODAL ---------------- */}
+      <Modal visible={payoutModalVisible} animationType="fade" transparent>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.pinModalCard}>
+            <View style={[styles.pinModalIconCircle, { backgroundColor: '#f0fdf4' }]}>
+              <Ionicons name="wallet" size={32} color="#16a34a" />
+            </View>
+            <Text style={styles.pinModalTitle}>Instant Bank / UPI Transfer</Text>
+            <Text style={styles.pinModalSub}>Funds transferred directly to your merchant account.</Text>
+
+            <View style={{ width: '100%', marginTop: 12 }}>
+              <Text style={styles.modalFieldLabel}>Payout Amount (₹)</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={payoutAmount}
+                onChangeText={setPayoutAmount}
+                keyboardType="numeric"
+              />
+
+              <Text style={styles.modalFieldLabel}>UPI ID / Account Number</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={payoutUpi}
+                onChangeText={setPayoutUpi}
+              />
+            </View>
+
+            <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, width: '100%' }}>
+              <TouchableOpacity
+                style={styles.pinCancelBtn}
+                onPress={() => setPayoutModalVisible(false)}
+              >
+                <Text style={styles.pinCancelBtnText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.pinConfirmBtn, requestingPayout && { opacity: 0.7 }]}
+                onPress={handleRequestPayout}
+                disabled={requestingPayout}
+              >
+                {requestingPayout ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.pinConfirmBtnText}>Transfer Now ⚡</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -895,143 +1006,175 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
   loginContainer: { flex: 1, backgroundColor: '#f8fafc' },
   loginHeader: { paddingTop: 40, paddingBottom: 24, paddingHorizontal: 20, alignItems: 'center' },
-  partnerHeroBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(167, 243, 208, 0.2)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, marginBottom: 10 },
-  partnerHeroBadgeText: { color: '#a7f3d0', fontSize: 11, fontWeight: '800', letterSpacing: 0.5 },
-  loginHeaderTitle: { fontSize: 24, fontWeight: '800', color: '#ffffff' },
-  loginHeaderSub: { fontSize: 12, color: 'rgba(255,255,255,0.85)', textAlign: 'center', marginTop: 6, lineHeight: 18 },
-  authTabRow: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.25)', borderRadius: 10, padding: 3, marginTop: 16, width: '100%' },
+  vendorBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(255,255,255,0.15)', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20, marginBottom: 10 },
+  vendorBadgeText: { color: '#bbf7d0', fontSize: 11, fontWeight: '800', letterSpacing: 0.5 },
+  loginTitle: { fontSize: 26, fontWeight: '800', color: '#ffffff' },
+  loginSub: { fontSize: 12, color: '#e2e8f0', textAlign: 'center', marginTop: 6, lineHeight: 18 },
+  authTabRow: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: 3, marginTop: 16, width: '100%' },
   authTabBtn: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 8 },
   authTabBtnActive: { backgroundColor: '#ffffff' },
-  authTabText: { color: '#a7f3d0', fontSize: 12, fontWeight: '700' },
-  authTabTextActive: { color: '#064e3b', fontWeight: '800' },
-  loginForm: { padding: 20 },
-  quickLoginBanner: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#ecfdf5', borderWidth: 1.5, borderColor: '#10b981', padding: 14, borderRadius: 14, marginBottom: 16 },
-  quickLoginIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(16, 185, 129, 0.2)', alignItems: 'center', justifyContent: 'center' },
-  quickLoginTitle: { color: '#065f46', fontSize: 14, fontWeight: '800' },
-  quickLoginSub: { color: '#047857', fontSize: 11, marginTop: 2 },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 12 },
+  authTabText: { fontSize: 12, fontWeight: '700', color: '#cbd5e1' },
+  authTabTextActive: { color: '#1b4332' },
+  loginForm: { flex: 1, padding: 20 },
+  quickLoginBanner: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#f0fdf4', padding: 14, borderRadius: 12, borderWidth: 1, borderColor: '#86efac', marginBottom: 16 },
+  quickLoginIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#bbf7d0', alignItems: 'center', justifyContent: 'center' },
+  quickLoginTitle: { fontSize: 13, fontWeight: '800', color: '#1b4332' },
+  quickLoginSub: { fontSize: 11, color: '#2d6a4f', marginTop: 2 },
+  dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 14 },
   dividerLine: { flex: 1, height: 1, backgroundColor: '#e2e8f0' },
-  dividerText: { color: '#94a3b8', fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
+  dividerText: { fontSize: 10, fontWeight: '700', color: '#94a3b8', marginHorizontal: 10 },
   inputGroup: { marginBottom: 14 },
   inputLabel: { fontSize: 12, fontWeight: '700', color: '#334155', marginBottom: 6 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ffffff', borderRadius: 12, paddingHorizontal: 12, borderWidth: 1, borderColor: '#e2e8f0', gap: 8 },
-  textInput: { flex: 1, height: 46, fontSize: 14, color: '#0f172a' },
-  loginBtn: { backgroundColor: '#059669', height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 10 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#cbd5e1', borderRadius: 10, paddingHorizontal: 12, height: 46 },
+  textInput: { flex: 1, fontSize: 13, color: '#0f172a' },
+  loginBtn: { backgroundColor: '#1b4332', height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 10 },
   loginBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '800' },
-  vendorPerksCard: { backgroundColor: '#ecfdf5', borderRadius: 14, padding: 16, marginTop: 20, borderWidth: 1, borderColor: '#a7f3d0' },
-  vendorPerksTitle: { color: '#065f46', fontSize: 13, fontWeight: '800', marginBottom: 10 },
-  perkItem: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 4 },
-  perkText: { flex: 1, color: '#047857', fontSize: 11, lineHeight: 16 },
-  header: { paddingTop: 20, paddingHorizontal: 16, paddingBottom: 14 },
-  headerNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  partnerTagRow: { marginBottom: 2 },
-  partnerAppPill: { color: '#a7f3d0', fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#ffffff' },
-  headerSub: { fontSize: 11, color: 'rgba(255,255,255,0.75)' },
-  storeStatusBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
-  storeOpen: { backgroundColor: '#10b981' },
+  perksCard: { backgroundColor: '#ffffff', borderRadius: 12, padding: 16, marginTop: 24, borderWidth: 1, borderColor: '#e2e8f0' },
+  perksTitle: { fontSize: 13, fontWeight: '800', color: '#1b4332', marginBottom: 8 },
+  perkText: { fontSize: 12, color: '#475569', lineHeight: 18, marginVertical: 3 },
+
+  // Authenticated styles
+  header: { paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14 },
+  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  storeName: { fontSize: 17, fontWeight: '800', color: '#ffffff' },
+  storeSub: { fontSize: 11, color: '#94a3b8', marginTop: 2 },
+  storeToggle: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20 },
+  storeOpen: { backgroundColor: '#16a34a' },
   storeClosed: { backgroundColor: '#ef4444' },
-  storeStatusText: { color: '#fff', fontSize: 10, fontWeight: '800' },
-  logoutBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  tabBar: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 10, padding: 3, marginTop: 12 },
-  tabBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 8, borderRadius: 8 },
-  tabBtnActive: { backgroundColor: '#ffffff' },
-  tabText: { color: '#a7f3d0', fontSize: 12, fontWeight: '700' },
-  tabTextActive: { color: '#064e3b', fontWeight: '800' },
-  actionBar: { flexDirection: 'row', padding: 12, gap: 10, backgroundColor: '#ffffff', borderBottomWidth: 1, borderBottomColor: '#e2e8f0' },
-  searchBar: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f1f5f9', borderRadius: 10, paddingHorizontal: 10, gap: 6 },
-  searchInput: { flex: 1, height: 38, fontSize: 13, color: '#0f172a' },
-  addProductBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#059669', paddingHorizontal: 14, borderRadius: 10, justifyContent: 'center' },
-  addProductBtnText: { color: '#fff', fontSize: 13, fontWeight: '800' },
-  scroll: { flex: 1 },
-  plantGrid: { flexDirection: 'row', flexWrap: 'wrap', padding: 10, gap: 10 },
-  productCard: { width: (width - 30) / 2, backgroundColor: '#ffffff', borderRadius: 12, overflow: 'hidden', borderWidth: 1, borderColor: '#e2e8f0' },
-  productImage: { width: '100%', height: 130, backgroundColor: '#f1f5f9' },
-  productBadge: { position: 'absolute', top: 8, left: 8, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-  productBadgeText: { color: '#fff', fontSize: 9, fontWeight: '800' },
-  deleteIconBtn: { position: 'absolute', top: 8, right: 8, width: 28, height: 28, borderRadius: 14, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' },
-  productBody: { padding: 10 },
-  productCategory: { fontSize: 10, color: '#059669', fontWeight: '800', textTransform: 'uppercase' },
-  productName: { fontSize: 13, fontWeight: '700', color: '#1e293b', marginTop: 2 },
-  productFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 },
-  productPrice: { fontSize: 14, fontWeight: '800', color: '#0f172a' },
-  verifiedTag: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-  verifiedText: { fontSize: 10, color: '#16a34a', fontWeight: '700' },
-  ordersContainer: { padding: 14 },
-  sectionHeaderTitle: { fontSize: 13, fontWeight: '800', color: '#64748b', textTransform: 'uppercase', marginBottom: 12 },
-  emptyCard: { backgroundColor: '#ffffff', padding: 30, borderRadius: 14, alignItems: 'center', borderWidth: 1, borderColor: '#e2e8f0' },
+  storeToggleText: { color: '#fff', fontSize: 10, fontWeight: '800' },
+  logoutIcon: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
+  tickerRow: { flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 12, padding: 10, marginTop: 12, alignItems: 'center' },
+  tickerItem: { flex: 1, alignItems: 'center' },
+  tickerVal: { fontSize: 15, fontWeight: '800', color: '#ffffff' },
+  tickerLbl: { fontSize: 10, color: '#cbd5e1', marginTop: 2 },
+  tickerDivider: { width: 1, height: 24, backgroundColor: 'rgba(255,255,255,0.2)' },
+  tabContent: { flex: 1, padding: 14 },
+  sectionHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  sectionTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
+  sectionSub: { fontSize: 11, color: '#64748b' },
+  refreshBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#f0fdf4', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: '#bbf7d0' },
+  refreshBtnText: { fontSize: 11, fontWeight: '700', color: '#1b4332' },
+  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#1b4332', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
+  addBtnText: { fontSize: 12, fontWeight: '700', color: '#fff' },
+
+  // Order cards
   orderCard: { backgroundColor: '#ffffff', borderRadius: 14, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#e2e8f0' },
-  orderCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  orderIdText: { fontSize: 14, fontWeight: '800', color: '#0f172a' },
-  orderTimeText: { fontSize: 11, color: '#64748b', marginTop: 2 },
-  statusBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
-  statusBadgeAmber: { backgroundColor: '#fef3c7' },
-  statusBadgeGreen: { backgroundColor: '#dcfce7' },
-  statusBadgeText: { fontSize: 11, fontWeight: '800' },
-  statusTextAmber: { color: '#d97706' },
-  statusTextGreen: { color: '#16a34a' },
-  orderItemsList: { marginTop: 10 },
-  orderItemRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3 },
-  orderItemQty: { fontSize: 12, fontWeight: '800', color: '#059669', width: 24 },
-  orderItemName: { flex: 1, fontSize: 12, color: '#334155' },
+  orderCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  orderId: { fontSize: 14, fontWeight: '800', color: '#0f172a' },
+  orderTime: { fontSize: 11, color: '#64748b', marginTop: 1 },
+  orderStatusPill: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
+  statusPickup: { backgroundColor: '#fef3c7' },
+  statusTransit: { backgroundColor: '#dbeafe' },
+  statusDelivered: { backgroundColor: '#dcfce7' },
+  orderStatusText: { fontSize: 10, fontWeight: '800', color: '#0f172a' },
+  orderItemsBox: { backgroundColor: '#f8fafc', padding: 10, borderRadius: 8, marginVertical: 8 },
+  orderItemRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginVertical: 3 },
+  orderItemDot: { fontSize: 12 },
+  orderItemName: { flex: 1, fontSize: 12, fontWeight: '600', color: '#1e293b' },
+  orderItemQty: { fontSize: 11, color: '#64748b' },
   orderItemPrice: { fontSize: 12, fontWeight: '700', color: '#0f172a' },
-  orderDivider: { height: 1, backgroundColor: '#f1f5f9', marginVertical: 10 },
-  riderRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  riderAvatar: { width: 36, height: 36, borderRadius: 18 },
-  riderName: { fontSize: 12, fontWeight: '800', color: '#0f172a' },
-  riderSub: { fontSize: 10, color: '#64748b' },
-  verifyPinBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#059669', paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8 },
-  verifyPinBtnText: { color: '#fff', fontSize: 11, fontWeight: '800' },
-  handedOverBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#ecfdf5', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
-  handedOverText: { color: '#059669', fontSize: 11, fontWeight: '800' },
-  payoutsContainer: { padding: 14 },
-  balanceCard: { borderRadius: 16, padding: 20, marginBottom: 14 },
-  balanceLabel: { fontSize: 12, color: 'rgba(255,255,255,0.8)', fontWeight: '700', textTransform: 'uppercase' },
-  balanceAmount: { fontSize: 32, fontWeight: '800', color: '#ffffff', marginVertical: 6 },
-  balanceSub: { fontSize: 11, color: 'rgba(255,255,255,0.7)', marginBottom: 14 },
-  withdrawBtn: { backgroundColor: '#ffffff', paddingVertical: 10, borderRadius: 10, alignItems: 'center' },
-  withdrawBtnText: { color: '#064e3b', fontSize: 13, fontWeight: '800' },
-  statsRow: { flexDirection: 'row', gap: 10, marginBottom: 14 },
-  statCard: { flex: 1, backgroundColor: '#ffffff', borderRadius: 12, padding: 14, borderWidth: 1, borderColor: '#e2e8f0' },
-  statCardLabel: { fontSize: 11, color: '#64748b', fontWeight: '700' },
-  statCardValue: { fontSize: 18, fontWeight: '800', color: '#0f172a', marginVertical: 4 },
-  statCardSub: { fontSize: 10, color: '#16a34a', fontWeight: '700' },
-  bankCard: { backgroundColor: '#ffffff', borderRadius: 12, padding: 16, borderWidth: 1, borderColor: '#e2e8f0' },
-  bankTitle: { fontSize: 13, fontWeight: '800', color: '#0f172a' },
-  bankName: { fontSize: 12, color: '#334155', marginTop: 4 },
-  bankAcc: { fontSize: 11, color: '#64748b', marginTop: 2 },
-  verifiedBankBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 10 },
-  verifiedBankText: { fontSize: 11, color: '#059669', fontWeight: '700' },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
-  modalContent: { backgroundColor: '#ffffff', borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, maxHeight: '85%' },
-  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  modalTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
-  imageSelectorBox: { marginBottom: 14 },
-  previewImageContainer: { position: 'relative', width: '100%', height: 180, borderRadius: 12, overflow: 'hidden' },
-  previewImage: { width: '100%', height: '100%' },
-  removeImageBtn: { position: 'absolute', top: 10, right: 10, width: 30, height: 30, borderRadius: 15, backgroundColor: 'rgba(0,0,0,0.7)', alignItems: 'center', justifyContent: 'center' },
-  photoActionsRow: { flexDirection: 'row', gap: 10 },
-  photoActionBtn: { flex: 1, backgroundColor: '#ecfdf5', borderWidth: 1.5, borderColor: '#a7f3d0', borderRadius: 12, padding: 14, alignItems: 'center' },
-  photoActionText: { fontSize: 13, fontWeight: '800', color: '#065f46', marginTop: 4 },
-  photoActionSub: { fontSize: 10, color: '#047857', marginTop: 2 },
-  formGroup: { marginBottom: 12 },
-  formLabel: { fontSize: 12, fontWeight: '700', color: '#334155', marginBottom: 4 },
-  formInput: { backgroundColor: '#f8fafc', borderWidth: 1, borderColor: '#e2e8f0', borderRadius: 10, paddingHorizontal: 12, height: 42, fontSize: 13, color: '#0f172a' },
-  catPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, backgroundColor: '#f1f5f9', marginRight: 8 },
-  catPillActive: { backgroundColor: '#059669' },
-  catPillText: { fontSize: 11, fontWeight: '700', color: '#64748b' },
+  addressBox: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
+  addressText: { flex: 1, fontSize: 11, color: '#475569' },
+  handshakeBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f0fdf4', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#bbf7d0' },
+  handshakePrompt: { fontSize: 12, fontWeight: '800', color: '#1b4332' },
+  handshakeSub: { fontSize: 10, color: '#2d6a4f' },
+  verifyPinBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#1b4332', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
+  verifyPinBtnText: { fontSize: 11, fontWeight: '800', color: '#fff' },
+  transitBanner: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#eff6ff', padding: 8, borderRadius: 6 },
+  transitText: { fontSize: 11, color: '#1d4ed8', fontWeight: '600' },
+  emptyCard: { backgroundColor: '#ffffff', borderRadius: 14, padding: 30, alignItems: 'center', borderWidth: 1, borderColor: '#e2e8f0', marginTop: 20 },
+  emptyTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
+  emptySub: { fontSize: 12, color: '#64748b', textAlign: 'center', marginTop: 6, lineHeight: 18 },
+
+  // Catalog
+  searchBar: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#ffffff', borderRadius: 10, paddingHorizontal: 12, height: 42, borderWidth: 1, borderColor: '#e2e8f0', marginBottom: 10 },
+  searchInput: { flex: 1, fontSize: 13, color: '#0f172a' },
+  catScroll: { marginBottom: 12 },
+  catPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#cbd5e1', marginRight: 8 },
+  catPillActive: { backgroundColor: '#1b4332', borderColor: '#1b4332' },
+  catPillText: { fontSize: 11, fontWeight: '700', color: '#475569' },
   catPillTextActive: { color: '#ffffff' },
-  publishBtn: { backgroundColor: '#059669', height: 46, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 10, marginBottom: 20 },
-  publishBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
-  pinModalContent: { backgroundColor: '#ffffff', borderRadius: 20, padding: 24, marginHorizontal: 24, alignItems: 'center', marginBottom: 'auto', marginTop: 'auto' },
-  pinIconCircle: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#ecfdf5', alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
-  pinModalTitle: { fontSize: 17, fontWeight: '800', color: '#0f172a', textAlign: 'center' },
-  pinModalSub: { fontSize: 12, color: '#64748b', textAlign: 'center', marginTop: 6, lineHeight: 18 },
-  pinInput: { width: 160, height: 54, backgroundColor: '#f1f5f9', borderRadius: 12, textAlign: 'center', fontSize: 26, fontWeight: '800', letterSpacing: 8, color: '#0f172a', marginVertical: 18 },
-  pinErrorText: { color: '#ef4444', fontSize: 12, fontWeight: '700', marginBottom: 12, textAlign: 'center' },
-  pinModalButtons: { flexDirection: 'row', gap: 10, width: '100%' },
-  pinCancelBtn: { flex: 1, height: 44, borderRadius: 10, backgroundColor: '#f1f5f9', alignItems: 'center', justifyContent: 'center' },
-  pinCancelText: { color: '#64748b', fontSize: 13, fontWeight: '700' },
-  pinConfirmBtn: { flex: 1.5, height: 44, borderRadius: 10, backgroundColor: '#059669', alignItems: 'center', justifyContent: 'center' },
-  pinConfirmText: { color: '#ffffff', fontSize: 13, fontWeight: '800' },
+  productCard: { flexDirection: 'row', gap: 12, backgroundColor: '#ffffff', borderRadius: 12, padding: 10, marginBottom: 10, borderWidth: 1, borderColor: '#e2e8f0', alignItems: 'center' },
+  productThumb: { width: 72, height: 72, borderRadius: 8, backgroundColor: '#e2e8f0' },
+  productInfo: { flex: 1 },
+  productTitle: { fontSize: 14, fontWeight: '800', color: '#0f172a' },
+  productCat: { fontSize: 10, color: '#64748b', marginTop: 1 },
+  productPrice: { fontSize: 14, fontWeight: '800', color: '#1b4332', marginTop: 2 },
+  stockRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
+  stockLabel: { fontSize: 11, color: '#64748b' },
+  stockBtn: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#f1f5f9', alignItems: 'center', justifyContent: 'center' },
+  stockCount: { fontSize: 12, fontWeight: '800', color: '#0f172a', minWidth: 20, textAlign: 'center' },
+  stockPill: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginLeft: 4 },
+  stockPillIn: { backgroundColor: '#dcfce7' },
+  stockPillOut: { backgroundColor: '#fee2e2' },
+  stockPillText: { fontSize: 9, fontWeight: '800', color: '#1e293b' },
+
+  // Revenue & Ledger
+  revenueCard: { borderRadius: 16, overflow: 'hidden', marginBottom: 14 },
+  revenueGradient: { padding: 20 },
+  revLabel: { fontSize: 12, color: '#bbf7d0', fontWeight: '700' },
+  revAmount: { fontSize: 32, fontWeight: '900', color: '#ffffff', marginVertical: 6 },
+  revSub: { fontSize: 11, color: '#e2e8f0' },
+  withdrawBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#ffffff', paddingVertical: 12, borderRadius: 10, marginTop: 16 },
+  withdrawBtnText: { fontSize: 13, fontWeight: '800', color: '#1b4332' },
+  ledgerCard: { backgroundColor: '#ffffff', borderRadius: 14, padding: 16, borderWidth: 1, borderColor: '#e2e8f0' },
+  ledgerHeader: { fontSize: 14, fontWeight: '800', color: '#0f172a', marginBottom: 12 },
+  ledgerRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
+  ledgerLabel: { fontSize: 12, color: '#64748b' },
+  ledgerVal: { fontSize: 13, fontWeight: '700', color: '#0f172a' },
+
+  // Profile
+  profileCard: { backgroundColor: '#ffffff', borderRadius: 14, padding: 16, borderWidth: 1, borderColor: '#e2e8f0', marginBottom: 14 },
+  avatarRow: { flexDirection: 'row', gap: 12, alignItems: 'center' },
+  storeAvatar: { width: 54, height: 54, borderRadius: 27, backgroundColor: '#f0fdf4', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#bbf7d0' },
+  profileStoreName: { fontSize: 15, fontWeight: '800', color: '#0f172a' },
+  profileOwner: { fontSize: 11, color: '#64748b', marginTop: 1 },
+  verifiedTag: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
+  verifiedTagText: { fontSize: 10, color: '#16a34a', fontWeight: '700' },
+  profileDivider: { height: 1, backgroundColor: '#e2e8f0', marginVertical: 14 },
+  profileDetailRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 },
+  profileDetailText: { fontSize: 12, color: '#334155', flex: 1 },
+  packingCard: { backgroundColor: '#f0fdf4', borderRadius: 14, padding: 16, borderWidth: 1, borderColor: '#bbf7d0', marginBottom: 14 },
+  packingTitle: { fontSize: 13, fontWeight: '800', color: '#1b4332', marginBottom: 8 },
+  packingRule: { fontSize: 11, color: '#2d6a4f', lineHeight: 18, marginVertical: 2 },
+  signOutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#fee2e2', paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderColor: '#fca5a5' },
+  signOutBtnText: { fontSize: 13, fontWeight: '800', color: '#b91c1c' },
+
+  // Bottom Nav
+  bottomBar: { flexDirection: 'row', backgroundColor: '#ffffff', borderTopWidth: 1, borderColor: '#e2e8f0', paddingBottom: Platform.OS === 'ios' ? 20 : 8, paddingTop: 8 },
+  tabItem: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 4 },
+  tabItemActive: {},
+  tabText: { fontSize: 10, fontWeight: '700', color: '#94a3b8', marginTop: 3 },
+  tabTextActive: { color: '#1b4332', fontWeight: '800' },
+
+  // Modals
+  modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
+  modalCard: { backgroundColor: '#ffffff', borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
+  modalTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
+  modalFieldLabel: { fontSize: 11, fontWeight: '700', color: '#475569', marginTop: 10, marginBottom: 4 },
+  modalInput: { backgroundColor: '#f8fafc', borderWidth: 1, borderColor: '#cbd5e1', borderRadius: 8, paddingHorizontal: 12, height: 42, fontSize: 13, color: '#0f172a' },
+  imageSelectorScroll: { marginVertical: 6 },
+  imageOptionBox: { width: 90, height: 80, borderRadius: 8, borderWidth: 1, borderColor: '#e2e8f0', marginRight: 8, overflow: 'hidden', alignItems: 'center' },
+  imageOptionBoxSelected: { borderColor: '#1b4332', borderWidth: 2 },
+  imageOptionThumb: { width: '100%', height: 55, backgroundColor: '#f1f5f9' },
+  imageOptionLabel: { fontSize: 9, color: '#334155', fontWeight: '700', paddingHorizontal: 4, marginTop: 2 },
+  catPillSmall: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14, backgroundColor: '#f1f5f9', marginRight: 6 },
+  catPillSmallActive: { backgroundColor: '#1b4332' },
+  catPillSmallText: { fontSize: 10, color: '#64748b', fontWeight: '700' },
+  catPillSmallTextActive: { color: '#ffffff' },
+  saveProductBtn: { backgroundColor: '#1b4332', height: 46, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 16, marginBottom: 20 },
+  saveProductBtnText: { color: '#ffffff', fontSize: 13, fontWeight: '800' },
+
+  // PIN Handshake Modal
+  pinModalCard: { width: '85%', maxWidth: 340, backgroundColor: '#ffffff', borderRadius: 20, padding: 20, alignSelf: 'center', marginBottom: 'auto', marginTop: 'auto', alignItems: 'center' },
+  pinModalIconCircle: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#f0fdf4', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
+  pinModalTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a', textAlign: 'center' },
+  pinModalSub: { fontSize: 11, color: '#64748b', textAlign: 'center', marginTop: 4, lineHeight: 16 },
+  pinInput: { width: 140, height: 48, backgroundColor: '#f8fafc', borderRadius: 10, textAlign: 'center', fontSize: 24, fontWeight: '800', letterSpacing: 6, color: '#0f172a', borderWidth: 1, borderColor: '#cbd5e1', marginTop: 14 },
+  pinErrorText: { color: '#ef4444', fontSize: 11, fontWeight: '700', marginTop: 8 },
+  pinCancelBtn: { flex: 1, backgroundColor: '#f1f5f9', paddingVertical: 10, borderRadius: 8, alignItems: 'center' },
+  pinCancelBtnText: { fontSize: 12, fontWeight: '700', color: '#64748b' },
+  pinConfirmBtn: { flex: 1.5, backgroundColor: '#1b4332', paddingVertical: 10, borderRadius: 8, alignItems: 'center' },
+  pinConfirmBtnText: { fontSize: 12, fontWeight: '800', color: '#ffffff' },
 });
