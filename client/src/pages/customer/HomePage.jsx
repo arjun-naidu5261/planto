@@ -80,9 +80,7 @@ export default function HomePage() {
   const handleGpsConnect = () => setGpsStatus('Jayanagar 4th Block, Bengaluru (Live Location ✅)');
   const handleSearchSubmit = () => {
     if (!searchVal) return;
-    const match = products.find(p => p.name.toLowerCase().includes(searchVal.toLowerCase()) || p.category.toLowerCase().includes(searchVal.toLowerCase()));
-    if (match) window.location.hash = `#/map?filter=${match.type}`;
-    else { alert(`Showing nurseries stocking "${searchVal}".`); window.location.hash = '#/map'; }
+    window.location.hash = `#/nurseries`;
   };
   const handleSeasonalClick = (seasonName) => {
     let key = 'spring';
@@ -208,7 +206,7 @@ export default function HomePage() {
             <h2 className="section-title" style={{ fontSize: '28px', margin: 0 }}>Nearby Nursery Stalls</h2>
             <p className="section-subtitle">Browse physical nurseries selling live plants, pots, & care supplies nearby</p>
           </div>
-          <Link to="/map" className="view-all">Explore Map View <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg></Link>
+          <Link to="/nurseries" className="view-all">View All Nurseries <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg></Link>
         </div>
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '4px' }}>
           {[['all', `All Nurseries (${vendors.length})`], ['express', 'Express < 1.5 km'], ['top', 'Top Rated (4.6+)'], ['open', 'Open Now']].map(([key, label]) => (

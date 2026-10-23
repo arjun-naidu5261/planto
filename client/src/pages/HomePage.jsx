@@ -374,9 +374,6 @@ export default function HomePage() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <Link to="/map" className="btn btn-secondary" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
-              Map View
-            </Link>
             <Link to="/nurseries" className="btn" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
               View All ({vendors.length}) →
             </Link>

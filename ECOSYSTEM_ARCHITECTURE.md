@@ -91,3 +91,12 @@
 4. Open PlantMe Customer App  ──► View Live Map & Doorstep OTP: [ 8401 ]
 5. In Delivery Partner App    ──► Enter Customer OTP [ 8401 ] ──► Order Delivered (+₹60 Credited)
 ```
+
+---
+
+## 🛡️ 6. Store & Nursery Location Privacy Rule (No Public Live Map)
+
+* **Rule**: Partner nursery store physical addresses, GPS pins, and public `/map` navigation are **STRICTLY NOT EXPOSED** to end customers.
+* **Architecture**: Planto operates on a managed dark-store / fulfillment network model. Direct public map view of physical nurseries is prohibited to protect marketplace transactions and vendor operations.
+* **Customer Interface**: Customers discover verified plant catalogs, nursery ratings, and plant items via `/nurseries` and `/` without exposing physical street coordinates. `/map` redirects to `/nurseries`.
+

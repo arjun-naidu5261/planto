@@ -50,7 +50,6 @@ import CustomerHelpBot from './components/CustomerHelpBot';
 // Pages
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
-import MapPage from './pages/MapPage';
 import StallPage from './pages/StallPage';
 import ProductPage from './pages/ProductPage';
 import AIDiagnosticsPage from './pages/AIDiagnosticsPage';
@@ -84,7 +83,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/nurseries" element={<NurseriesPage />} />
             <Route path="/category/:name" element={<CategoryPage />} />
-            <Route path="/map" element={<MapPage />} />
+            <Route path="/map" element={<Navigate to="/nurseries" replace />} />
             <Route path="/stall/:id" element={<StallPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/ai" element={<AIDiagnosticsPage />} />
