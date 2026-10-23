@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/api';
+import { api, API_BASE } from '../../services/api';
 
 export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
   const [trackingData, setTrackingData] = useState(null);
@@ -30,7 +30,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
     // 2. Real-time Server-Sent Events (SSE) telemetry connection
     let eventSource = null;
     try {
-      eventSource = new EventSource(`http://localhost:5002/api/orders/${idToFetch}/live-telemetry-stream`);
+      eventSource = new EventSource(`${API_BASE}/orders/${idToFetch}/live-telemetry-stream`);
       eventSource.onmessage = (event) => {
         try {
           const telemetry = JSON.parse(event.data);

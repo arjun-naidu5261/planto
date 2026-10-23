@@ -276,11 +276,7 @@ export default function CartPage() {
               <button 
                 onClick={async () => {
                   try {
-                    await fetch('http://localhost:5002/api/notifications/whatsapp-care-card', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ phone: '+91 88856 00899', plantName: placedOrder?.items?.[0]?.name || 'Plant' })
-                    });
+                    await api.sendWhatsAppCareCard('+91 88856 00899', placedOrder?.items?.[0]?.name || 'Plant');
                     alert("WhatsApp Care Card & Unboxing instructions sent to your phone!");
                   } catch (e) {
                     alert("Sent WhatsApp notification!");

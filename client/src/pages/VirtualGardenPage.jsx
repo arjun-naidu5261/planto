@@ -14,11 +14,7 @@ export default function VirtualGardenPage() {
 
   const handleWaterPlant = async (plantId, plantName) => {
     try {
-      await fetch('http://localhost:5002/api/user/garden/water', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plantId })
-      });
+      await api.waterGardenPlant(plantId);
       setWateredFeedback(prev => ({ ...prev, [plantId]: `Watered! Plant is happy.` }));
       setTimeout(() => {
         setWateredFeedback(prev => ({ ...prev, [plantId]: null }));

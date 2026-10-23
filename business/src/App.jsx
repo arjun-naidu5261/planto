@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://localhost:5002/api';
+const API_BASE = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+  ? '/api'
+  : (import.meta.env?.VITE_API_URL || 'http://localhost:5002/api');
 const DEFAULT_PLANT_IMG = 'https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=600&q=80';
 
 export default function App() {
@@ -699,7 +701,16 @@ export default function App() {
     alert('🎉 Profile details successfully updated!');
   };
 
-  const handleUpdateOrderStatus = (orderId, newStatus) => {
+  const handleUpdateOrderStatus = async (orderId, newStatus) => {
+    try {
+      await fetch(`${API_BASE}/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (err) {
+      console.warn('Backend order update error:', err);
+    }
     setVendorOrders(vendorOrders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
   };
 
