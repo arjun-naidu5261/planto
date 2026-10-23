@@ -42,7 +42,7 @@ export const normalizePhone = (rawPhone) => {
  * Send WhatsApp text message via OpenWA Gateway API
  */
 export const sendWhatsAppMessage = async (phone, text) => {
-  const baseUrl = process.env.OPENWA_BASE_URL || 'http://localhost:2785';
+  const baseUrl = process.env.OPENWA_BASE_URL || 'http://127.0.0.1:2785';
   const apiKey = process.env.OPENWA_API_KEY || 'owa_k1_efe78fef70b13d678b55129eaea5eb216aec86a5c5c74ba609af7fd8a7f3e9dd';
   const sessionId = process.env.OPENWA_SESSION_ID || '94c1468e-4d28-432e-803a-aae9adba6af4';
 

@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Check OpenWA connection status
 app.get('/api/auth/whatsapp/status', async (req, res) => {
-  const baseUrl = process.env.OPENWA_BASE_URL || 'http://localhost:2785';
+  const baseUrl = process.env.OPENWA_BASE_URL || 'http://127.0.0.1:2785';
   const apiKey = process.env.OPENWA_API_KEY || 'owa_k1_efe78fef70b13d678b55129eaea5eb216aec86a5c5c74ba609af7fd8a7f3e9dd';
   const sessionId = process.env.OPENWA_SESSION_ID || '94c1468e-4d28-432e-803a-aae9adba6af4';
 
@@ -289,13 +289,14 @@ app.post('/api/auth/register', (req, res) => {
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body || {};
-  if (!email || !password) {
+  const { password } = req.body || {};
+  const identifier = (req.body?.email || req.body?.identifier || req.body?.phone || '').toString().trim();
+  if (!identifier || !password) {
     return res.status(400).json({ success: false, message: 'Email or Mobile and password are required.' });
   }
 
-  const em = (email || '').toLowerCase().trim();
-  const phoneLookup = normalizePhone(email);
+  const em = identifier.toLowerCase();
+  const phoneLookup = normalizePhone(identifier);
 
   // 1. Check Registered Customers Database (by email OR by mobile number)
   const users = db.getUsers ? db.getUsers() : [];
