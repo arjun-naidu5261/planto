@@ -167,7 +167,7 @@ app.post('/api/auth/verify-otp', async (req, res) => {
       const { password: _, ...safeUser } = foundUser;
       return res.json({
         success: true,
-        message: `Welcome back to Planto, ${foundUser.name}!`,
+        message: `Welcome back to PlantMe, ${foundUser.name}!`,
         user: {
           ...safeUser,
           wallet: foundUser.wallet !== undefined ? foundUser.wallet : db.getWallet()
@@ -218,7 +218,7 @@ app.post('/api/auth/verify-otp', async (req, res) => {
 
     // 4. Create New Customer account (seamless onboarding)
     const customerName = (name || verification.data?.name || 'Plant Lover').trim();
-    const customerEmail = (email || `user_${normalizedPhone}@planto.in`).toLowerCase().trim();
+    const customerEmail = (email || `user_${normalizedPhone}@plantme.in`).toLowerCase().trim();
 
     const newUser = {
       id: 'u_' + Date.now(),
@@ -240,7 +240,7 @@ app.post('/api/auth/verify-otp', async (req, res) => {
     const { password: _, ...safeUser } = newUser;
     return res.status(201).json({
       success: true,
-      message: `Welcome to Planto, ${customerName}! Your account is ready with ₹1,500 bonus.`,
+      message: `Welcome to PlantMe, ${customerName}! Your account is ready with ₹1,500 bonus.`,
       user: safeUser,
       isNewUser: true
     });

@@ -33,7 +33,7 @@ export default function DeliveryDashboardPage() {
             className="btn" 
             style={{ width: '100%', justifyContent: 'center', height: '46px', borderRadius: '10px' }} 
             onClick={() => {
-              setLoginPresetEmail('delivery@planto.in');
+              setLoginPresetEmail('delivery@plantme.in');
               setShowLogin(true);
             }}
           >

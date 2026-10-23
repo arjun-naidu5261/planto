@@ -28,13 +28,13 @@ export default function AdminPortalPage() {
           <div style={{ fontSize: '64px', marginBottom: '20px', animation: 'float 4s infinite' }}>⚙️</div>
           <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', fontWeight: 700, marginBottom: '12px', color: 'var(--dark)' }}>Admin Console Restricted</h2>
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '24px', lineHeight: '1.5' }}>
-            PLANTO Central Command Admin privileges are required to access this dashboard. Please sign in with an Admin account.
+            PlantMe Central Command Admin privileges are required to access this dashboard. Please sign in with an Admin account.
           </p>
           <button 
             className="btn" 
             style={{ width: '100%', justifyContent: 'center', height: '46px', borderRadius: '10px' }} 
             onClick={() => {
-              setLoginPresetEmail('admin@planto.in');
+              setLoginPresetEmail('admin@plantme.in');
               setShowLogin(true);
             }}
           >
@@ -536,12 +536,12 @@ export default function AdminPortalPage() {
           <div>
             <span style={{ fontSize: '12.5px', color: '#718096', fontWeight: 600 }}>Welcome back,</span>
             <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', fontWeight: 800, color: 'var(--dark)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              PLANTO Central Admin 
+              PlantMe Central Admin 
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '4px' }}>
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
             </h2>
-            <p style={{ fontSize: '12.5px', color: '#718096', marginTop: '2px' }}>Monitor, manage & grow the PLANTO ecosystem.</p>
+            <p style={{ fontSize: '12.5px', color: '#718096', marginTop: '2px' }}>Monitor, manage & grow the PlantMe ecosystem.</p>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>

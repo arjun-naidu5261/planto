@@ -172,7 +172,7 @@ export default function LoginModal() {
       setIsLoading(false);
 
       if (res.success) {
-        setStatusMsg({ type: 'success', text: `Welcome to Planto, ${signUpName}! Account created successfully.` });
+        setStatusMsg({ type: 'success', text: `Welcome to PlantMe, ${signUpName}! Account created successfully.` });
         setTimeout(() => {
           setShowLogin(false);
           setLoginPresetEmail('');
@@ -365,7 +365,7 @@ export default function LoginModal() {
         {/* Branding & Header */}
         <div style={{ textAlign: 'center', marginBottom: '18px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '6px' }}>
-            <img src="/logo.png" alt="Planto" style={{ height: '42px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/logo.png" alt="PlantMe" style={{ height: '42px', width: 'auto', objectFit: 'contain' }} />
           </div>
           <p style={{ fontSize: '12.5px', color: '#64748b', margin: 0, fontWeight: 500 }}>
             Hyperlocal Live Plant Delivery & Botanical Care

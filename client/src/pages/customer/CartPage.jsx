@@ -37,15 +37,16 @@ export default function CartPage() {
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
-    if (couponCode.toUpperCase() === 'PLANTO50') {
+    const upCode = couponCode.toUpperCase().trim();
+    if (upCode === 'PLANTME50' || upCode === 'PLANTO50') {
       setDiscountPercent(50);
-      setCouponMessage('🎉 Coupon PLANTO50 applied: 50% off products!');
-    } else if (couponCode.toUpperCase() === 'FIRSTPLANT') {
+      setCouponMessage('🎉 Coupon PLANTME50 applied: 50% off products!');
+    } else if (upCode === 'FIRSTPLANT') {
       setDiscountPercent(20);
       setCouponMessage('🎉 Coupon FIRSTPLANT applied: 20% off!');
     } else {
       setDiscountPercent(0);
-      setCouponMessage('❌ Invalid coupon code. Try PLANTO50 or FIRSTPLANT');
+      setCouponMessage('❌ Invalid coupon code. Try PLANTME50 or FIRSTPLANT');
     }
   };
 
@@ -131,7 +132,7 @@ export default function CartPage() {
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: trackerStage >= 3 ? '#2e7d32' : '#ccc', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800 }}>{trackerStage >= 3 ? '✓' : '3'}</div>
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '14px' }}>3. Out for Express Delivery</div>
-                  <div style={{ fontSize: '11px', color: '#666' }}>Ramu (Planto Rider) picked up your plant order</div>
+                  <div style={{ fontSize: '11px', color: '#666' }}>Ramu (PlantMe Express Rider) picked up your plant order</div>
                 </div>
               </div>
 
@@ -258,7 +259,7 @@ export default function CartPage() {
                 id="cart-coupon-input" 
                 value={couponCode} 
                 onChange={(e) => setCouponCode(e.target.value)} 
-                placeholder="PLANTO50" 
+                placeholder="PLANTME50" 
                 style={{ borderRadius: '10px', border: '1px solid #ccc', padding: '8px 12px' }}
               />
               <button className="btn" id="cart-apply-coupon" onClick={handleApplyCoupon} style={{ padding: '0 16px', borderRadius: '10px', fontWeight: 800 }}>Apply</button>

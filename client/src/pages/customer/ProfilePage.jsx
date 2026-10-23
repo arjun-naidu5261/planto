@@ -1257,7 +1257,7 @@ export default function ProfilePage() {
         {activeTab === 'wallet' && (
           <div style={{ maxWidth: '480px' }}>
             <div className="stall-hours-box" style={{ background: 'linear-gradient(135deg, var(--light-green) 0%, rgba(255,255,255,0.9) 100%)', border: 'none' }}>
-              <h3 style={{ fontSize: '16px', color: 'var(--earth-brown)', marginBottom: '8px', fontWeight: 600 }}>PLANTO Wallet Ledger</h3>
+              <h3 style={{ fontSize: '16px', color: 'var(--earth-brown)', marginBottom: '8px', fontWeight: 600 }}>PlantMe Wallet Ledger</h3>
               <div style={{ fontSize: '42px', fontWeight: 800, color: 'var(--primary-green)' }}>
                 ₹{Math.round(wallet)}
               </div>
@@ -1379,7 +1379,7 @@ export default function ProfilePage() {
         {activeTab === 'refer' && (
           <div style={{ background: '#ffffff', padding: '30px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '18px', marginBottom: '12px' }}>Refer & Earn</h3>
-            <p style={{ fontSize: '13px', color: '#666' }}>Share the green life! Invite a plant vendor to sign up on Planto and earn 100 wallet coins when they register their stall.</p>
+            <p style={{ fontSize: '13px', color: '#666' }}>Share the green life! Invite a plant vendor to sign up on PlantMe and earn 100 wallet coins when they register their stall.</p>
           </div>
         )}
 

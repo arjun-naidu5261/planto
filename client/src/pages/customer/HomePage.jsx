@@ -222,12 +222,12 @@ export default function HomePage() {
       <section style={{ marginBottom: '48px', background: 'linear-gradient(135deg, #1b4332 0%, #081c15 100%)', borderRadius: '20px', padding: '32px', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
         <div style={{ maxWidth: '580px' }}>
           <span style={{ background: '#ffb703', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.5px' }}>🏪 FOR NURSERY OWNERS & ARTISANS</span>
-          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-serif)', color: '#fff', marginTop: '10px', marginBottom: '8px' }}>Own a Plant Nursery or Pottery Stall? Join Planto!</h3>
+          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-serif)', color: '#fff', marginTop: '10px', marginBottom: '8px' }}>Own a Plant Nursery or Pottery Stall? Join PlantMe!</h3>
           <p style={{ fontSize: '14px', color: '#d8f3dc', lineHeight: 1.5 }}>Put your local nursery online in 2 minutes. Receive instant plant orders from nearby plant lovers, manage live stock, and get instant payouts.</p>
         </div>
         <div>
           <button className="btn" style={{ background: '#ffb703', color: '#000', border: 'none', fontWeight: 800, padding: '14px 28px', fontSize: '15px', borderRadius: '12px' }}
-            onClick={() => { setLoginPresetEmail('vendor@planto.in'); setShowLogin(true); }}>
+            onClick={() => { setLoginPresetEmail('vendor@plantme.in'); setShowLogin(true); }}>
             Open Nursery Vendor Portal →
           </button>
         </div>

@@ -114,11 +114,11 @@ export const sendWhatsAppOtp = async ({ phone, type = 'login', name = '' }) => {
     attempts: 0
   });
 
-  const actionText = type === 'signup' ? 'Planto Account Registration' : 'Planto Login';
+  const actionText = type === 'signup' ? 'PlantMe Account Registration' : 'PlantMe Login';
   const greeting = name ? `Hello ${name}!` : 'Hello!';
 
   const messageText = 
-`🌿 *Planto - Plant Nursery & Care* 🌿
+`🌿 *PlantMe - Live Plant Delivery & Botanical Care* 🌿
 
 ${greeting} 👋
 Your WhatsApp verification code for *${actionText}* is:
@@ -129,7 +129,7 @@ Your WhatsApp verification code for *${actionText}* is:
 🔒 Please do not share this code with anyone.
 
 Happy Planting! 🪴💚
-— Team Planto`;
+— Team PlantMe.in`;
 
   console.log(`\n========================================`);
   console.log(`[WHATSAPP OTP DISPATCH] To: ${display} (${normalizedPhone})`);
