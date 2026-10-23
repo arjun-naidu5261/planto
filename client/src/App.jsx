@@ -62,6 +62,8 @@ import SeasonalPage from './pages/SeasonalPage';
 import VirtualGardenPage from './pages/VirtualGardenPage';
 import NurseriesPage from './pages/NurseriesPage';
 import CorporateGiftingPage from './pages/CorporateGiftingPage';
+import PlantPassportPage from './pages/PlantPassportPage';
+import BalconyVisualizerPage from './pages/BalconyVisualizerPage';
 
 export default function App() {
   return (
@@ -80,10 +82,10 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/nurseries" element={<Navigate to="/" replace />} />
+            <Route path="/nurseries" element={<NurseriesPage />} />
             <Route path="/category/:name" element={<CategoryPage />} />
-            <Route path="/map" element={<Navigate to="/" replace />} />
-            <Route path="/stall/:id" element={<Navigate to="/" replace />} />
+            <Route path="/map" element={<MapPage />} />
+            <Route path="/stall/:id" element={<StallPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/ai" element={<AIDiagnosticsPage />} />
             <Route path="/admin" element={<AdminPortalPage />} />
@@ -98,6 +100,12 @@ export default function App() {
             <Route path="/seasonal/:season" element={<SeasonalPage />} />
             <Route path="/garden" element={<VirtualGardenPage />} />
             <Route path="/corporate" element={<CorporateGiftingPage />} />
+            <Route path="/passport" element={<PlantPassportPage />} />
+            <Route path="/passport/:id" element={<PlantPassportPage />} />
+            <Route path="/plant/:id" element={<PlantPassportPage />} />
+            <Route path="/visualizer" element={<BalconyVisualizerPage />} />
+            <Route path="/planner" element={<BalconyVisualizerPage />} />
+            <Route path="/balcony-planner" element={<BalconyVisualizerPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

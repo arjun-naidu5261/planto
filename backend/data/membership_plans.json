@@ -1,0 +1,77 @@
+[
+  {
+    "id": "free",
+    "name": "PlantMe Basic (Free)",
+    "tier": "free",
+    "monthlyPrice": 0,
+    "annualPrice": 0,
+    "description": "Essential tools for casual houseplant enthusiasts",
+    "features": [
+      "Catalog browsing and live local nursery ordering",
+      "Virtual Garden tracking (up to 3 plants)",
+      "2 AI Plant Doctor diagnoses per month",
+      "1 active watering care reminder",
+      "Standard customer support"
+    ],
+    "quotas": {
+      "aiDiagnosesPerMonth": 2,
+      "maxGardenPlants": 3,
+      "maxReminders": 1,
+      "discountPercent": 0,
+      "freeDeliveryThreshold": 500
+    },
+    "badge": "FREE FOREVER",
+    "isPopular": false
+  },
+  {
+    "id": "plus",
+    "name": "PlantMe Care Plus",
+    "tier": "plus",
+    "monthlyPrice": 149,
+    "annualPrice": 1499,
+    "description": "Smart automated plant health and urban garden care",
+    "features": [
+      "Virtual Garden tracking (up to 12 plants) with growth timelines",
+      "10 AI Plant Doctor computer-vision scans per month",
+      "Unlimited smart watering & fertilizing push reminders",
+      "5% flat discount on all plant catalog orders",
+      "Free express doorstep delivery on orders above ₹299",
+      "Official Plant Passport Digital Birth Certificates"
+    ],
+    "quotas": {
+      "aiDiagnosesPerMonth": 12,
+      "maxGardenPlants": 12,
+      "maxReminders": 9999,
+      "discountPercent": 5,
+      "freeDeliveryThreshold": 299
+    },
+    "badge": "MOST POPULAR",
+    "isPopular": true
+  },
+  {
+    "id": "premium",
+    "name": "PlantMe Care VIP Club",
+    "tier": "premium",
+    "monthlyPrice": 399,
+    "annualPrice": 3999,
+    "description": "Full botanical concierge, VIP perks & hospital recovery ward",
+    "features": [
+      "Unlimited Virtual Garden inventory with AI disease telemetry",
+      "Unlimited AI Plant Doctor diagnoses & symptom triage",
+      "10% VIP discount on all plants, pots & fertilizers",
+      "100% Free Express Delivery on ALL orders (zero minimum)",
+      "1 Free Day/year at Plant Hospital ICU Recovery Ward",
+      "Priority 1-on-1 Botanist Consultation credit each quarter",
+      "Exclusive access to Rare & Collector's Nursery drops"
+    ],
+    "quotas": {
+      "aiDiagnosesPerMonth": 999999,
+      "maxGardenPlants": 999999,
+      "maxReminders": 9999,
+      "discountPercent": 10,
+      "freeDeliveryThreshold": 0
+    },
+    "badge": "VIP GREEN CONCIERGE",
+    "isPopular": false
+  }
+]

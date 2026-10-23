@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import VendorCard from '../components/VendorCard';
+import NurseryStoriesBar from '../components/NurseryStoriesBar';
 
 export default function NurseriesPage() {
   const { vendors } = useApp();
@@ -83,6 +84,9 @@ export default function NurseriesPage() {
           )}
         </div>
       </div>
+
+      {/* 📸 Hyperlocal Nursery Daily Live Stories */}
+      <NurseryStoriesBar />
 
       {/* Filter Tabs & Counter */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>

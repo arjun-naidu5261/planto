@@ -1,0 +1,843 @@
+[
+  {
+    "id": "audit_1792177435636",
+    "timestamp": "2026-10-16T19:03:55.636Z",
+    "actor": "webhook_processor",
+    "role": "system",
+    "action": "PAYMENT_WEBHOOK_PROCESSED",
+    "entityType": "payment_webhook",
+    "entityId": "evt_pay_1792177435634",
+    "details": "Processed webhook event evt_pay_1792177435634 (payment.captured) for payment pay_1792177435634. Amount: ₹529."
+  },
+  {
+    "id": "audit_1792177435626",
+    "timestamp": "2026-10-16T19:03:55.626Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_3250",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177435624",
+    "timestamp": "2026-10-16T19:03:55.624Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-3039",
+    "details": "Service #EXP-3039 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177435623",
+    "timestamp": "2026-10-16T19:03:55.623Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-3039",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177435618",
+    "timestamp": "2026-10-16T19:03:55.618Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-1253",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177435616",
+    "timestamp": "2026-10-16T19:03:55.616Z",
+    "actor": "test_care_1792177435609@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_41750",
+    "details": "Subscription sub_41750 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T19:03:55.609Z."
+  },
+  {
+    "id": "audit_1792177435610",
+    "timestamp": "2026-10-16T19:03:55.610Z",
+    "actor": "test_care_1792177435609@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_41750",
+    "details": "Customer test_care_1792177435609@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177435608",
+    "timestamp": "2026-10-16T19:03:55.608Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177336575",
+    "timestamp": "2026-10-16T19:02:16.575Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_4828",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177336572",
+    "timestamp": "2026-10-16T19:02:16.572Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-4577",
+    "details": "Service #EXP-4577 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177336571",
+    "timestamp": "2026-10-16T19:02:16.571Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-4577",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177336566",
+    "timestamp": "2026-10-16T19:02:16.566Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-6220",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177336564",
+    "timestamp": "2026-10-16T19:02:16.564Z",
+    "actor": "test_care_1792177336557@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_16281",
+    "details": "Subscription sub_16281 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T19:02:16.558Z."
+  },
+  {
+    "id": "audit_1792177336558",
+    "timestamp": "2026-10-16T19:02:16.558Z",
+    "actor": "test_care_1792177336557@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_16281",
+    "details": "Customer test_care_1792177336557@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177336557",
+    "timestamp": "2026-10-16T19:02:16.557Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177307826",
+    "timestamp": "2026-10-16T19:01:47.826Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_9442",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177307824",
+    "timestamp": "2026-10-16T19:01:47.824Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5391",
+    "details": "Service #EXP-5391 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177307822",
+    "timestamp": "2026-10-16T19:01:47.822Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5391",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177307818",
+    "timestamp": "2026-10-16T19:01:47.818Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-1460",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177307815",
+    "timestamp": "2026-10-16T19:01:47.815Z",
+    "actor": "test_care_1792177307807@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_90106",
+    "details": "Subscription sub_90106 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T19:01:47.808Z."
+  },
+  {
+    "id": "audit_1792177307809",
+    "timestamp": "2026-10-16T19:01:47.809Z",
+    "actor": "test_care_1792177307807@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_90106",
+    "details": "Customer test_care_1792177307807@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177307807",
+    "timestamp": "2026-10-16T19:01:47.807Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177259634",
+    "timestamp": "2026-10-16T19:00:59.634Z",
+    "actor": "webhook_processor",
+    "role": "system",
+    "action": "PAYMENT_WEBHOOK_PROCESSED",
+    "entityType": "payment_webhook",
+    "entityId": "evt_pay_1792177259632",
+    "details": "Processed webhook event evt_pay_1792177259632 (payment.captured) for payment pay_99887766. Amount: ₹529."
+  },
+  {
+    "id": "audit_1792177259624",
+    "timestamp": "2026-10-16T19:00:59.624Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_5783",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177259622",
+    "timestamp": "2026-10-16T19:00:59.622Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-8067",
+    "details": "Service #EXP-8067 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177259620",
+    "timestamp": "2026-10-16T19:00:59.620Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-8067",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177259616",
+    "timestamp": "2026-10-16T19:00:59.616Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-7705",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177259613",
+    "timestamp": "2026-10-16T19:00:59.613Z",
+    "actor": "test_care_1792177259606@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_71861",
+    "details": "Subscription sub_71861 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T19:00:59.606Z."
+  },
+  {
+    "id": "audit_1792177259607",
+    "timestamp": "2026-10-16T19:00:59.607Z",
+    "actor": "test_care_1792177259606@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_71861",
+    "details": "Customer test_care_1792177259606@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177259605",
+    "timestamp": "2026-10-16T19:00:59.605Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177169483",
+    "timestamp": "2026-10-16T18:59:29.483Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_1696",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177169481",
+    "timestamp": "2026-10-16T18:59:29.481Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-1342",
+    "details": "Service #EXP-1342 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177169480",
+    "timestamp": "2026-10-16T18:59:29.480Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-1342",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177169475",
+    "timestamp": "2026-10-16T18:59:29.475Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-6935",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177169473",
+    "timestamp": "2026-10-16T18:59:29.473Z",
+    "actor": "test_care_1792177169466@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_65319",
+    "details": "Subscription sub_65319 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:59:29.467Z."
+  },
+  {
+    "id": "audit_1792177169467",
+    "timestamp": "2026-10-16T18:59:29.467Z",
+    "actor": "test_care_1792177169466@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_65319",
+    "details": "Customer test_care_1792177169466@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177169465",
+    "timestamp": "2026-10-16T18:59:29.465Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177123430",
+    "timestamp": "2026-10-16T18:58:43.430Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_4312",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177123427",
+    "timestamp": "2026-10-16T18:58:43.427Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5276",
+    "details": "Service #EXP-5276 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177123426",
+    "timestamp": "2026-10-16T18:58:43.426Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5276",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177123420",
+    "timestamp": "2026-10-16T18:58:43.420Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-2102",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177123416",
+    "timestamp": "2026-10-16T18:58:43.416Z",
+    "actor": "test_care_1792177123407@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_51549",
+    "details": "Subscription sub_51549 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:58:43.408Z."
+  },
+  {
+    "id": "audit_1792177123409",
+    "timestamp": "2026-10-16T18:58:43.409Z",
+    "actor": "test_care_1792177123407@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_51549",
+    "details": "Customer test_care_1792177123407@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177123406",
+    "timestamp": "2026-10-16T18:58:43.406Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177077258",
+    "timestamp": "2026-10-16T18:57:57.258Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_7543",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177077256",
+    "timestamp": "2026-10-16T18:57:57.256Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-4402",
+    "details": "Service #EXP-4402 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177077254",
+    "timestamp": "2026-10-16T18:57:57.254Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-4402",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177077250",
+    "timestamp": "2026-10-16T18:57:57.250Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5680",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177077248",
+    "timestamp": "2026-10-16T18:57:57.248Z",
+    "actor": "test_care_1792177077239@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_46328",
+    "details": "Subscription sub_46328 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:57:57.239Z."
+  },
+  {
+    "id": "audit_1792177077240",
+    "timestamp": "2026-10-16T18:57:57.240Z",
+    "actor": "test_care_1792177077239@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_46328",
+    "details": "Customer test_care_1792177077239@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177077238",
+    "timestamp": "2026-10-16T18:57:57.238Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792177050045",
+    "timestamp": "2026-10-16T18:57:30.045Z",
+    "actor": "Sai Baba Plant & Pot Stall",
+    "role": "vendor",
+    "action": "VENDOR_PLAN_UPGRADED",
+    "entityType": "vendor_subscription",
+    "entityId": "vsub_7678",
+    "details": "Nursery Sai Baba Plant & Pot Stall upgraded to PlantMe Pro Nursery Partner (Tier: pro, Fee: ₹999/mo, Commission: 5%)."
+  },
+  {
+    "id": "audit_1792177050042",
+    "timestamp": "2026-10-16T18:57:30.042Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5193",
+    "details": "Service #EXP-5193 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792177050041",
+    "timestamp": "2026-10-16T18:57:30.041Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-5193",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792177050037",
+    "timestamp": "2026-10-16T18:57:30.037Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-2638",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792177050034",
+    "timestamp": "2026-10-16T18:57:30.034Z",
+    "actor": "test_care_1792177050027@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_51023",
+    "details": "Subscription sub_51023 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:57:30.027Z."
+  },
+  {
+    "id": "audit_1792177050028",
+    "timestamp": "2026-10-16T18:57:30.028Z",
+    "actor": "test_care_1792177050027@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_51023",
+    "details": "Customer test_care_1792177050027@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792177050026",
+    "timestamp": "2026-10-16T18:57:30.026Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176943202",
+    "timestamp": "2026-10-16T18:55:43.202Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-9445",
+    "details": "Service #EXP-9445 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792176943201",
+    "timestamp": "2026-10-16T18:55:43.201Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-9445",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792176943193",
+    "timestamp": "2026-10-16T18:55:43.193Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-8408",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792176943191",
+    "timestamp": "2026-10-16T18:55:43.191Z",
+    "actor": "test_care_1792176943183@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_32366",
+    "details": "Subscription sub_32366 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:55:43.183Z."
+  },
+  {
+    "id": "audit_1792176943184",
+    "timestamp": "2026-10-16T18:55:43.184Z",
+    "actor": "test_care_1792176943183@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_32366",
+    "details": "Customer test_care_1792176943183@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176943182",
+    "timestamp": "2026-10-16T18:55:43.182Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176874317",
+    "timestamp": "2026-10-16T18:54:34.317Z",
+    "actor": "customer",
+    "role": "customer",
+    "action": "EXPERT_BOOKING_CANCELLED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-6367",
+    "details": "Service #EXP-6367 cancelled. Refunded ₹999 to customer wallet."
+  },
+  {
+    "id": "audit_1792176874316",
+    "timestamp": "2026-10-16T18:54:34.316Z",
+    "actor": "cancel_user@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-6367",
+    "details": "Booked Balcony Garden Complete Greenery Revamp for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹999."
+  },
+  {
+    "id": "audit_1792176874311",
+    "timestamp": "2026-10-16T18:54:34.311Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-3348",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792176874308",
+    "timestamp": "2026-10-16T18:54:34.308Z",
+    "actor": "test_care_1792176874301@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_58591",
+    "details": "Subscription sub_58591 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:54:34.301Z."
+  },
+  {
+    "id": "audit_1792176874302",
+    "timestamp": "2026-10-16T18:54:34.302Z",
+    "actor": "test_care_1792176874301@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_58591",
+    "details": "Customer test_care_1792176874301@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176874300",
+    "timestamp": "2026-10-16T18:54:34.300Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176842305",
+    "timestamp": "2026-10-16T18:54:02.305Z",
+    "actor": "test_care_1792176842297@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_60529",
+    "details": "Subscription sub_60529 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:54:02.298Z."
+  },
+  {
+    "id": "audit_1792176842298",
+    "timestamp": "2026-10-16T18:54:02.298Z",
+    "actor": "test_care_1792176842297@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_60529",
+    "details": "Customer test_care_1792176842297@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176842296",
+    "timestamp": "2026-10-16T18:54:02.296Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176769093",
+    "timestamp": "2026-10-16T18:52:49.093Z",
+    "actor": "pooja@plantme.in",
+    "role": "customer",
+    "action": "EXPERT_SERVICE_BOOKED",
+    "entityType": "expert_booking",
+    "entityId": "EXP-3339",
+    "details": "Booked Pruning, Repotting & Pest Treatment Master Visit for undefined (undefined) with certified expert Mahesh Kumar. Fee: ₹499."
+  },
+  {
+    "id": "audit_1792176769090",
+    "timestamp": "2026-10-16T18:52:49.090Z",
+    "actor": "test_care_1792176769080@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_CANCEL",
+    "entityType": "membership",
+    "entityId": "sub_82194",
+    "details": "Subscription sub_82194 (PlantMe Care Plus) cancelled by customer. Active through 2026-11-16T18:52:49.081Z."
+  },
+  {
+    "id": "audit_1792176769082",
+    "timestamp": "2026-10-16T18:52:49.082Z",
+    "actor": "test_care_1792176769080@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_82194",
+    "details": "Customer test_care_1792176769080@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176769079",
+    "timestamp": "2026-10-16T18:52:49.079Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176729108",
+    "timestamp": "2026-10-16T18:52:09.108Z",
+    "actor": "test_care_1792176729106@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_16989",
+    "details": "Customer test_care_1792176729106@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176729104",
+    "timestamp": "2026-10-16T18:52:09.104Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176674166",
+    "timestamp": "2026-10-16T18:51:14.166Z",
+    "actor": "test_care_1792176674164@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_21496",
+    "details": "Customer test_care_1792176674164@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176674163",
+    "timestamp": "2026-10-16T18:51:14.163Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1792176637282",
+    "timestamp": "2026-10-16T18:50:37.282Z",
+    "actor": "test_care_1792176637280@plantme.in",
+    "role": "customer",
+    "action": "MEMBERSHIP_SUBSCRIBE",
+    "entityType": "membership",
+    "entityId": "sub_98680",
+    "details": "Customer test_care_1792176637280@plantme.in subscribed to PlantMe Care Plus (monthly) for ₹149 via wallet."
+  },
+  {
+    "id": "audit_1792176637280",
+    "timestamp": "2026-10-16T18:50:37.280Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Updated plan plus pricing: ₹149/mo, ₹1499/yr."
+  },
+  {
+    "id": "audit_1001",
+    "timestamp": "2026-10-15T12:00:00.000Z",
+    "actor": "admin@plantme.in",
+    "role": "admin",
+    "action": "MEMBERSHIP_PLAN_UPDATE",
+    "entityType": "membership_plan",
+    "entityId": "plus",
+    "details": "Verified PlantMe Care Plus monthly fee at ₹149 and 10 AI diagnosis quota.",
+    "ip": "127.0.0.1"
+  }
+]

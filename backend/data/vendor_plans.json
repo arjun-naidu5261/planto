@@ -1,0 +1,69 @@
+[
+  {
+    "id": "vendor_basic",
+    "name": "Nursery Stall Basic",
+    "tier": "basic",
+    "monthlyFee": 0,
+    "commissionRate": 0.08,
+    "description": "Standard marketplace listing for local plant stalls and neighborhood nurseries",
+    "features": [
+      "Standard marketplace catalog listing",
+      "Standard 8.0% platform marketplace commission",
+      "Basic incoming order manager & PIN pickup verification",
+      "Standard 48-hour bank payout settlement"
+    ],
+    "entitlements": {
+      "featuredListing": false,
+      "sponsoredBadge": false,
+      "inventoryIntelligence": false,
+      "priorityRiderDispatch": false,
+      "commissionRate": 0.08
+    }
+  },
+  {
+    "id": "vendor_pro",
+    "name": "PlantMe Pro Nursery Partner",
+    "tier": "pro",
+    "monthlyFee": 999,
+    "commissionRate": 0.05,
+    "description": "Accelerated customer discovery, lower commission & inventory intelligence",
+    "features": [
+      "Reduced 5.0% platform marketplace commission (Save 3% on every order)",
+      "Prominent 'Featured Certified Nursery' badge on marketplace",
+      "Priority customer discovery & map search ranking",
+      "AI Inventory Intelligence: Restock velocity alerts & demand forecasting",
+      "Priority 20-min express EV rider dispatch queue",
+      "Instant 12-hour bank payout settlements"
+    ],
+    "entitlements": {
+      "featuredListing": true,
+      "sponsoredBadge": true,
+      "inventoryIntelligence": true,
+      "priorityRiderDispatch": true,
+      "commissionRate": 0.05
+    }
+  },
+  {
+    "id": "vendor_enterprise",
+    "name": "Botanical Flagship Enterprise",
+    "tier": "enterprise",
+    "monthlyFee": 2499,
+    "commissionRate": 0.03,
+    "description": "Flagship nursery placement, lowest commission & multi-outlet management",
+    "features": [
+      "Ultra-low 3.0% platform commission (Maximized nursery margins)",
+      "Top #1 'Sponsored Organic Nursery' banner in city-wide customer search",
+      "Unlimited Live Nursery Daily Stories & video broadcasts",
+      "Multi-outlet and multi-stall centralized management",
+      "Dedicated B2B corporate order distribution routing",
+      "Dedicated PlantMe Account Horticulturist & instant payouts"
+    ],
+    "entitlements": {
+      "featuredListing": true,
+      "sponsoredBadge": true,
+      "inventoryIntelligence": true,
+      "priorityRiderDispatch": true,
+      "commissionRate": 0.03
+    }
+  }
+]

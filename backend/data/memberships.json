@@ -1,0 +1,631 @@
+[
+  {
+    "id": "sub_41750",
+    "userId": "u_test_care_1792177435609_plantme_in",
+    "userEmail": "test_care_1792177435609@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T19:03:55.610Z",
+    "validUntil": "2026-11-16T19:03:55.609Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T19:03:55.610Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T19:03:55.616Z"
+  },
+  {
+    "id": "sub_16281",
+    "userId": "u_test_care_1792177336557_plantme_in",
+    "userEmail": "test_care_1792177336557@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T19:02:16.558Z",
+    "validUntil": "2026-11-16T19:02:16.558Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T19:02:16.558Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T19:02:16.563Z"
+  },
+  {
+    "id": "sub_90106",
+    "userId": "u_test_care_1792177307807_plantme_in",
+    "userEmail": "test_care_1792177307807@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T19:01:47.809Z",
+    "validUntil": "2026-11-16T19:01:47.808Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T19:01:47.809Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T19:01:47.815Z"
+  },
+  {
+    "id": "sub_71861",
+    "userId": "u_test_care_1792177259606_plantme_in",
+    "userEmail": "test_care_1792177259606@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T19:00:59.607Z",
+    "validUntil": "2026-11-16T19:00:59.606Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T19:00:59.607Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T19:00:59.613Z"
+  },
+  {
+    "id": "sub_65319",
+    "userId": "u_test_care_1792177169466_plantme_in",
+    "userEmail": "test_care_1792177169466@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:59:29.467Z",
+    "validUntil": "2026-11-16T18:59:29.467Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:59:29.467Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:59:29.473Z"
+  },
+  {
+    "id": "sub_51549",
+    "userId": "u_test_care_1792177123407_plantme_in",
+    "userEmail": "test_care_1792177123407@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:58:43.408Z",
+    "validUntil": "2026-11-16T18:58:43.408Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:58:43.408Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:58:43.416Z"
+  },
+  {
+    "id": "sub_46328",
+    "userId": "u_test_care_1792177077239_plantme_in",
+    "userEmail": "test_care_1792177077239@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:57:57.240Z",
+    "validUntil": "2026-11-16T18:57:57.239Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:57:57.240Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:57:57.247Z"
+  },
+  {
+    "id": "sub_51023",
+    "userId": "u_test_care_1792177050027_plantme_in",
+    "userEmail": "test_care_1792177050027@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:57:30.028Z",
+    "validUntil": "2026-11-16T18:57:30.027Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:57:30.028Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:57:30.034Z"
+  },
+  {
+    "id": "sub_32366",
+    "userId": "u_test_care_1792176943183_plantme_in",
+    "userEmail": "test_care_1792176943183@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:55:43.184Z",
+    "validUntil": "2026-11-16T18:55:43.183Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:55:43.184Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:55:43.191Z"
+  },
+  {
+    "id": "sub_58591",
+    "userId": "u_test_care_1792176874301_plantme_in",
+    "userEmail": "test_care_1792176874301@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:54:34.301Z",
+    "validUntil": "2026-11-16T18:54:34.301Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:54:34.302Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:54:34.308Z"
+  },
+  {
+    "id": "sub_60529",
+    "userId": "u_test_care_1792176842297_plantme_in",
+    "userEmail": "test_care_1792176842297@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:54:02.298Z",
+    "validUntil": "2026-11-16T18:54:02.298Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:54:02.298Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:54:02.305Z"
+  },
+  {
+    "id": "sub_82194",
+    "userId": "u_test_care_1792176769080_plantme_in",
+    "userEmail": "test_care_1792176769080@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:52:49.081Z",
+    "validUntil": "2026-11-16T18:52:49.081Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:52:49.081Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:52:49.089Z"
+  },
+  {
+    "id": "sub_16989",
+    "userId": "u_test_care_1792176729106_plantme_in",
+    "userEmail": "test_care_1792176729106@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "cancelled",
+    "startedAt": "2026-10-16T18:52:09.108Z",
+    "validUntil": "2026-11-16T18:52:09.108Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:52:09.108Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ],
+    "cancelledAt": "2026-10-16T18:52:09.134Z"
+  },
+  {
+    "id": "sub_21496",
+    "userId": "u_test_care_1792176674164_plantme_in",
+    "userEmail": "test_care_1792176674164@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "active",
+    "startedAt": "2026-10-16T18:51:14.165Z",
+    "validUntil": "2026-11-16T18:51:14.165Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:51:14.165Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ]
+  },
+  {
+    "id": "sub_98680",
+    "userId": "u_test_care_1792176637280_plantme_in",
+    "userEmail": "test_care_1792176637280@plantme.in",
+    "userName": "Valued Member",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "active",
+    "startedAt": "2026-10-16T18:50:37.281Z",
+    "validUntil": "2026-11-16T18:50:37.281Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 12,
+      "activeRemindersCount": 0
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-16T18:50:37.281Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ]
+  },
+  {
+    "id": "sub_cust_101",
+    "userId": "u_customer_1",
+    "userEmail": "customer@plantme.in",
+    "userName": "Priya Sharma",
+    "planId": "plus",
+    "planName": "PlantMe Care Plus",
+    "billingCadence": "monthly",
+    "pricePaid": 149,
+    "paymentMethod": "wallet",
+    "status": "active",
+    "startedAt": "2026-10-01T10:00:00.000Z",
+    "validUntil": "2026-11-01T10:00:00.000Z",
+    "autoRenew": false,
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 1,
+      "maxAiAllowed": 10,
+      "activeRemindersCount": 1
+    },
+    "history": [
+      {
+        "event": "subscribed",
+        "date": "2026-10-01T10:00:00.000Z",
+        "amount": 149,
+        "method": "wallet"
+      }
+    ]
+  },
+  {
+    "id": "sub_temp_1792176674171",
+    "userId": "guest_free_user_1792176674170@plantme.in",
+    "userEmail": "free_user_1792176674170@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792176729127",
+    "userId": "guest_free_user_1792176729125@plantme.in",
+    "userEmail": "free_user_1792176729125@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792176769086",
+    "userId": "guest_free_user_1792176769086@plantme.in",
+    "userEmail": "free_user_1792176769086@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792176842302",
+    "userId": "guest_free_user_1792176842301@plantme.in",
+    "userEmail": "free_user_1792176842301@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792176874306",
+    "userId": "guest_free_user_1792176874305@plantme.in",
+    "userEmail": "free_user_1792176874305@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792176943188",
+    "userId": "guest_free_user_1792176943187@plantme.in",
+    "userEmail": "free_user_1792176943187@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177050032",
+    "userId": "guest_free_user_1792177050031@plantme.in",
+    "userEmail": "free_user_1792177050031@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177077244",
+    "userId": "guest_free_user_1792177077244@plantme.in",
+    "userEmail": "free_user_1792177077244@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177123413",
+    "userId": "guest_free_user_1792177123413@plantme.in",
+    "userEmail": "free_user_1792177123413@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177169470",
+    "userId": "guest_free_user_1792177169470@plantme.in",
+    "userEmail": "free_user_1792177169470@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177259611",
+    "userId": "guest_free_user_1792177259610@plantme.in",
+    "userEmail": "free_user_1792177259610@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177307813",
+    "userId": "guest_free_user_1792177307812@plantme.in",
+    "userEmail": "free_user_1792177307812@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177336561",
+    "userId": "guest_free_user_1792177336561@plantme.in",
+    "userEmail": "free_user_1792177336561@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  },
+  {
+    "id": "sub_temp_1792177435614",
+    "userId": "guest_free_user_1792177435613@plantme.in",
+    "userEmail": "free_user_1792177435613@plantme.in",
+    "planId": "free",
+    "planName": "PlantMe Basic (Free)",
+    "status": "active",
+    "usage": {
+      "aiDiagnosesUsedThisPeriod": 2,
+      "maxAiAllowed": 2
+    }
+  }
+]

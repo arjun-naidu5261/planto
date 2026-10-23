@@ -9,12 +9,50 @@ const handleResponse = async (res) => {
 };
 
 export const api = {
-  // Auth
+  // WhatsApp OTP Auth (OpenWA Gateway)
+  sendOtp: async (phone, type = 'login', name = '') => {
+    const res = await fetch(`${API_BASE}/auth/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, type, name })
+    });
+    return handleResponse(res);
+  },
+  verifyOtp: async (phone, otp, type = 'login', name = '', email = '', password = '') => {
+    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, otp, type, name, email, password })
+    });
+    return handleResponse(res);
+  },
+  resendOtp: async (phone, type = 'login') => {
+    const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, type })
+    });
+    return handleResponse(res);
+  },
+  getWhatsAppStatus: async () => {
+    const res = await fetch(`${API_BASE}/auth/whatsapp/status`);
+    return handleResponse(res);
+  },
+
+  // Auth (Legacy Email Fallback)
   login: async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
+    });
+    return handleResponse(res);
+  },
+  register: async (userData) => {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
     });
     return handleResponse(res);
   },
@@ -408,7 +446,221 @@ export const api = {
   getRiderEarnings: async (riderId) => {
     const res = await fetch(`${API_BASE}/rider/earnings?riderId=${riderId || ''}`);
     return handleResponse(res);
+  },
+
+  // 💳 PAYMENT GATEWAY (Razorpay & Dynamic UPI QR)
+  createPaymentOrder: async (data) => {
+    const res = await fetch(`${API_BASE}/payments/create-order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  verifyPayment: async (data) => {
+    const res = await fetch(`${API_BASE}/payments/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 🔔 NOTIFICATIONS (WhatsApp & In-App)
+  getNotifications: async (limit = 30) => {
+    const res = await fetch(`${API_BASE}/notifications?limit=${limit}`);
+    return handleResponse(res);
+  },
+  markNotificationRead: async (id) => {
+    const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
+      method: 'PATCH'
+    });
+    return handleResponse(res);
+  },
+
+  // 🗺️ TRIP SIMULATOR & SSE
+  simulateTripStatus: async (orderId, nextStatus) => {
+    const res = await fetch(`${API_BASE}/orders/${orderId}/simulate-trip`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nextStatus })
+    });
+    return handleResponse(res);
+  },
+
+  // 🌱 AI BOTANICAL DIAGNOSTICS TO VIRTUAL GARDEN SYNC
+  syncAIDiagnosisToGarden: async (data) => {
+    const res = await fetch(`${API_BASE}/ai/sync-to-garden`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 📸 NURSERY DAILY LIVE STORIES
+  getStories: async () => {
+    const res = await fetch(`${API_BASE}/stories`);
+    return handleResponse(res);
+  },
+  reactToStory: async (storyId, data) => {
+    const res = await fetch(`${API_BASE}/stories/${storyId}/react`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 🌿 REVENUE MVP: PRODUCT BUNDLES & UPSELLS
+  getBundles: async () => {
+    const res = await fetch(`${API_BASE}/bundles`);
+    return handleResponse(res);
+  },
+  getBundleById: async (id) => {
+    const res = await fetch(`${API_BASE}/bundles/${id}`);
+    return handleResponse(res);
+  },
+  getUpsellRecommendations: async (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    const res = await fetch(`${API_BASE}/upsells/recommendations?${q}`);
+    return handleResponse(res);
+  },
+
+  // ⭐ REVENUE MVP: PLANTME CARE MEMBERSHIP
+  getMembershipPlans: async () => {
+    const res = await fetch(`${API_BASE}/memberships/plans`);
+    return handleResponse(res);
+  },
+  getMyMembership: async (email) => {
+    const res = await fetch(`${API_BASE}/memberships/me?email=${encodeURIComponent(email || '')}`);
+    return handleResponse(res);
+  },
+  subscribeMembership: async (data) => {
+    const res = await fetch(`${API_BASE}/memberships/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  cancelMembership: async (data) => {
+    const res = await fetch(`${API_BASE}/memberships/cancel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  updateAdminMembershipPlan: async (id, data) => {
+    const res = await fetch(`${API_BASE}/admin/membership-plans/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 🏡 REVENUE MVP: GARDENER & PLANT EXPERT BOOKINGS
+  getExpertBookings: async (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    const res = await fetch(`${API_BASE}/expert-bookings?${q}`);
+    return handleResponse(res);
+  },
+  bookExpertService: async (data) => {
+    const res = await fetch(`${API_BASE}/expert-bookings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  cancelExpertBooking: async (id, data = {}) => {
+    const res = await fetch(`${API_BASE}/expert-bookings/${id}/cancel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  rateExpertBooking: async (id, data) => {
+    const res = await fetch(`${API_BASE}/expert-bookings/${id}/rate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 🏪 REVENUE MVP: NURSERY VENDOR SAAS TIERS
+  getVendorPlans: async () => {
+    const res = await fetch(`${API_BASE}/vendors/plans`);
+    return handleResponse(res);
+  },
+  getVendorSubscription: async (vendorId) => {
+    const res = await fetch(`${API_BASE}/vendors/${vendorId}/subscription`);
+    return handleResponse(res);
+  },
+  subscribeVendorPlan: async (vendorId, data) => {
+    const res = await fetch(`${API_BASE}/vendors/${vendorId}/subscription`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  getVendorInsights: async (vendorId) => {
+    const res = await fetch(`${API_BASE}/vendor/${vendorId}/analytics/insights`);
+    return handleResponse(res);
+  },
+
+  // 🎁 REVENUE MVP: REFERRALS, REORDERS & CART ABANDONMENT
+  getMyReferralCode: async (email) => {
+    const res = await fetch(`${API_BASE}/referrals/my-code?email=${encodeURIComponent(email || '')}`);
+    return handleResponse(res);
+  },
+  claimReferral: async (data) => {
+    const res = await fetch(`${API_BASE}/referrals/claim`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  reorderPastOrder: async (orderId) => {
+    const res = await fetch(`${API_BASE}/orders/${orderId}/reorder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return handleResponse(res);
+  },
+  sendAbandonedCartReminder: async (data) => {
+    const res = await fetch(`${API_BASE}/cart/abandoned-reminder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+
+  // 📊 REVENUE MVP: ADMIN REVENUE DASHBOARD & AUDIT LOGS
+  getAdminRevenueAnalytics: async () => {
+    const res = await fetch(`${API_BASE}/admin/revenue-analytics`);
+    return handleResponse(res);
+  },
+  getAdminAuditLogs: async () => {
+    const res = await fetch(`${API_BASE}/admin/audit-logs`);
+    return handleResponse(res);
+  },
+  postPaymentWebhook: async (data) => {
+    const res = await fetch(`${API_BASE}/payments/webhook`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
   }
 };
+
 
 

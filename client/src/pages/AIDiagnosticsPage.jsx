@@ -5,12 +5,15 @@ import ChatBubble from '../components/ChatBubble';
 import ProductCard from '../components/ProductCard';
 
 export default function AIDiagnosticsPage() {
-  const { products, setShowBotanistModal } = useApp();
+  const { products, setShowBotanistModal, loadAllData } = useApp();
   const fileInputRef = useRef(null);
   const chatContainerRef = useRef(null);
   const chatEndRef = useRef(null);
   const isFirstRender = useRef(true);
   
+  const [activeDiagnosis, setActiveDiagnosis] = useState(null);
+  const [syncedStatus, setSyncedStatus] = useState(null);
+
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -57,6 +60,17 @@ export default function AIDiagnosticsPage() {
   };
 
   const processFile = (file) => {
+    if (!file) return;
+    if (!file.type || !file.type.startsWith('image/')) {
+      alert(`Invalid file format (${file.type || 'unknown'}). Please upload a valid image file (JPG, PNG, WEBP).`);
+      return;
+    }
+    const maxSizeBytes = 10 * 1024 * 1024; // 10 MB limit
+    if (file.size > maxSizeBytes) {
+      alert('The uploaded image exceeds the 10 MB limit. Please choose a smaller photo.');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = async (event) => {
       const userMsg = {
@@ -76,6 +90,8 @@ export default function AIDiagnosticsPage() {
         });
 
         setIsTyping(false);
+        setActiveDiagnosis(diag);
+        setSyncedStatus(null);
         const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
         const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
 
@@ -98,7 +114,7 @@ export default function AIDiagnosticsPage() {
         setMessages(prev => [...prev, {
           id: Date.now(),
           isBot: true,
-          text: "I've analyzed the photo of your plant. Foliage appears healthy with standard metabolic development. Maintain regular moisture checks and indirect sunlight."
+          text: `⚠️ <strong>Botanical Diagnostic Service Unavailable</strong><br/><br/>${err.message || 'Unable to connect to the botanical pathology diagnosis model. Please verify your network connection and try again.'}`
         }]);
       }
     };
@@ -122,6 +138,8 @@ export default function AIDiagnosticsPage() {
     try {
       const diag = await api.diagnosePlantAI({ symptoms: query });
       setIsTyping(false);
+      setActiveDiagnosis(diag);
+      setSyncedStatus(null);
       const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
       const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
 
@@ -144,7 +162,7 @@ export default function AIDiagnosticsPage() {
       setMessages(prev => [...prev, {
         id: Date.now(),
         isBot: true,
-        text: `Thanks for your question: "${query}". For healthy plant growth, ensure adequate indirect sunlight and let the top 1-2 inches of soil dry out before your next watering.`
+        text: `⚠️ <strong>Botanical Diagnostic Service Unavailable</strong><br/><br/>Unable to process symptom inquiry "${query}". Please check your connection or consult our certified botanist.`
       }]);
     }
   };
@@ -161,6 +179,8 @@ export default function AIDiagnosticsPage() {
     try {
       const diag = await api.diagnosePlantAI({ symptoms: symptomText });
       setIsTyping(false);
+      setActiveDiagnosis(diag);
+      setSyncedStatus(null);
       const remedyList = diag.remedy?.map((r, i) => `• <strong>Step ${i+1}:</strong> ${r}`).join('<br/>') || '';
       const urgencyColor = diag.urgency === 'Critical' ? '#dc2626' : diag.urgency === 'High' ? '#ea580c' : '#166534';
 
@@ -180,6 +200,30 @@ export default function AIDiagnosticsPage() {
       }]);
     } catch (e) {
       setIsTyping(false);
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        isBot: true,
+        text: `⚠️ <strong>Botanical Diagnostic Service Unavailable</strong><br/><br/>Unable to diagnose symptom "${symptomText}". Please verify connection and retry.`
+      }]);
+    }
+  };
+
+  const handleSyncToGarden = async (diagToSync) => {
+    const diag = diagToSync || activeDiagnosis;
+    if (!diag) return;
+    try {
+      const res = await api.syncAIDiagnosisToGarden({
+        plantName: diag.plantType || diag.issue || 'Diagnosed Plant',
+        condition: diag.issue,
+        prescription: diag.remedy?.[0] || 'Apply neem oil spray & moderate watering.',
+        careFrequency: diag.urgency === 'Critical' ? 'Every 2 days' : 'Every 5 days'
+      });
+      if (res.success) {
+        setSyncedStatus(`✓ Synced to Virtual Garden! Care schedule set (${res.reminder.frequency}).`);
+        if (loadAllData) loadAllData();
+      }
+    } catch (e) {
+      alert('Failed to sync to garden');
     }
   };
 
@@ -232,6 +276,53 @@ export default function AIDiagnosticsPage() {
           Book 5-Min Video Call →
         </button>
       </div>
+
+      {/* Active Clinical Diagnosis & 1-Click Virtual Garden Sync */}
+      {activeDiagnosis && (
+        <div style={{
+          background: '#f0fdf4',
+          border: '1.5px solid #86efac',
+          borderRadius: '16px',
+          padding: '14px 18px',
+          marginBottom: '14px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px',
+          boxShadow: '0 4px 12px rgba(22,101,52,0.06)'
+        }}>
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: 800, color: '#166534', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+              ● ML DIAGNOSIS: {activeDiagnosis.issue}
+            </div>
+            <div style={{ fontSize: '12.5px', color: '#1e293b', marginTop: '2px' }}>
+              Condition: <strong>{activeDiagnosis.cause}</strong> • Remedy: <strong>{activeDiagnosis.remedy?.[0] || 'Care needed'}</strong>
+            </div>
+          </div>
+          
+          <button
+            type="button"
+            onClick={() => handleSyncToGarden(activeDiagnosis)}
+            disabled={!!syncedStatus}
+            style={{
+              background: syncedStatus ? '#166534' : '#1b4332',
+              color: '#ffffff',
+              border: 'none',
+              padding: '9px 16px',
+              borderRadius: '10px',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              cursor: syncedStatus ? 'default' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {syncedStatus ? '✓ Synced to Virtual Garden' : '🌱 1-Click Add to Virtual Garden →'}
+          </button>
+        </div>
+      )}
 
       <div style={{
         flex: 1,

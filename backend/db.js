@@ -23,7 +23,9 @@ const readJSON = (filename) => {
 const writeJSON = (filename, data) => {
   try {
     const filePath = getFilePath(filename);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    const tempPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).slice(2, 7)}`;
+    fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf8');
+    fs.renameSync(tempPath, filePath);
     return true;
   } catch (error) {
     console.error(`Error writing ${filename}:`, error);
@@ -32,6 +34,9 @@ const writeJSON = (filename, data) => {
 };
 
 export const db = {
+  getUsers: () => readJSON('users.json'),
+  saveUsers: (data) => writeJSON('users.json', data),
+
   getVendors: () => readJSON('vendors.json'),
   saveVendors: (data) => writeJSON('vendors.json', data),
   
@@ -88,5 +93,33 @@ export const db = {
   saveClubSubscriptions: (data) => writeJSON('club_subscriptions.json', data),
 
   getCorporateQuotes: () => readJSON('corporate_quotes.json'),
-  saveCorporateQuotes: (data) => writeJSON('corporate_quotes.json', data)
+  saveCorporateQuotes: (data) => writeJSON('corporate_quotes.json', data),
+
+  getBundles: () => readJSON('bundles.json'),
+  saveBundles: (data) => writeJSON('bundles.json', data),
+
+  getMembershipPlans: () => readJSON('membership_plans.json'),
+  saveMembershipPlans: (data) => writeJSON('membership_plans.json', data),
+
+  getMemberships: () => readJSON('memberships.json'),
+  saveMemberships: (data) => writeJSON('memberships.json', data),
+
+  getExpertBookings: () => readJSON('expert_bookings.json'),
+  saveExpertBookings: (data) => writeJSON('expert_bookings.json', data),
+
+  getVendorPlans: () => readJSON('vendor_plans.json'),
+  saveVendorPlans: (data) => writeJSON('vendor_plans.json', data),
+
+  getVendorSubscriptions: () => readJSON('vendor_subscriptions.json'),
+  saveVendorSubscriptions: (data) => writeJSON('vendor_subscriptions.json', data),
+
+  getReferrals: () => readJSON('referrals.json'),
+  saveReferrals: (data) => writeJSON('referrals.json', data),
+
+  getAuditLogs: () => readJSON('audit_logs.json'),
+  saveAuditLogs: (data) => writeJSON('audit_logs.json', data),
+
+  getPaymentWebhooks: () => readJSON('payment_webhooks.json'),
+  savePaymentWebhooks: (data) => writeJSON('payment_webhooks.json', data)
 };
+

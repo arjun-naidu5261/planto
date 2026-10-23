@@ -518,6 +518,7 @@ export default function ProfilePage({ defaultTab }) {
     { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
     { id: 'orders', label: 'My Orders', icon: '🛍️' },
     { id: 'track', label: 'Track Packages', icon: '🚚' },
+    { id: 'passports', label: 'Plant Passports', icon: '🪴' },
     { id: 'wishlist', label: 'My Wishlist', icon: '❤️' },
     { id: 'addresses', label: 'My Addresses', icon: '🏡' },
     { id: 'wallet', label: 'My Wallet', icon: '💳' },
@@ -652,6 +653,15 @@ export default function ProfilePage({ defaultTab }) {
             <path d="M12 2v10" />
             <path d="M12 6a4 4 0 0 0-4-4 4 4 0 0 0 4 4z" />
             <path d="M12 8a4 4 0 0 1 4-4 4 4 0 0 1-4 4z" />
+          </svg>
+        );
+      case 'passports':
+        return (
+          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <line x1="9" y1="7" x2="15" y2="7" />
+            <line x1="9" y1="11" x2="15" y2="11" />
           </svg>
         );
       default:
@@ -1365,6 +1375,24 @@ export default function ProfilePage({ defaultTab }) {
                           }}
                         >
                           Instant 1-Click Replacement
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/passport/${ord.items?.[0]?.id || ord.id}`)}
+                          style={{
+                            background: '#ecfdf5',
+                            color: '#065f46',
+                            border: '1px solid #a7f3d0',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          🪴 Plant Passport & Journal
                         </button>
                       </div>
                       <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--primary-green)' }}>
@@ -2103,6 +2131,132 @@ export default function ProfilePage({ defaultTab }) {
                   ))
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab: Digital Plant Passports */}
+        {activeTab === 'passports' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{
+              background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%)',
+              color: '#ffffff',
+              padding: '24px',
+              borderRadius: '20px',
+              boxShadow: '0 8px 24px rgba(27,67,50,0.15)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                <div>
+                  <span style={{ background: '#d8f3dc', color: '#1b4332', fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                    🪴 OFFICIAL BOTANICAL REGISTRY
+                  </span>
+                  <h3 style={{ fontSize: '24px', margin: '6px 0 4px 0', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>
+                    Adopted Plant Passports & Growth Records
+                  </h3>
+                  <p style={{ fontSize: '13px', color: '#d8f3dc', margin: 0, opacity: 0.9 }}>
+                    Every plant from PlantMe includes a certified origin passport, 30-day health guarantee, and live growth timeline.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/passport')}
+                  style={{
+                    background: '#ffb703',
+                    color: '#000000',
+                    border: 'none',
+                    padding: '10px 18px',
+                    borderRadius: '12px',
+                    fontWeight: 800,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(255,183,3,0.3)'
+                  }}
+                >
+                  Open Plant Passport Hub →
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+              {(orders.flatMap(o => o.items).length > 0 ? orders.flatMap(o => o.items) : products.slice(0, 3)).map((item, idx) => (
+                <div key={idx} style={{
+                  background: '#ffffff',
+                  borderRadius: '16px',
+                  border: '1px solid #e2e8f0',
+                  padding: '18px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+                }}>
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                    <img 
+                      src={item.images?.[0] || 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=200&auto=format&fit=crop&q=80'} 
+                      alt={item.name} 
+                      style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #f1f5f9' }} 
+                    />
+                    <div>
+                      <span style={{ fontSize: '10.5px', background: '#dcfce7', color: '#166534', fontWeight: 800, padding: '2px 8px', borderRadius: '6px' }}>
+                        Adoption Tag #{item.id || `PLT-${idx + 100}`}
+                      </span>
+                      <h4 style={{ fontSize: '15px', fontWeight: 800, margin: '4px 0 2px 0', color: '#1b4332' }}>
+                        {item.name}
+                      </h4>
+                      <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                        Parent: <strong>{currentUser?.name || 'Suhas K.'}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '10px', fontSize: '11.5px', color: '#475569', display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>GUARANTEE</div>
+                      <div style={{ color: '#16a34a', fontWeight: 800 }}>🟢 Active 30 Days</div>
+                    </div>
+                    <div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>WATER CYCLE</div>
+                      <div style={{ fontWeight: 700 }}>Every 6–7 Days</div>
+                    </div>
+                    <div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>HEALTH</div>
+                      <div style={{ color: '#059669', fontWeight: 800 }}>100% Prime</div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                    <button
+                      onClick={() => navigate(`/passport/${item.id || 'p1'}`)}
+                      style={{
+                        flex: 1,
+                        background: '#16a34a',
+                        color: '#ffffff',
+                        border: 'none',
+                        padding: '9px',
+                        borderRadius: '10px',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      View Growth Passport
+                    </button>
+                    <button
+                      onClick={() => navigate('/ai')}
+                      style={{
+                        background: '#f1f5f9',
+                        color: '#334155',
+                        border: '1px solid #cbd5e1',
+                        padding: '9px 12px',
+                        borderRadius: '10px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      AI Health Scan
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

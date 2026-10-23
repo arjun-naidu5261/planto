@@ -1,0 +1,73 @@
+[
+  {
+    "id": "bundle_oxygen_starter",
+    "name": "Urban Balcony Oxygen Starter Kit",
+    "tagline": "Everything you need to green your balcony in 1 complete box",
+    "description": "Includes resilient Golden Pothos, handcrafted porous red terracotta planter, 5kg aerated organic potting mix, and 2kg nutrient-packed vermicompost.",
+    "category": "Starter Kits & Bundles",
+    "image": "/images/golden_pothos.png",
+    "items": [
+      { "productId": "p1", "name": "Premium Golden Pothos", "quantity": 1, "unitPrice": 180 },
+      { "productId": "po1", "name": "Handcrafted Terracotta Clay Pot", "quantity": 1, "unitPrice": 80 },
+      { "productId": "so1", "name": "Premium Potting Soil Mix (5kg)", "quantity": 1, "unitPrice": 150 },
+      { "productId": "so2", "name": "Organic Vermicompost (2kg)", "quantity": 1, "unitPrice": 90 }
+    ],
+    "originalPrice": 500,
+    "bundlePrice": 429,
+    "discountPercent": 14,
+    "savings": 71,
+    "deliveryCharge": 0,
+    "vendorId": "v1",
+    "vendorName": "Sai Baba Plant & Pot Stall",
+    "badge": "BESTSELLER STARTER KIT",
+    "rating": 4.9,
+    "reviewsCount": 86
+  },
+  {
+    "id": "bundle_monstera_luxury",
+    "name": "Monstera Deluxe Living Room Kit",
+    "tagline": "Exotic tropical foliage with self-watering convenience and protection",
+    "description": "Includes statement Monstera Deliciosa, 6-inch self-watering reservoir pot, organic potting mix, and organic cold-pressed neem pesticide spray.",
+    "category": "Starter Kits & Bundles",
+    "image": "/images/monstera.png",
+    "items": [
+      { "productId": "p3", "name": "Monstera Deliciosa (Swiss Cheese)", "quantity": 1, "unitPrice": 240 },
+      { "productId": "po2", "name": "Sleek Self-Watering Pot", "quantity": 1, "unitPrice": 240 },
+      { "productId": "so1", "name": "Premium Potting Soil Mix (5kg)", "quantity": 1, "unitPrice": 150 },
+      { "productId": "e1", "name": "Neem Oil Pesticide Spray (500ml)", "quantity": 1, "unitPrice": 160 }
+    ],
+    "originalPrice": 790,
+    "bundlePrice": 699,
+    "discountPercent": 12,
+    "savings": 91,
+    "deliveryCharge": 0,
+    "vendorId": "v3",
+    "vendorName": "Green Valley Nursery",
+    "badge": "LUXURY INTERIOR COMBO",
+    "rating": 4.95,
+    "reviewsCount": 112
+  },
+  {
+    "id": "bundle_bedroom_zen",
+    "name": "Bedroom Zen & Night-Oxygen Kit",
+    "tagline": "Air-purifying night oxygen with classic earthenware & zen stones",
+    "description": "Includes bedroom-safe Snake Plant (releases oxygen at night), red terracotta clay pot, and snow-white polished decorative landscape stones.",
+    "category": "Starter Kits & Bundles",
+    "image": "/images/snake_plant.png",
+    "items": [
+      { "productId": "p2", "name": "Luxury Snake Plant (Sansevieria)", "quantity": 1, "unitPrice": 320 },
+      { "productId": "po1", "name": "Handcrafted Terracotta Clay Pot", "quantity": 1, "unitPrice": 80 },
+      { "productId": "d1", "name": "Polished Snow-White Decorative Stones", "quantity": 1, "unitPrice": 130 }
+    ],
+    "originalPrice": 530,
+    "bundlePrice": 459,
+    "discountPercent": 13,
+    "savings": 71,
+    "deliveryCharge": 30,
+    "vendorId": "v2",
+    "vendorName": "Evergreen Botanicals",
+    "badge": "ZEN NIGHT-AIR SPECIAL",
+    "rating": 4.8,
+    "reviewsCount": 54
+  }
+]

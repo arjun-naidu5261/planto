@@ -11,28 +11,61 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
     if (!isOpen) return;
 
     let isMounted = true;
+    const idToFetch = orderId || 'ORD-7290';
+
+    // 1. Initial REST fetch
     const fetchTracking = async () => {
       try {
-        const idToFetch = orderId || 'ORD-7290';
         const data = await api.getLiveTracking(idToFetch);
         if (isMounted && data.success) {
-          setTrackingData(data);
+          setTrackingData(prev => ({ ...(prev || {}), ...data }));
           setLoading(false);
         }
       } catch (err) {
-        console.error('Failed to fetch live tracking:', err);
         if (isMounted) setLoading(false);
       }
     };
-
     fetchTracking();
-    const interval = setInterval(fetchTracking, 3000); // 3-second live sync
+
+    // 2. Real-time Server-Sent Events (SSE) telemetry connection
+    let eventSource = null;
+    try {
+      eventSource = new EventSource(`http://localhost:5002/api/orders/${idToFetch}/live-telemetry-stream`);
+      eventSource.onmessage = (event) => {
+        try {
+          const telemetry = JSON.parse(event.data);
+          if (isMounted && !telemetry.error) {
+            setTrackingData(prev => ({
+              ...(prev || {}),
+              ...telemetry
+            }));
+            setLoading(false);
+          }
+        } catch (e) {}
+      };
+    } catch (e) {
+      console.warn('SSE fallback to polling:', e);
+    }
+
+    const interval = setInterval(fetchTracking, 4000);
 
     return () => {
       isMounted = false;
+      if (eventSource) eventSource.close();
       clearInterval(interval);
     };
   }, [isOpen, orderId]);
+
+  const handleSimulateAdvance = async () => {
+    try {
+      const res = await api.simulateTripStatus(data.orderId);
+      if (res.success) {
+        setTrackingData(prev => ({ ...prev, ...res.order, status: res.order.status }));
+      }
+    } catch (e) {
+      alert('Simulation failed');
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -266,6 +299,26 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
               </div>
             </div>
 
+            {/* Live Telemetry Bar */}
+            <div style={{
+              position: 'absolute',
+              bottom: '12px',
+              left: '16px',
+              display: 'flex',
+              gap: '6px',
+              alignItems: 'center'
+            }}>
+              <span style={{ background: 'rgba(15,23,42,0.85)', color: '#38bdf8', padding: '4px 8px', borderRadius: '8px', fontSize: '10px', fontWeight: 700 }}>
+                🛵 {data.speedKmh || (stageIdx === 3 ? 28 : 0)} km/h
+              </span>
+              <span style={{ background: 'rgba(15,23,42,0.85)', color: '#4ade80', padding: '4px 8px', borderRadius: '8px', fontSize: '10px', fontWeight: 700 }}>
+                🔋 {data.batteryLevel || 88}%
+              </span>
+              <span style={{ background: 'rgba(15,23,42,0.85)', color: '#facc15', padding: '4px 8px', borderRadius: '8px', fontSize: '10px', fontWeight: 700 }}>
+                💧 Hydration 100%
+              </span>
+            </div>
+
             {/* Coordinates Stream Indicator */}
             <div style={{
               position: 'absolute',
@@ -281,6 +334,28 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
             }}>
               GPS: {data.riderCoords?.lat?.toFixed(4) || '12.9732'}, {data.riderCoords?.lng?.toFixed(4) || '77.6414'}
             </div>
+          </div>
+
+          {/* Demo Trip Simulator Button */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', padding: '10px 16px', borderRadius: '12px', border: '1px solid #e2e8f0', margin: '-8px 0 16px 0' }}>
+            <span style={{ fontSize: '11.5px', color: '#64748b', fontWeight: 600 }}>
+              🧪 <strong>Live Stage Simulator:</strong> Step through delivery lifecycle
+            </span>
+            <button
+              onClick={handleSimulateAdvance}
+              style={{
+                background: '#0f172a',
+                color: '#ffffff',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '11.5px',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              Advance Stage ➔
+            </button>
           </div>
 
           {/* 2. 🔐 Customer Delivery OTP Highlight Card */}

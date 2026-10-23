@@ -295,6 +295,38 @@ export default function ProductPage() {
               </div>
             </div>
           </div>
+
+          {/* Digital Plant Passport Link */}
+          <Link
+            to={`/passport/${product.id}`}
+            style={{
+              marginTop: '12px',
+              padding: '14px 16px',
+              background: '#f0fdf4',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              border: '1.5px solid #86efac',
+              textDecoration: 'none',
+              transition: 'all 0.2s'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '22px' }}>📜</span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '13px', color: '#166534' }}>
+                  Verified Digital Plant Passport & Care Diary
+                </div>
+                <div style={{ fontSize: '11px', color: '#15803d', marginTop: '2px' }}>
+                  Botanical provenance, growth milestones, and nursery origin.
+                </div>
+              </div>
+            </div>
+            <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534' }}>
+              View Passport →
+            </span>
+          </Link>
         </div>
       </div>
 

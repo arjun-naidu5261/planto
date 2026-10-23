@@ -35,7 +35,11 @@
         "comment": "Great variety of seasonal flowering plants. Located right on the main road.",
         "date": "1 week ago"
       }
-    ]
+    ],
+    "tier": "pro",
+    "subscriptionTier": "pro",
+    "isSponsored": true,
+    "commissionRate": 0.05
   },
   {
     "id": "v2",

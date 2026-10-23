@@ -1,0 +1,658 @@
+[
+  {
+    "id": "NOTIF-441427953",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-4722 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 4855 ].",
+    "orderId": "ORD-4722",
+    "timestamp": "Oct 17, 12:34 AM",
+    "isoDate": "2026-10-16T19:04:01.427Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "4855",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-435629215",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-6185 placed! ₹180 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 9207 ].",
+    "orderId": "ORD-6185",
+    "timestamp": "Oct 17, 12:33 AM",
+    "isoDate": "2026-10-16T19:03:55.629Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "9207",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-435603837",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-2150 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 6144 ].",
+    "orderId": "ORD-2150",
+    "timestamp": "Oct 17, 12:33 AM",
+    "isoDate": "2026-10-16T19:03:55.603Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "6144",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-336553792",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-9920 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 5038 ].",
+    "orderId": "ORD-9920",
+    "timestamp": "Oct 17, 12:32 AM",
+    "isoDate": "2026-10-16T19:02:16.553Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "5038",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-307830130",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-4198 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8042 ].",
+    "orderId": "ORD-4198",
+    "timestamp": "Oct 17, 12:31 AM",
+    "isoDate": "2026-10-16T19:01:47.830Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8042",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-307800222",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-9962 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 1475 ].",
+    "orderId": "ORD-9962",
+    "timestamp": "Oct 17, 12:31 AM",
+    "isoDate": "2026-10-16T19:01:47.800Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "1475",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-259628301",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-8668 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 9168 ].",
+    "orderId": "ORD-8668",
+    "timestamp": "Oct 17, 12:30 AM",
+    "isoDate": "2026-10-16T19:00:59.628Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "9168",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-259599564",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-7540 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 6910 ].",
+    "orderId": "ORD-7540",
+    "timestamp": "Oct 17, 12:30 AM",
+    "isoDate": "2026-10-16T19:00:59.599Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "6910",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-169488815",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-5097 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 2430 ].",
+    "orderId": "ORD-5097",
+    "timestamp": "Oct 17, 12:29 AM",
+    "isoDate": "2026-10-16T18:59:29.488Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "2430",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-169460205",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-8739 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8479 ].",
+    "orderId": "ORD-8739",
+    "timestamp": "Oct 17, 12:29 AM",
+    "isoDate": "2026-10-16T18:59:29.460Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8479",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-123434824",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-3175 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 6522 ].",
+    "orderId": "ORD-3175",
+    "timestamp": "Oct 17, 12:28 AM",
+    "isoDate": "2026-10-16T18:58:43.434Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "6522",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-123398453",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-6654 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 9803 ].",
+    "orderId": "ORD-6654",
+    "timestamp": "Oct 17, 12:28 AM",
+    "isoDate": "2026-10-16T18:58:43.398Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "9803",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-077262784",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-2331 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 5949 ].",
+    "orderId": "ORD-2331",
+    "timestamp": "Oct 17, 12:27 AM",
+    "isoDate": "2026-10-16T18:57:57.262Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "5949",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-077232610",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-8018 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 5189 ].",
+    "orderId": "ORD-8018",
+    "timestamp": "Oct 17, 12:27 AM",
+    "isoDate": "2026-10-16T18:57:57.232Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "5189",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-050020384",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-1776 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 1730 ].",
+    "orderId": "ORD-1776",
+    "timestamp": "Oct 17, 12:27 AM",
+    "isoDate": "2026-10-16T18:57:30.020Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "1730",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-943176945",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-6288 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 1831 ].",
+    "orderId": "ORD-6288",
+    "timestamp": "Oct 17, 12:25 AM",
+    "isoDate": "2026-10-16T18:55:43.176Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "1831",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-874296311",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-6486 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8076 ].",
+    "orderId": "ORD-6486",
+    "timestamp": "Oct 17, 12:24 AM",
+    "isoDate": "2026-10-16T18:54:34.296Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8076",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-842290429",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-3490 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8130 ].",
+    "orderId": "ORD-3490",
+    "timestamp": "Oct 17, 12:24 AM",
+    "isoDate": "2026-10-16T18:54:02.290Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8130",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-769073644",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-6020 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 2542 ].",
+    "orderId": "ORD-6020",
+    "timestamp": "Oct 17, 12:22 AM",
+    "isoDate": "2026-10-16T18:52:49.073Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "2542",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-729094658",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-5980 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 3616 ].",
+    "orderId": "ORD-5980",
+    "timestamp": "Oct 17, 12:22 AM",
+    "isoDate": "2026-10-16T18:52:09.094Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "3616",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-674156979",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-4585 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 2638 ].",
+    "orderId": "ORD-4585",
+    "timestamp": "Oct 17, 12:21 AM",
+    "isoDate": "2026-10-16T18:51:14.156Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "2638",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-661282884",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-8923 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8816 ].",
+    "orderId": "ORD-8923",
+    "timestamp": "Oct 17, 12:21 AM",
+    "isoDate": "2026-10-16T18:51:01.282Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8816",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-637273155",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-1441 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 3063 ].",
+    "orderId": "ORD-1441",
+    "timestamp": "Oct 17, 12:20 AM",
+    "isoDate": "2026-10-16T18:50:37.273Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "3063",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-391853404",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-5480 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 5146 ].",
+    "orderId": "ORD-5480",
+    "timestamp": "Oct 17, 12:16 AM",
+    "isoDate": "2026-10-16T18:46:31.853Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "5146",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-348637938",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-9651 placed! ₹489 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 5932 ].",
+    "orderId": "ORD-9651",
+    "timestamp": "Oct 17, 12:15 AM",
+    "isoDate": "2026-10-16T18:45:48.637Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "5932",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-176303124",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-7372 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 2286 ].",
+    "orderId": "ORD-7372",
+    "timestamp": "Oct 16, 11:56 PM",
+    "isoDate": "2026-10-16T18:26:16.303Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "2286",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-669541297",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-4340 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 4585 ].",
+    "orderId": "ORD-4340",
+    "timestamp": "Oct 16, 11:47 PM",
+    "isoDate": "2026-10-16T18:17:49.541Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "4585",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-636839370",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-7805 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8134 ].",
+    "orderId": "ORD-7805",
+    "timestamp": "Oct 16, 11:47 PM",
+    "isoDate": "2026-10-16T18:17:16.839Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8134",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-251675612",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-5604 placed! ₹240 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8904 ].",
+    "orderId": "ORD-5604",
+    "timestamp": "Oct 16, 11:40 PM",
+    "isoDate": "2026-10-16T18:10:51.675Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8904",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-251674230",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-7226 placed! ₹179999880 paid via COD. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8492 ].",
+    "orderId": "ORD-7226",
+    "timestamp": "Oct 16, 11:40 PM",
+    "isoDate": "2026-10-16T18:10:51.674Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8492",
+      "paymentMethod": "cod"
+    }
+  },
+  {
+    "id": "NOTIF-251672906",
+    "type": "ORDER_PLACED",
+    "channel": "whatsapp",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Order Confirmed (PlantMe Express)",
+    "message": "PlantMe Order #ORD-5082 placed! ₹1 paid via WALLET. Nursery is condition-wrapping your plants. Your Doorstep OTP: [ 8083 ].",
+    "orderId": "ORD-5082",
+    "timestamp": "Oct 16, 11:40 PM",
+    "isoDate": "2026-10-16T18:10:51.672Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "18 mins",
+      "deliveryOtp": "8083",
+      "paymentMethod": "wallet"
+    }
+  },
+  {
+    "id": "NOTIF-117285152",
+    "type": "PLANT_CARE",
+    "channel": "whatsapp",
+    "recipientName": "Plant Parent",
+    "phone": "+91 88856 00899",
+    "title": "🌿 Calathea Orbifolia Added to Virtual Garden",
+    "message": "Prescription saved! Apply neem spray & provide indirect morning sunlight. Care schedule set for: Every 3 days.",
+    "orderId": null,
+    "timestamp": "Oct 13, 03:55 PM",
+    "isoDate": "2026-10-13T10:25:17.285Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "reminderId": "r_117284"
+    }
+  },
+  {
+    "id": "NOTIF-112573299",
+    "type": "ORDER_PICKED_UP",
+    "channel": "whatsapp",
+    "recipientName": "Suhas K.",
+    "phone": "+91 88856 00899",
+    "title": "Rider In Transit",
+    "message": "🛵 Rider Ramu has picked up your order #ORD-8920. Arriving in ~12 mins! Doorstep OTP: [ 8401 ].",
+    "orderId": "ORD-8920",
+    "timestamp": "Oct 13, 03:55 PM",
+    "isoDate": "2026-10-13T10:25:12.573Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {}
+  },
+  {
+    "id": "NOTIF-982101",
+    "type": "ORDER_UPDATE",
+    "channel": "whatsapp",
+    "recipientName": "Suhas K.",
+    "phone": "+91 88856 00899",
+    "title": "Order Placed & Packaging Underway",
+    "message": "🌿 PlantMe Order #ORD-8920 confirmed! Your Monstera is being packed in biodegradable root-hydration wrap at Indiranagar Botanical Nursery.",
+    "orderId": "ORD-8920",
+    "timestamp": "Today, 02:45 PM",
+    "isoDate": "2026-10-13T09:15:00.000Z",
+    "isRead": false,
+    "status": "DELIVERED",
+    "metadata": {
+      "eta": "22 mins",
+      "otp": "8401"
+    }
+  },
+  {
+    "id": "NOTIF-982100",
+    "type": "PLANT_CARE",
+    "channel": "whatsapp",
+    "recipientName": "Suhas K.",
+    "phone": "+91 88856 00899",
+    "title": "Hydration Reminder: Golden Pothos",
+    "message": "💧 High afternoon humidity in Bengaluru (68%). Give your Golden Pothos 150ml of water and check soil moisture.",
+    "orderId": null,
+    "timestamp": "Today, 11:30 AM",
+    "isoDate": "2026-10-13T06:00:00.000Z",
+    "isRead": true,
+    "status": "DELIVERED",
+    "metadata": {
+      "plantName": "Golden Pothos"
+    }
+  }
+]

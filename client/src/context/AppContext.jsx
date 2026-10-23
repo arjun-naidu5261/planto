@@ -4,10 +4,39 @@ import { api } from '../services/api';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('plantme_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('plantme_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('plantme_cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('plantme_wishlist', JSON.stringify(wishlist));
+    } catch {}
+  }, [wishlist]);
+
   const [vendors, setVendors] = useState([]);
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
@@ -197,12 +226,71 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // WhatsApp OTP Auth
+  const sendWhatsAppOtp = async (phone, type = 'login', name = '') => {
+    try {
+      const res = await api.sendOtp(phone, type, name);
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to send WhatsApp OTP' };
+    }
+  };
+
+  const verifyWhatsAppOtp = async ({ phone, otp, type = 'login', name = '', email = '', password = '' }) => {
+    try {
+      const res = await api.verifyOtp(phone, otp, type, name, email, password);
+      if (res.success && res.user) {
+        setIsLoggedIn(true);
+        setCurrentUser(res.user);
+        localStorage.setItem('planto_user', JSON.stringify(res.user));
+        if (res.user.wallet !== undefined) {
+          setWallet(res.user.wallet);
+        }
+        await loadAllData();
+        return { success: true, user: res.user, message: res.message, isNewUser: res.isNewUser };
+      }
+      return { success: false, message: res.message || 'Verification failed' };
+    } catch (err) {
+      return { success: false, message: err.message || 'Verification failed' };
+    }
+  };
+
+  const resendWhatsAppOtp = async (phone, type = 'login') => {
+    try {
+      const res = await api.resendOtp(phone, type);
+      return res;
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to resend WhatsApp OTP' };
+    }
+  };
+
+  // Register Customer (Email/Password)
+  const registerUser = async (userData) => {
+    try {
+      const res = await api.register(userData);
+      if (res.success && res.user) {
+        setIsLoggedIn(true);
+        setCurrentUser(res.user);
+        localStorage.setItem('planto_user', JSON.stringify(res.user));
+        if (res.user.wallet !== undefined) {
+          setWallet(res.user.wallet);
+        }
+        await loadAllData();
+        return { success: true, message: res.message };
+      }
+      return { success: false, message: res.message || 'Registration failed' };
+    } catch (err) {
+      return { success: false, message: err.message || 'Registration failed' };
+    }
+  };
+
   // Logout
   const logoutUser = () => {
     setIsLoggedIn(false);
     setCurrentUser(null);
     localStorage.removeItem('planto_user');
   };
+
 
   // Update User Profile details
   const updateUserProfile = (updatedFields) => {
@@ -264,7 +352,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // Checkout
-  const checkout = async (deliveryType, total, vendorName, additionalItems = []) => {
+  const checkout = async (deliveryType, total, vendorName, additionalItems = [], paymentDetails = {}) => {
     if (!isLoggedIn) return { success: false, message: 'Please login' };
     
     const items = [
@@ -282,7 +370,10 @@ export const AppProvider = ({ children }) => {
         items,
         deliveryType,
         total,
-        vendorName
+        vendorName,
+        paymentMethod: paymentDetails.paymentMethod || 'wallet',
+        paymentId: paymentDetails.paymentId || null,
+        invoiceNumber: paymentDetails.invoiceNumber || null
       });
 
       if (res.success) {
@@ -291,7 +382,7 @@ export const AppProvider = ({ children }) => {
         await refreshWallet();
         return { success: true, order: res.order };
       }
-      return { success: false, message: 'Order placement failed' };
+      return { success: false, message: res.message || 'Order placement failed' };
     } catch (err) {
       return { success: false, message: err.message || 'Checkout failed' };
     }
@@ -426,7 +517,11 @@ export const AppProvider = ({ children }) => {
         activeSociety, setActiveSociety,
         cuttingSwaps, setCuttingSwaps,
         addCuttingSwap,
+        sendWhatsAppOtp,
+        verifyWhatsAppOtp,
+        resendWhatsAppOtp,
         loginUser,
+        registerUser,
         logoutUser,
         updateUserProfile,
         addToCart,

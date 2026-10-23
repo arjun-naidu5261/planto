@@ -1,0 +1,72 @@
+[
+  {
+    "id": "u_default_1",
+    "name": "Suhas K.",
+    "email": "customer@plantme.in",
+    "password": "plantme123",
+    "phone": "+91 98450 99881",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "u_default_2",
+    "name": "Suhas K.",
+    "email": "customer@planto.in",
+    "password": "planto123",
+    "phone": "+91 98450 99881",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "u_1792174636818",
+    "name": "Anita Roy",
+    "email": "testuser_1792174636817@example.com",
+    "password": "Password@123",
+    "phone": "+91 98765 43210",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-10-16T18:17:16.818Z"
+  },
+  {
+    "id": "u_1792174669533",
+    "name": "Anita Roy",
+    "email": "testuser_1792174669533@example.com",
+    "password": "Password@123",
+    "phone": "+91 98765 43210",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-10-16T18:17:49.533Z"
+  },
+  {
+    "id": "u_1792175176289",
+    "name": "Anita Roy",
+    "email": "testuser_1792175176288@example.com",
+    "password": "Password@123",
+    "phone": "+91 98765 43210",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-10-16T18:26:16.289Z"
+  },
+  {
+    "id": "u_1792177441415",
+    "name": "Anita Roy",
+    "email": "testuser_1792177441414@example.com",
+    "password": "Password@123",
+    "phone": "+91 98765 43210",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-10-16T19:04:01.415Z"
+  },
+  {
+    "id": "u_1792791026459",
+    "name": "Future Forbes",
+    "email": "user_919885600899@planto.in",
+    "phone": "+91 98856 00899",
+    "rawPhone": "919885600899",
+    "role": "Customer",
+    "wallet": 1500,
+    "createdAt": "2026-10-23T21:30:26.459Z"
+  }
+]

@@ -5,6 +5,8 @@ import { api } from '../services/api';
 import VendorCard from '../components/VendorCard';
 import ProductCard from '../components/ProductCard';
 import SocietyGroupDrop from '../components/SocietyGroupDrop';
+import NurseryStoriesBar from '../components/NurseryStoriesBar';
+import WeatherCareWidget from '../components/WeatherCareWidget';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -272,6 +274,9 @@ export default function HomePage() {
 
           {/* Quick CX Action Shortcuts */}
           <div className="quick-action-shortcuts" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <Link to="/planner" className="cx-shortcut-btn" style={{ background: '#dcfce7', color: '#166534', fontWeight: 800, border: '1.5px solid #86efac' }}>
+              🎨 Garden Visualizer Studio
+            </Link>
             <Link to="/ai" className="cx-shortcut-btn">
               AI Plant Doctor
             </Link>
@@ -321,6 +326,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 📸 Hyperlocal Nursery Daily Live Stories */}
+      <NurseryStoriesBar />
+
       {/* Quick Category Chips Carousel */}
       <section style={{ marginBottom: '40px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '14px' }}>
@@ -352,6 +360,71 @@ export default function HomePage() {
 
       {/* Apartment Society & Tech Park Group Drop */}
       <SocietyGroupDrop />
+
+      {/* Hyperlocal Verified Plant Nurseries & Stalls */}
+      <section style={{ marginBottom: '44px' }}>
+        <div className="section-title-row" style={{ alignItems: 'flex-end', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              HYPERLOCAL PARTNER NETWORK
+            </div>
+            <h2 className="section-title" style={{ fontSize: '26px', margin: '4px 0 0 0' }}>Nearby Plant Nurseries & Stalls</h2>
+            <p className="section-subtitle" style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+              Direct live inventory from certified local plant nurseries & roadside pottery stalls
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <Link to="/map" className="btn btn-secondary" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+              Map View
+            </Link>
+            <Link to="/nurseries" className="btn" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
+              View All ({vendors.length}) →
+            </Link>
+          </div>
+        </div>
+
+        {/* Filter Pills */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '16px', width: '100%', scrollbarWidth: 'none' }}>
+          <button 
+            className={`inventory-filter-btn ${vendorFilter === 'all' ? 'active' : ''}`}
+            onClick={() => setVendorFilter('all')}
+          >
+            All Nurseries ({vendors.length})
+          </button>
+          <button 
+            className={`inventory-filter-btn ${vendorFilter === 'express' ? 'active' : ''}`}
+            onClick={() => setVendorFilter('express')}
+          >
+            Under 2 km (Express)
+          </button>
+          <button 
+            className={`inventory-filter-btn ${vendorFilter === 'top' ? 'active' : ''}`}
+            onClick={() => setVendorFilter('top')}
+          >
+            Top Rated (4.6+)
+          </button>
+          <button 
+            className={`inventory-filter-btn ${vendorFilter === 'open' ? 'active' : ''}`}
+            onClick={() => setVendorFilter('open')}
+          >
+            Open Now
+          </button>
+        </div>
+
+        {/* Horizontal scroll of VendorCards */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '16px', 
+          overflowX: 'auto', 
+          paddingBottom: '14px',
+          scrollbarWidth: 'thin',
+          WebkitOverflowScrolling: 'touch' 
+        }}>
+          {visibleVendors.map(vendor => (
+            <VendorCard key={vendor.id} vendor={vendor} />
+          ))}
+        </div>
+      </section>
 
       {/* REVENUE GENERATING BOTANICAL SERVICES & CLUBS */}
       <section style={{ marginBottom: '44px' }}>
@@ -503,6 +576,95 @@ export default function HomePage() {
 
         </div>
       </section>
+
+      {/* Featured Banner: Balcony & Room Visualizer */}
+      <section style={{ marginBottom: '48px' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #1b4332 0%, #0d2818 100%)',
+          borderRadius: '24px',
+          padding: '36px 32px',
+          color: '#ffffff',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '24px',
+          boxShadow: '0 12px 36px rgba(27,67,50,0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ maxWidth: '600px' }}>
+            <span style={{ background: '#ffb703', color: '#000', fontSize: '11px', fontWeight: 900, padding: '3px 10px', borderRadius: '12px', textTransform: 'uppercase' }}>
+              🎨 NEW: 3D/2D ROOM STUDIO
+            </span>
+            <h2 style={{ fontSize: '32px', fontFamily: 'var(--font-serif)', margin: '10px 0 8px 0', color: '#ffffff' }}>
+              Design Your Balcony Before You Buy
+            </h2>
+            <p style={{ fontSize: '14.5px', color: '#d8f3dc', lineHeight: 1.5, margin: '0 0 20px 0' }}>
+              Drag & drop floor plants, railing boxes, and hanging pots into a virtual apartment balcony. Instant sunlight compatibility checking, NASA oxygen calculation, and 1-click bundle checkout with 15% discount.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <Link
+                to="/planner"
+                style={{
+                  background: '#22c55e',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '14px',
+                  fontSize: '14px',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 14px rgba(34,197,94,0.3)'
+                }}
+              >
+                Launch Garden Studio →
+              </Link>
+              <Link
+                to="/passport"
+                style={{
+                  background: 'rgba(255,255,255,0.12)',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  padding: '12px 20px',
+                  borderRadius: '14px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  border: '1px solid rgba(255,255,255,0.25)'
+                }}
+              >
+                🪴 Digital Plant Passports
+              </Link>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '18px', padding: '16px 20px', textAlign: 'center', minWidth: '120px' }}>
+              <div style={{ fontSize: '24px' }}>☀️</div>
+              <div style={{ fontSize: '15px', fontWeight: 900, marginTop: '4px' }}>Sunlight Test</div>
+              <div style={{ fontSize: '11px', color: '#b7e4c7' }}>Zero-scorch check</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '18px', padding: '16px 20px', textAlign: 'center', minWidth: '120px' }}>
+              <div style={{ fontSize: '24px' }}>💨</div>
+              <div style={{ fontSize: '15px', fontWeight: 900, marginTop: '4px' }}>NASA Oxygen</div>
+              <div style={{ fontSize: '11px', color: '#b7e4c7' }}>Liters/day calculated</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '18px', padding: '16px 20px', textAlign: 'center', minWidth: '120px' }}>
+              <div style={{ fontSize: '24px' }}>⚡</div>
+              <div style={{ fontSize: '15px', fontWeight: 900, marginTop: '4px' }}>Save 15%</div>
+              <div style={{ fontSize: '11px', color: '#b7e4c7' }}>1-Click bundle order</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 🌦️ Ambient Weather-Aware Plant Health Forecast */}
+      <WeatherCareWidget />
 
       {/* The PlantMe Experience & Quality Standard */}
       <section style={{ marginBottom: '48px' }}>

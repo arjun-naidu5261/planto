@@ -1,5 +1,2942 @@
 [
   {
+    "id": "ORD-4722",
+    "invoiceNumber": "INV-2026-51351",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-441426",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "+91 98765 43210",
+    "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "8486",
+    "deliveryOtp": "4855",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "email": "delivery@planto.in",
+      "password": "delivery123",
+      "phone": "+91 98450 11223",
+      "address": "Indiranagar 100ft Road, Bengaluru, KA",
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "drivingLicense": "KA-01-2023-0098412",
+      "aadhaar": "4812-9901-3412",
+      "dlDoc": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+      "aadhaarDoc": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&q=80",
+      "status": "APPROVED",
+      "registeredAt": "2026-08-10",
+      "totalEarnings": 120,
+      "completedTrips": 2
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.975,
+      "lng": 77.641,
+      "heading": 90,
+      "updatedAt": "2026-10-16T19:04:01.441Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-16T19:04:01.426Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-51351)",
+        "time": "12:34 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "12:34 AM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "12:34 AM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "12:34 AM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "12:34 AM",
+        "completed": true
+      }
+    ]
+  },
+  {
+    "id": "ORD-6185",
+    "invoiceNumber": "INV-2026-63828",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p3",
+        "name": "Mini Jade Plant",
+        "price": 120,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 180,
+    "paymentMethod": "cod",
+    "paymentId": "pay_1792177435634",
+    "paymentStatus": "PAID",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 9,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9710",
+    "deliveryOtp": "9207",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:03:55.629Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-63828)",
+        "time": "12:33 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-2150",
+    "invoiceNumber": "INV-2026-28785",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-435602",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "6502",
+    "deliveryOtp": "6144",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:03:55.602Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-28785)",
+        "time": "12:33 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-9920",
+    "invoiceNumber": "INV-2026-76512",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-336552",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "1002",
+    "deliveryOtp": "5038",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:02:16.552Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-76512)",
+        "time": "12:32 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-4198",
+    "invoiceNumber": "INV-2026-17094",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Monstera Deliciosa",
+        "price": 499,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-307830",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9509",
+    "deliveryOtp": "8042",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:01:47.830Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-17094)",
+        "time": "12:31 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-9962",
+    "invoiceNumber": "INV-2026-30635",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-307799",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "3959",
+    "deliveryOtp": "1475",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:01:47.799Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-30635)",
+        "time": "12:31 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-8668",
+    "invoiceNumber": "INV-2026-21804",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Monstera Deliciosa",
+        "price": 499,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "pay_99887766",
+    "paymentStatus": "PAID",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9979",
+    "deliveryOtp": "9168",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:00:59.627Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-21804)",
+        "time": "12:30 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-7540",
+    "invoiceNumber": "INV-2026-50666",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-259598",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5116",
+    "deliveryOtp": "6910",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T19:00:59.598Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-50666)",
+        "time": "12:30 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-5097",
+    "invoiceNumber": "INV-2026-75779",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Monstera Deliciosa",
+        "price": 499,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-169487",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5599",
+    "deliveryOtp": "2430",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:59:29.487Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-75779)",
+        "time": "12:29 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-8739",
+    "invoiceNumber": "INV-2026-29497",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-169459",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "7866",
+    "deliveryOtp": "8479",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:59:29.459Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-29497)",
+        "time": "12:29 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-3175",
+    "invoiceNumber": "INV-2026-55002",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Monstera Deliciosa",
+        "price": 499,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-123434",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "3059",
+    "deliveryOtp": "6522",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:58:43.434Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-55002)",
+        "time": "12:28 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-6654",
+    "invoiceNumber": "INV-2026-46261",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-123397",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5454",
+    "deliveryOtp": "9803",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:58:43.397Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-46261)",
+        "time": "12:28 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-2331",
+    "invoiceNumber": "INV-2026-74121",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Monstera Deliciosa",
+        "price": 499,
+        "quantity": 1,
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-077262",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 12,
+    "customerEmail": "customer@plantme.in",
+    "address": "Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5995",
+    "deliveryOtp": "5949",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:57:57.262Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-74121)",
+        "time": "12:27 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-8018",
+    "invoiceNumber": "INV-2026-43423",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-077231",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9530",
+    "deliveryOtp": "5189",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:57:57.231Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-43423)",
+        "time": "12:27 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-1776",
+    "invoiceNumber": "INV-2026-75844",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-050019",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9989",
+    "deliveryOtp": "1730",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:57:30.019Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-75844)",
+        "time": "12:27 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-6288",
+    "invoiceNumber": "INV-2026-96209",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-943175",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "2399",
+    "deliveryOtp": "1831",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:55:43.175Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-96209)",
+        "time": "12:25 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-6486",
+    "invoiceNumber": "INV-2026-77816",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-874294",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "9654",
+    "deliveryOtp": "8076",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:54:34.295Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-77816)",
+        "time": "12:24 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-3490",
+    "invoiceNumber": "INV-2026-10268",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-842289",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "4769",
+    "deliveryOtp": "8130",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:54:02.289Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-10268)",
+        "time": "12:24 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-6020",
+    "invoiceNumber": "INV-2026-56139",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-769072",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5568",
+    "deliveryOtp": "2542",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:52:49.072Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-56139)",
+        "time": "12:22 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-5980",
+    "invoiceNumber": "INV-2026-12001",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-729093",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "6331",
+    "deliveryOtp": "3616",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:52:09.093Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-12001)",
+        "time": "12:22 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-4585",
+    "invoiceNumber": "INV-2026-96323",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-674155",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "3318",
+    "deliveryOtp": "2638",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:51:14.155Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-96323)",
+        "time": "12:21 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-8923",
+    "invoiceNumber": "INV-2026-20243",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-661281",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "8464",
+    "deliveryOtp": "8816",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:51:01.281Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-20243)",
+        "time": "12:21 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-1441",
+    "invoiceNumber": "INV-2026-73610",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-637272",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "2064",
+    "deliveryOtp": "3063",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:50:37.272Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-73610)",
+        "time": "12:20 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-5480",
+    "invoiceNumber": "INV-2026-75286",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-391852",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "8394",
+    "deliveryOtp": "5146",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:46:31.852Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-75286)",
+        "time": "12:16 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-9651",
+    "invoiceNumber": "INV-2026-77616",
+    "date": "Oct 17, 2026",
+    "items": [
+      {
+        "id": "bundle_oxygen_starter",
+        "name": "Urban Balcony Oxygen Starter Kit",
+        "price": 429,
+        "quantity": 1,
+        "isBundle": true,
+        "bundleId": "bundle_oxygen_starter",
+        "vendorId": "v1"
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "Express Hydration",
+    "total": 489,
+    "paymentMethod": "cod",
+    "paymentId": "POD-348636",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "commissionRate": 0.05,
+    "platformCommission": 24,
+    "customerEmail": "customer@plantme.in",
+    "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5183",
+    "deliveryOtp": "5932",
+    "deliveryFee": 60,
+    "assignedRiderId": null,
+    "rider": null,
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 101, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:45:48.636Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-77616)",
+        "time": "12:15 AM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-7372",
+    "invoiceNumber": "INV-2026-23272",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-176302",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "1493",
+    "deliveryOtp": "2286",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "email": "delivery@planto.in",
+      "password": "delivery123",
+      "phone": "+91 98450 11223",
+      "address": "Indiranagar 100ft Road, Bengaluru, KA",
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "drivingLicense": "KA-01-2023-0098412",
+      "aadhaar": "4812-9901-3412",
+      "dlDoc": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+      "aadhaarDoc": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&q=80",
+      "status": "APPROVED",
+      "registeredAt": "2026-08-10",
+      "totalEarnings": 60,
+      "completedTrips": 1
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.975,
+      "lng": 77.641,
+      "heading": 90,
+      "updatedAt": "2026-10-16T18:26:16.317Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-16T18:26:16.302Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-23272)",
+        "time": "11:56 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "11:56 PM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "11:56 PM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "11:56 PM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "11:56 PM",
+        "completed": true
+      }
+    ]
+  },
+  {
+    "id": "ORD-4340",
+    "invoiceNumber": "INV-2026-21044",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-669540",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "1482",
+    "deliveryOtp": "4585",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "email": "delivery@planto.in",
+      "password": "delivery123",
+      "phone": "+91 98450 11223",
+      "address": "Indiranagar 100ft Road, Bengaluru, KA",
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "drivingLicense": "KA-01-2023-0098412",
+      "aadhaar": "4812-9901-3412",
+      "dlDoc": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+      "aadhaarDoc": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&q=80",
+      "status": "APPROVED",
+      "registeredAt": "2026-08-10"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.975,
+      "lng": 77.641,
+      "heading": 90,
+      "updatedAt": "2026-10-16T18:17:49.553Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-16T18:17:49.540Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-21044)",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "11:47 PM",
+        "completed": true
+      }
+    ]
+  },
+  {
+    "id": "ORD-7805",
+    "invoiceNumber": "INV-2026-26520",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-636838",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "8251",
+    "deliveryOtp": "8134",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "email": "delivery@planto.in",
+      "password": "delivery123",
+      "phone": "+91 98450 11223",
+      "address": "Indiranagar 100ft Road, Bengaluru, KA",
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "drivingLicense": "KA-01-2023-0098412",
+      "aadhaar": "4812-9901-3412",
+      "dlDoc": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80",
+      "aadhaarDoc": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&q=80",
+      "status": "APPROVED",
+      "registeredAt": "2026-08-10"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.975,
+      "lng": 77.641,
+      "heading": 90,
+      "updatedAt": "2026-10-16T18:17:16.852Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-16T18:17:16.838Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-26520)",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "11:47 PM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-5604",
+    "invoiceNumber": "INV-2026-70777",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 240,
+    "paymentMethod": "cod",
+    "paymentId": "POD-251675",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Anita Roy",
+    "phone": "+91 98765 43210",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "1482",
+    "deliveryOtp": "8904",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_999_competing_rider",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
+      "rating": 4.9,
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Villa 14, Palm Meadows, Whitefield, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.975,
+      "lng": 77.641,
+      "heading": 90,
+      "updatedAt": "2026-10-16T18:10:51.683Z"
+    },
+    "etaMinutes": 2,
+    "createdAt": "2026-10-16T18:10:51.675Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-70777)",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "11:40 PM",
+        "completed": true
+      }
+    ]
+  },
+  {
+    "id": "ORD-7226",
+    "invoiceNumber": "INV-2026-39299",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 999999
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 179999880,
+    "paymentMethod": "cod",
+    "paymentId": "POD-251674",
+    "paymentStatus": "PENDING_AT_DOORSTEP",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Flat 402, Green Heights, Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "2068",
+    "deliveryOtp": "8492",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
+      "rating": 4.9,
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 402, Green Heights, Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:10:51.674Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via COD (Inv: INV-2026-39299)",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "ORD-5082",
+    "invoiceNumber": "INV-2026-53323",
+    "date": "Oct 16, 2026",
+    "items": [
+      {
+        "id": "p1",
+        "name": "Premium Golden Pothos (Money Plant)",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "status": "Placed",
+    "deliveryType": "PlantMe Express (20 min)",
+    "total": 1,
+    "paymentMethod": "wallet",
+    "paymentId": "WAL-251671",
+    "paymentStatus": "PAID",
+    "vendorId": "v1",
+    "vendorName": "PlantMe Certified Local Nursery",
+    "address": "Flat 402, Green Heights, Indiranagar, Bengaluru",
+    "buildingImage": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&auto=format&fit=crop&q=80",
+    "recipientName": "Arjun Patel",
+    "phone": "+91 88856 00899",
+    "landmark": "Near Gate 2 Security Cabin",
+    "deliveryInstruction": "Eco-friendly hydration wrap requested.",
+    "pickupPin": "5226",
+    "deliveryOtp": "8083",
+    "deliveryFee": 60,
+    "assignedRiderId": "r_101",
+    "rider": {
+      "id": "r_101",
+      "name": "Ramu Prasad",
+      "phone": "+91 98450 11223",
+      "rating": 4.9,
+      "vehicle": "Hero Electric Scooter",
+      "vehicleNumber": "KA-05-EQ-8821",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+    },
+    "nurseryOrigin": "PlantMe Certified Local Nursery - Indiranagar",
+    "nurseryCoords": {
+      "lat": 12.9716,
+      "lng": 77.6412,
+      "name": "PlantMe Certified Local Nursery"
+    },
+    "customerCoords": {
+      "lat": 12.9784,
+      "lng": 77.6408,
+      "address": "Flat 402, Green Heights, Indiranagar, Bengaluru"
+    },
+    "riderCoords": {
+      "lat": 12.9722,
+      "lng": 77.6414,
+      "heading": 45
+    },
+    "etaMinutes": 18,
+    "createdAt": "2026-10-16T18:10:51.671Z",
+    "timeline": [
+      {
+        "status": "Placed",
+        "title": "Order Placed & Paid",
+        "desc": "Customer paid via WALLET (Inv: INV-2026-53323)",
+        "time": "11:40 PM",
+        "completed": true
+      },
+      {
+        "status": "Preparing",
+        "title": "Nursery Selecting & Eco-Wrapping",
+        "desc": "Selecting healthy plant, inspecting soil moisture and wrapping",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pickup",
+        "title": "Eco-Crate Packed",
+        "desc": "Ready for Rider Pickup PIN verification",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "title": "Rider Dispatched (En Route)",
+        "desc": "Rider verified PIN and traveling to delivery address",
+        "time": "",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "title": "Delivered with Customer OTP",
+        "desc": "Customer verified OTP upon arrival",
+        "time": "",
+        "completed": false
+      }
+    ]
+  },
+  {
     "id": "ORD-8920",
     "date": "Oct 03, 2026",
     "items": [
@@ -16,7 +2953,7 @@
         "quantity": 1
       }
     ],
-    "status": "Placed",
+    "status": "Picked Up",
     "deliveryType": "PlantMe Express (20 min)",
     "total": 548,
     "vendorId": "v1",
@@ -82,8 +3019,8 @@
         "status": "Picked Up",
         "title": "Rider Dispatched",
         "desc": "Pickup PIN verified; Rider en-route via EV cargo bike",
-        "time": "",
-        "completed": false
+        "time": "03:55 PM",
+        "completed": true
       },
       {
         "status": "Delivered",

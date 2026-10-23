@@ -1,5 +1,15 @@
 [
   {
+    "id": "r_117284",
+    "active": true,
+    "title": "Calathea Orbifolia",
+    "type": "Water",
+    "frequency": "Every 3 days",
+    "nextDate": "2026-10-15",
+    "health": "82% Recovering (Under Doctor Plan)",
+    "doctorPrescription": "Apply neem spray & provide indirect morning sunlight."
+  },
+  {
     "id": "r1",
     "active": true,
     "title": "Ficus Bonsai (Bonsai Buddy)",

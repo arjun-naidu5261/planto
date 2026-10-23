@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 import LiveOrderTrackerModal from '../components/modals/LiveOrderTrackerModal';
+import PaymentGatewayModal from '../components/modals/PaymentGatewayModal';
 
 export default function CartPage() {
   const { 
@@ -90,12 +91,15 @@ export default function CartPage() {
     }
   };
 
-  const handleCheckout = async () => {
-    if (wallet < grandTotal) {
-      alert(`Insufficient wallet balance. Grand total is ₹${grandTotal}, your wallet balance is ₹${wallet}.`);
-      return;
-    }
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [toastAlert, setToastAlert] = useState(null);
 
+  const handleOpenPayment = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = async (paymentDetails) => {
+    setShowPaymentModal(false);
     const firstVendor = 'PlantMe Certified Local Nursery';
     
     if (isGift) {
@@ -136,18 +140,18 @@ export default function CartPage() {
       `${deliveryType}${deliveryTimingSlot === 'midnight' ? ' (Scheduled Midnight Slot)' : deliveryTimingSlot === 'morning' ? ' (Morning Surprise Slot)' : ''}`, 
       grandTotal, 
       firstVendor,
-      additionalItems
+      additionalItems,
+      paymentDetails
     );
+
     if (res.success) {
       if (addCarePass) {
         setHasCarePass(true);
       }
       setPlacedOrder(res.order);
-      setShowLiveTracker(true);
-      // Simulate live order tracking progress
-      setTimeout(() => setTrackerStage(2), 2500);
-      setTimeout(() => setTrackerStage(3), 5500);
-      setTimeout(() => setTrackerStage(4), 8500);
+      setShowInteractiveModal(true);
+      setToastAlert(`🌿 Payment Verified (${paymentDetails.paymentMethod.toUpperCase()})! WhatsApp order confirmation dispatched to +91 88856 00899.`);
+      setTimeout(() => setToastAlert(null), 6000);
       await loadAllData();
     } else {
       alert(res.message || "Failed to complete checkout.");
@@ -805,11 +809,38 @@ export default function CartPage() {
             </div>
           </div>
 
-          <button className="btn" id="cart-checkout-submit" onClick={handleCheckout} style={{ width: '100%', justifyContent: 'center', height: '48px', borderRadius: '12px', fontSize: '15px', fontWeight: 800 }}>
-            Pay ₹{grandTotal} from Wallet (Bal: ₹{Math.round(wallet)}) →
+          {toastAlert && (
+            <div style={{
+              background: '#25D366',
+              color: '#ffffff',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              fontSize: '13px',
+              fontWeight: 800,
+              marginBottom: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 12px rgba(37,211,102,0.3)'
+            }}>
+              <span>💬</span>
+              <span>{toastAlert}</span>
+            </div>
+          )}
+
+          <button className="btn" id="cart-checkout-submit" onClick={handleOpenPayment} style={{ width: '100%', justifyContent: 'center', height: '50px', borderRadius: '12px', fontSize: '15px', fontWeight: 800 }}>
+            Proceed to Pay ₹{grandTotal} (UPI, Cards, Wallet) →
           </button>
         </div>
       </div>
+
+      <PaymentGatewayModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        amount={grandTotal}
+        walletBalance={wallet}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
 
       <LiveOrderTrackerModal
         isOpen={showInteractiveModal}

@@ -21,7 +21,7 @@
       "Medium",
       "Large"
     ],
-    "quantity": 10,
+    "quantity": 23,
     "images": [
       "/images/golden_pothos.png"
     ],
@@ -88,7 +88,7 @@
     "sizesAvailable": [
       "Small"
     ],
-    "quantity": 25,
+    "quantity": 24,
     "images": [
       "/images/mini_jade.png"
     ],
@@ -255,7 +255,7 @@
       "5kg Bag",
       "10kg Bag"
     ],
-    "quantity": 40,
+    "quantity": 22,
     "images": [
       "/images/potting_mix.png"
     ],
@@ -289,7 +289,7 @@
       "2kg Bag",
       "5kg Bag"
     ],
-    "quantity": 50,
+    "quantity": 32,
     "images": [
       "/images/vermicompost.png"
     ],
@@ -324,7 +324,7 @@
       "8 inch",
       "10 inch"
     ],
-    "quantity": 45,
+    "quantity": 27,
     "images": [
       "/images/terracotta_pot.png"
     ],
@@ -580,7 +580,7 @@
     "type": "bouquet",
     "price": 799,
     "vendorId": "v3",
-    "rating": 5.0,
+    "rating": 5,
     "reviewsCount": 51,
     "description": "Grand luxury celebration bouquet featuring long-stem Dutch red roses, fragrant oriental white lilies, and fresh asparagus foliage. Perfect for anniversaries and birthdays.",
     "height": "55 cm",
