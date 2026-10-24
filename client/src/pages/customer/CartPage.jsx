@@ -13,7 +13,7 @@ export default function CartPage() {
   } = useApp();
 
   const navigate = useNavigate();
-  const [deliveryType, setDeliveryType] = useState('Express Nursery Delivery');
+  const [deliveryType, setDeliveryType] = useState('Express Doorstep Delivery');
   const [couponCode, setCouponCode] = useState('');
   const [couponMessage, setCouponMessage] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -23,9 +23,9 @@ export default function CartPage() {
 
   // Delivery costs
   const getDeliveryCharge = () => {
-    if (deliveryType === 'Express Nursery Delivery') return 30;
-    if (deliveryType === 'Standard Courier') return 15;
-    return 0; // Reserve & Collect
+    if (deliveryType === 'Express Doorstep Delivery') return 30;
+    if (deliveryType === 'Standard Scheduled Delivery') return 15;
+    return 30;
   };
 
   const deliveryCharge = getDeliveryCharge();
@@ -234,9 +234,8 @@ export default function CartPage() {
               onChange={(e) => setDeliveryType(e.target.value)}
               style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ccc', fontWeight: 600, fontSize: '13px' }}
             >
-              <option value="Express Nursery Delivery">Express Nursery Delivery (20-30 Mins) - ₹30</option>
-              <option value="Reserve & Collect">Reserve & Pickup at Nursery Counter - Free</option>
-              <option value="Standard Courier">Standard Shipping (1-2 Days) - ₹15</option>
+              <option value="Express Doorstep Delivery">Express Doorstep Delivery (20-30 Mins) - ₹30</option>
+              <option value="Standard Scheduled Delivery">Standard Scheduled Delivery (1-2 Days) - ₹15</option>
             </select>
           </div>
 

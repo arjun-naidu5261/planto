@@ -93,7 +93,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
     try {
       await api.reactToStory(currentStory.id, { comment: questionText, plantId: currentSlide.plantId });
     } catch (e) {}
-    setReactionSent('Message sent to stall owner!');
+    setReactionSent('Message sent to botanical concierge!');
     setQuestionText('');
     setTimeout(() => setReactionSent(''), 3000);
   };

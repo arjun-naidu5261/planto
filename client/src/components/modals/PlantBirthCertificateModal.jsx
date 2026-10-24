@@ -24,7 +24,7 @@ export default function PlantBirthCertificateModal() {
   const botanicalName = certificateData.botanicalName || 'Ficus microcarpa';
   const parentName = certificateData.parentName || 'Arjun Patel';
   const adoptionDate = certificateData.adoptionDate || 'Sep 11, 2026';
-  const originNursery = certificateData.nurseryOrigin || 'PlantMe Certified Partner Nursery (Bengaluru)';
+  const originNursery = certificateData.botanicalProvenance || certificateData.nurseryOrigin || 'PlantMe Botanical Research & Propagation Center';
   const oxygenRating = certificateData.oxygenRating || '+1.4 Liters Pure O₂ / Day';
   const soilBlend = certificateData.soilBlend || 'Organic Cocopeat, Perlite & Vermicompost';
   const planterType = certificateData.planterType || 'Handcrafted Eco Ceramic Pot';
@@ -403,7 +403,7 @@ export default function PlantBirthCertificateModal() {
                 fontSize: '11.5px'
               }}>
                 <div>
-                  <div style={{ color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', fontSize: '10px' }}>NURSERY ORIGIN</div>
+                  <div style={{ color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', fontSize: '10px' }}>BOTANICAL PROVENANCE</div>
                   <div style={{ fontWeight: 800, color: '#1b4332', marginTop: '2px' }}>{originNursery}</div>
                 </div>
                 <div>
@@ -444,7 +444,7 @@ export default function PlantBirthCertificateModal() {
                   <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#1b4332' }}>{botanistName}</div>
                   <div style={{ fontSize: '9.5px', color: '#666' }}>{botanistTitle}</div>
                   <div style={{ fontSize: '8.5px', color: '#2d6a4f', fontWeight: 700, marginTop: '2px' }}>
-                    Digitally Sealed • Nursery Inspected
+                    Digitally Sealed • PlantMe Health Inspected
                   </div>
                 </div>
 

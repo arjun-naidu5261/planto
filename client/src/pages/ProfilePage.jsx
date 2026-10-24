@@ -1290,7 +1290,7 @@ export default function ProfilePage({ defaultTab }) {
                       </span>
                     </div>
                     <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                      Date: {ord.date} • Delivery Mode: {ord.deliveryType} • Fulfillment: {ord.vendorName || 'PlantMe Certified Nursery'}
+                      Date: {ord.date} • Delivery Mode: {ord.deliveryType} • Fulfillment: {ord.vendorName || 'PlantMe Botanical Hub'}
                     </div>
                     <div style={{ fontSize: '13px', marginTop: '8px', background: '#fcfcfc', padding: '10px', borderRadius: '8px' }}>
                       <strong>Items:</strong> {ord.items.map(item => `${item.name} (x${item.quantity})`).join(', ')}
@@ -1500,11 +1500,11 @@ export default function ProfilePage({ defaultTab }) {
                   <svg width="100%" height="100%" viewBox="0 0 500 160">
                     <line x1="40" y1="80" x2="460" y2="80" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="8 6" />
                     
-                    {/* Nursery pin */}
+                    {/* PlantMe Hub pin */}
                     <g transform="translate(60, 80)">
                       <circle cx="0" cy="0" r="16" fill="#15803d" />
                       <text x="0" y="5" fill="#fff" fontSize="14" textAnchor="middle">🌿</text>
-                      <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">NURSERY</text>
+                      <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">PLANTME HUB</text>
                     </g>
 
                     {/* Rider Scooter */}
@@ -1546,15 +1546,15 @@ export default function ProfilePage({ defaultTab }) {
                   </div>
 
                   <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Certified Local Nursery</span>
+                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Fulfillment & Support</span>
                     <strong style={{ display: 'block', fontSize: '14px', color: '#0f172a', margin: '4px 0 2px 0' }}>
-                      {activeOrder.vendorName || 'PlantMe Certified Local Nursery'}
+                      PlantMe Customer Concierge
                     </strong>
                     <span style={{ fontSize: '12px', color: '#16a34a', display: 'block', marginBottom: '10px' }}>
-                      ● Botanist Inspection Passed
+                      ● Botanical Health Desk
                     </span>
                     <a href="tel:+918885600899" style={{ color: '#15803d', fontSize: '12px', fontWeight: 800, textDecoration: 'none' }}>
-                      📞 Contact Nursery
+                      📞 Call Support
                     </a>
                   </div>
                 </div>
@@ -2591,7 +2591,7 @@ export default function ProfilePage({ defaultTab }) {
                       />
                       <div>
                         <div style={{ fontWeight: 800, fontSize: '13px', color: '#1b4332' }}>Free Express Replacement</div>
-                        <div style={{ fontSize: '11px', color: '#64748b' }}>Dispatched via PlantMe Express cargo directly from our certified nursery within 4 hours.</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>Dispatched via PlantMe Express cargo directly from our botanical center within 4 hours.</div>
                       </div>
                     </label>
 

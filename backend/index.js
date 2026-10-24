@@ -417,7 +417,35 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 
+// --- SOURCING & SUPPLIER PRIVACY PROTECTION ---
+// Helper: Resolve requester authorization role (Admin, Vendor, Delivery, Customer)
+const getRequestRole = (req) => {
+  const roleHeader = req.headers['x-user-role'] || req.headers['x-role'] || req.query.role || '';
+  const emailHeader = (req.headers['x-user-email'] || req.headers['x-admin-email'] || req.query.userEmail || '').toLowerCase();
+  const authHeader = req.headers['authorization'] || '';
+
+  if (roleHeader === 'Admin' || emailHeader.includes('admin') || authHeader.includes('admin')) {
+    return 'Admin';
+  }
+  if (roleHeader === 'Vendor' || emailHeader.includes('vendor') || authHeader.includes('vendor')) {
+    return 'Vendor';
+  }
+  if (roleHeader === 'Delivery' || roleHeader === 'Delivery Partner' || emailHeader.includes('delivery')) {
+    return 'Delivery';
+  }
+  return 'Customer';
+};
+
 app.get('/api/vendors', (req, res) => {
+  const role = getRequestRole(req);
+  // Strict Security: Supplier sourcing directory is confidential business data
+  if (role !== 'Admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Access restricted: Nursery sourcing locations, supplier identities, and procurement relationships are confidential business information.'
+    });
+  }
+
   const vendors = db.getVendors();
   const { status } = req.query;
   const vendorSubs = db.getVendorSubscriptions ? db.getVendorSubscriptions() : [];
@@ -447,6 +475,10 @@ app.get('/api/vendors', (req, res) => {
 });
 
 app.get('/api/vendors/pending', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
   const vendors = db.getVendors();
   res.json(vendors.filter(v => v.status === 'PENDING_APPROVAL'));
 });
@@ -513,10 +545,25 @@ app.post('/api/vendors', (req, res) => {
 
 app.get('/api/vendors/:id', (req, res, next) => {
   if (req.params.id === 'plans' || req.params.id === 'pending') return next();
+  const role = getRequestRole(req);
+  const userEmail = (req.headers['x-user-email'] || req.query.userEmail || '').toLowerCase();
   const vendors = db.getVendors();
   const vendor = vendors.find(v => v.id === req.params.id);
   if (!vendor) return res.status(404).json({ message: 'Vendor not found' });
-  
+
+  // Only Admin or the authentic matching Vendor themselves can inspect vendor details
+  const isAuthorizedVendor = role === 'Vendor' && (
+    (vendor.email && vendor.email.toLowerCase() === userEmail) ||
+    (req.headers['x-vendor-id'] && req.headers['x-vendor-id'] === req.params.id)
+  );
+
+  if (role !== 'Admin' && !isAuthorizedVendor) {
+    return res.status(403).json({
+      success: false,
+      message: 'Access restricted: Sourcing locations and supplier profiles are confidential.'
+    });
+  }
+
   // Include vendor products too
   const products = db.getProducts();
   const vendorProducts = products.filter(p => p.vendorId === req.params.id);
@@ -524,8 +571,12 @@ app.get('/api/vendors/:id', (req, res, next) => {
   res.json({ ...vendor, products: vendorProducts });
 });
 
-// Vendor adds review
+// Vendor adds review (Internal)
 app.post('/api/vendors/:id/reviews', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin' && role !== 'Vendor') {
+    return res.status(403).json({ success: false, message: 'Vendor reviews are disabled for public access.' });
+  }
   const { user, rating, comment } = req.body;
   const vendors = db.getVendors();
   const index = vendors.findIndex(v => v.id === req.params.id);
@@ -539,7 +590,6 @@ app.post('/api/vendors/:id/reviews', (req, res) => {
   };
   
   vendors[index].reviews = [newReview, ...vendors[index].reviews];
-  // Recalculate average rating & reviewsCount
   const totalRating = vendors[index].reviews.reduce((sum, r) => sum + r.rating, 0);
   vendors[index].rating = parseFloat((totalRating / vendors[index].reviews.length).toFixed(1));
   vendors[index].reviewsCount = vendors[index].reviews.length;
@@ -570,14 +620,36 @@ app.get('/api/products', (req, res) => {
     products = products.filter(p => p.type.toLowerCase() === type.toLowerCase());
   }
   
-  res.json(products);
+  const role = getRequestRole(req);
+  if (role === 'Admin' || role === 'Vendor') {
+    return res.json(products);
+  }
+
+  // PUBLIC CUSTOMER PAYLOAD: Redact confidential supplier attributes
+  const sanitized = products.map(({ vendorId, supplierAddress, supplierName, procurementCost, supplierCost, ...p }) => ({
+    ...p,
+    fulfillment: 'PlantMe Express Fulfillment Hub'
+  }));
+
+  res.json(sanitized);
 });
 
 app.get('/api/products/:id', (req, res) => {
   const products = db.getProducts();
   const product = products.find(p => p.id === req.params.id);
   if (!product) return res.status(404).json({ message: 'Product not found' });
-  res.json(product);
+
+  const role = getRequestRole(req);
+  if (role === 'Admin' || role === 'Vendor') {
+    return res.json(product);
+  }
+
+  // PUBLIC CUSTOMER PAYLOAD: Redact confidential supplier attributes
+  const { vendorId, supplierAddress, supplierName, procurementCost, supplierCost, ...sanitized } = product;
+  res.json({
+    ...sanitized,
+    fulfillment: 'PlantMe Express Fulfillment Hub'
+  });
 });
 
 // Vendor management: add new product
@@ -651,7 +723,72 @@ app.get('/api/guides', (req, res) => {
 
 // --- ORDERS ---
 app.get('/api/orders', (req, res) => {
-  res.json(db.getOrders());
+  const role = getRequestRole(req);
+  const userEmail = (req.headers['x-user-email'] || req.query.email || req.query.customerEmail || '').toLowerCase();
+  const userPhone = req.headers['x-user-phone'] || req.query.phone || '';
+  const vendorId = req.headers['x-vendor-id'] || req.query.vendorId || '';
+  const riderId = req.headers['x-rider-id'] || req.query.riderId || '';
+
+  const allOrders = db.getOrders();
+
+  // 1. Authorized Administrators: Full fulfillment ledger
+  if (role === 'Admin') {
+    return res.json(allOrders);
+  }
+
+  // 2. Authorized Nursery Vendors: Only their assigned orders
+  if (role === 'Vendor') {
+    const vendorOrders = allOrders.filter(o => 
+      o.vendorId === vendorId || 
+      (o.vendorEmail && o.vendorEmail.toLowerCase() === userEmail)
+    );
+    return res.json(vendorOrders);
+  }
+
+  // 3. Authorized Delivery Partners: Only their assigned delivery tasks
+  if (role === 'Delivery') {
+    const riderOrders = allOrders.filter(o => 
+      o.assignedRiderId === riderId || 
+      (o.rider?.phone && userPhone && o.rider.phone.includes(userPhone.slice(-8)))
+    );
+    return res.json(riderOrders);
+  }
+
+  // 4. Customers / Public: Filter by customer identity and sanitize confidential supplier data
+  let customerOrders = allOrders;
+  if (userEmail || userPhone) {
+    customerOrders = allOrders.filter(o => {
+      const emailMatch = userEmail && (o.customerEmail || '').toLowerCase() === userEmail;
+      const phoneMatch = userPhone && (o.phone || '').includes(userPhone.slice(-8));
+      return emailMatch || phoneMatch;
+    });
+  }
+
+  const sanitizedOrders = customerOrders.map(o => {
+    const { 
+      pickupPin, // Redact confidential pickup PIN
+      nurseryCoords, // Redact supplier coordinates
+      vendorId, // Redact internal supplier ID
+      platformCommission,
+      platformCommissionRate,
+      commissionRate,
+      ...safeOrder 
+    } = o;
+
+    return {
+      ...safeOrder,
+      vendorName: 'PlantMe Botanical Fulfillment Hub',
+      nurseryOrigin: 'PlantMe Express Botanical Hub',
+      items: (o.items || []).map(({ vendorId: _, ...item }) => item),
+      timeline: (o.timeline || []).map(t => ({
+        ...t,
+        title: (t.title || '').replace(/nursery/gi, 'PlantMe Hub'),
+        desc: (t.desc || '').replace(/nursery/gi, 'PlantMe Hub')
+      }))
+    };
+  });
+
+  res.json(sanitizedOrders);
 });
 
 app.post('/api/orders', (req, res) => {
@@ -948,11 +1085,10 @@ app.get('/api/orders/:id/live-tracking', (req, res) => {
     deliveryOtp: order.deliveryOtp || '8204',
     // Sensitive pickup PIN is intentionally redacted for customer
     etaMinutes: order.etaMinutes || 12,
-    items: order.items || [],
+    items: (order.items || []).map(({ vendorId: _, ...item }) => item),
     total: order.total || 0,
     address: order.address || 'Bengaluru',
-    vendorName: order.vendorName || 'PlantMe Certified Local Nursery',
-    nurseryCoords: order.nurseryCoords || { lat: 12.9716, lng: 77.6412, name: 'Local Nursery' },
+    fulfillmentHub: 'PlantMe Express Botanical Hub',
     customerCoords: order.customerCoords || { lat: 12.9784, lng: 77.6408, address: order.address },
     riderCoords: order.riderCoords || { lat: 12.9745, lng: 77.6418, heading: 45 },
     rider: order.rider || {
@@ -961,7 +1097,16 @@ app.get('/api/orders/:id/live-tracking', (req, res) => {
       rating: 4.9,
       vehicle: 'Hero Electric Scooter • KA-05-EQ-8821'
     },
-    timeline: order.timeline || []
+    supportContact: {
+      phone: '+91 88856 00899',
+      email: 'care@plantme.in',
+      name: 'PlantMe Botanical Concierge'
+    },
+    timeline: (order.timeline || []).map(t => ({
+      ...t,
+      title: (t.title || '').replace(/nursery/gi, 'PlantMe Hub'),
+      desc: (t.desc || '').replace(/nursery/gi, 'PlantMe Hub')
+    }))
   });
 });
 
@@ -1104,7 +1249,7 @@ app.get('/api/orders/:id/telemetry', (req, res) => {
     stageIndex: currentIdx >= 0 ? currentIdx : 1,
     riderCoords: order.riderCoords || { lat: 12.9722, lng: 77.6414, heading: 45 },
     customerCoords: order.customerCoords || { lat: 12.9784, lng: 77.6408 },
-    nurseryCoords: order.nurseryCoords || { lat: 12.9716, lng: 77.6412 },
+    fulfillmentHub: 'PlantMe Express Botanical Hub',
     etaMinutes: order.etaMinutes || 14,
     deliveryOtp: order.deliveryOtp || '8401',
     rider: order.rider || { name: 'Ramu Prasad', phone: '+91 98450 11223', rating: 4.9, vehicle: 'Hero Vida V1 Pro EV' },
@@ -1223,12 +1368,24 @@ app.post('/api/ai/sync-to-garden', (req, res) => {
   });
 });
 
-// --- NURSERY DAILY LIVE STORIES APIS ---
+// --- PLANTME DAILY BOTANICAL LIVE UNBOXINGS ---
 app.get('/api/stories', (req, res) => {
   const storiesFile = path.join(__dirname, 'data', 'stories.json');
   try {
-    const stories = JSON.parse(fs.readFileSync(storiesFile, 'utf8') || '[]');
-    res.json({ success: true, stories });
+    const raw = JSON.parse(fs.readFileSync(storiesFile, 'utf8') || '[]');
+    // Sanitize stories: brand under PlantMe Botanical Hub without supplier or owner identities
+    const sanitizedStories = raw.map(s => ({
+      id: s.id,
+      vendorName: 'PlantMe Botanical Hub',
+      vendorAvatar: '/logo.png',
+      verified: true,
+      hasUnread: s.hasUnread,
+      slides: (s.slides || []).map(slide => ({
+        ...slide,
+        caption: (slide.caption || '').replace(/nursery/gi, 'PlantMe Hub')
+      }))
+    }));
+    res.json({ success: true, stories: sanitizedStories });
   } catch (e) {
     res.json({ success: true, stories: [] });
   }

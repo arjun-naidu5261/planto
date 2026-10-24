@@ -336,17 +336,22 @@ export default function App() {
 
   const fetchAdminData = async () => {
     try {
-      const vRes = await fetch(`${API_BASE}/vendors`);
+      const adminHeaders = {
+        'x-user-role': 'Admin',
+        'x-admin-email': 'admin@plantme.in'
+      };
+
+      const vRes = await fetch(`${API_BASE}/vendors`, { headers: adminHeaders });
       const vData = await vRes.json();
-      setVendors(vData);
+      setVendors(Array.isArray(vData) ? vData : []);
 
-      const pRes = await fetch(`${API_BASE}/products`);
+      const pRes = await fetch(`${API_BASE}/products`, { headers: adminHeaders });
       const pData = await pRes.json();
-      setProducts(pData);
+      setProducts(Array.isArray(pData) ? pData : []);
 
-      const oRes = await fetch(`${API_BASE}/orders`);
+      const oRes = await fetch(`${API_BASE}/orders`, { headers: adminHeaders });
       const oData = await oRes.json();
-      setOrders(oData);
+      setOrders(Array.isArray(oData) ? oData : []);
 
       const cRes = await fetch(`${API_BASE}/categories`);
       const cData = await cRes.json();

@@ -59,22 +59,44 @@ export const api = {
     return handleResponse(res);
   },
 
-  // Vendors
+  // Vendors (Restricted to Authorized Operational Staff)
   getVendors: async () => {
-    const res = await fetch(`${API_BASE}/vendors`);
-    return handleResponse(res);
+    try {
+      const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+      const headers = {};
+      if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+      if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+      const res = await fetch(`${API_BASE}/vendors`, { headers });
+      if (!res.ok) return [];
+      return res.json();
+    } catch {
+      return [];
+    }
   },
   addVendor: async (vendorData) => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = { 'Content-Type': 'application/json' };
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
     const res = await fetch(`${API_BASE}/vendors`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(vendorData)
     });
     return handleResponse(res);
   },
   getVendorById: async (id) => {
-    const res = await fetch(`${API_BASE}/vendors/${id}`);
-    return handleResponse(res);
+    try {
+      const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+      const headers = {};
+      if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+      if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+      const res = await fetch(`${API_BASE}/vendors/${id}`, { headers });
+      if (!res.ok) return null;
+      return res.json();
+    } catch {
+      return null;
+    }
   },
   addVendorReview: async (vendorId, reviewData) => {
     const res = await fetch(`${API_BASE}/vendors/${vendorId}/reviews`, {

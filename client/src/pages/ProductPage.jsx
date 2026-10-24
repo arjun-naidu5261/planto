@@ -142,7 +142,7 @@ export default function ProductPage() {
 
           <div style={{ marginTop: '10px', fontSize: '11px', color: '#166534', background: '#f0fdf4', padding: '8px 12px', borderRadius: '8px', border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>✓</span>
-            <span><strong>PlantMe Inspection Verified:</strong> Fresh batch photographed today at certified partner nursery.</span>
+            <span><strong>PlantMe Inspection Verified:</strong> Fresh batch inspected today at PlantMe Botanical Fulfillment Hub.</span>
           </div>
         </div>
         
@@ -319,7 +319,7 @@ export default function ProductPage() {
                   Verified Digital Plant Passport & Care Diary
                 </div>
                 <div style={{ fontSize: '11px', color: '#15803d', marginTop: '2px' }}>
-                  Botanical provenance, growth milestones, and nursery origin.
+                  Botanical provenance, growth milestones, and propagation history.
                 </div>
               </div>
             </div>
@@ -388,13 +388,13 @@ export default function ProductPage() {
               </div>
 
               <div style={{ background: '#f8faf9', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px', fontSize: '12px', color: '#475569', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div><strong>Dispatch Partner:</strong> Certified Partner Nursery (Bengaluru)</div>
+                <div><strong>Fulfillment:</strong> PlantMe Express Botanical Hub</div>
                 <div><strong>Batch Inspected:</strong> Today at 09:30 AM IST by PlantMe Certified Botanist</div>
                 <div><strong>Vitality Score:</strong> 98% Health • Roots Hydrated in Organic Cocopeat</div>
               </div>
 
               <p style={{ fontSize: '13px', color: '#555', marginBottom: '20px', lineHeight: 1.5 }}>
-                Unlike generic online stores that use stock 3D renders, PlantMe photographs the actual batch currently in stock at our certified nursery. What you see here is the exact healthy, inspected plant our EV rider will deliver!
+                Unlike generic online stores that use stock 3D renders, PlantMe photographs the actual batch currently in stock at our botanical center. What you see here is the exact healthy, inspected plant our EV rider will deliver!
               </p>
 
               <button 

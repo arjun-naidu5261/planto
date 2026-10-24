@@ -76,7 +76,7 @@ export default function CategoryModal() {
       dbType = 'essential';
     }
 
-    navigate('/nurseries');
+    navigate('/?category=' + encodeURIComponent(selectedCategoryName));
   };
 
   return (

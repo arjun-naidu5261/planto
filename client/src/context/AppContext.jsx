@@ -153,25 +153,29 @@ export const AppProvider = ({ children }) => {
   const loadAllData = async () => {
     try {
       setLoading(true);
+      const savedUserStr = localStorage.getItem('planto_user');
+      const savedUserObj = savedUserStr ? JSON.parse(savedUserStr) : null;
+      const isAdmin = (savedUserObj?.role === 'Admin' || currentUser?.role === 'Admin');
+
       const [vList, pList, bList, gList, oList, rList, wData, cList, itList] = await Promise.all([
-        api.getVendors(),
-        api.getProducts(),
-        api.getBlogs(),
-        api.getGuides(),
-        api.getOrders(),
-        api.getReminders(),
-        api.getWallet(),
-        api.getCategories(),
-        api.getItemTypes()
+        isAdmin ? api.getVendors().catch(() => []) : Promise.resolve([]),
+        api.getProducts().catch(() => []),
+        api.getBlogs().catch(() => []),
+        api.getGuides().catch(() => []),
+        api.getOrders().catch(() => []),
+        api.getReminders().catch(() => []),
+        api.getWallet().catch(() => ({ wallet: 0 })),
+        api.getCategories().catch(() => []),
+        api.getItemTypes().catch(() => [])
       ]);
-      setVendors(vList);
-      setProducts(pList);
-      setBlogs(bList);
-      setGuides(gList);
-      setOrders(oList);
-      setReminders(rList);
-      setWallet(wData.wallet);
-      setCategories(cList);
+      setVendors(vList || []);
+      setProducts(pList || []);
+      setBlogs(bList || []);
+      setGuides(gList || []);
+      setOrders(oList || []);
+      setReminders(rList || []);
+      setWallet(wData?.wallet ?? 0);
+      setCategories(cList || []);
       setItemTypes(itList || []);
     } catch (err) {
       console.error("Error loading data from API:", err);

@@ -50,7 +50,6 @@ import CustomerHelpBot from './components/CustomerHelpBot';
 // Pages
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
-import StallPage from './pages/StallPage';
 import ProductPage from './pages/ProductPage';
 import AIDiagnosticsPage from './pages/AIDiagnosticsPage';
 import AdminPortalPage from './pages/AdminPortalPage';
@@ -59,7 +58,6 @@ import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import SeasonalPage from './pages/SeasonalPage';
 import VirtualGardenPage from './pages/VirtualGardenPage';
-import NurseriesPage from './pages/NurseriesPage';
 import CorporateGiftingPage from './pages/CorporateGiftingPage';
 import PlantPassportPage from './pages/PlantPassportPage';
 import BalconyVisualizerPage from './pages/BalconyVisualizerPage';
@@ -81,10 +79,12 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/nurseries" element={<NurseriesPage />} />
+            {/* Sourcing Privacy: Redirect legacy nursery/stall/map routes to home shop */}
+            <Route path="/nurseries" element={<Navigate to="/" replace />} />
+            <Route path="/map" element={<Navigate to="/" replace />} />
+            <Route path="/stall/:id" element={<Navigate to="/" replace />} />
+            <Route path="/stall" element={<Navigate to="/" replace />} />
             <Route path="/category/:name" element={<CategoryPage />} />
-            <Route path="/map" element={<Navigate to="/nurseries" replace />} />
-            <Route path="/stall/:id" element={<StallPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/ai" element={<AIDiagnosticsPage />} />
             <Route path="/admin" element={<AdminPortalPage />} />

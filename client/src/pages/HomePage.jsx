@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
-import VendorCard from '../components/VendorCard';
 import ProductCard from '../components/ProductCard';
 import SocietyGroupDrop from '../components/SocietyGroupDrop';
 import NurseryStoriesBar from '../components/NurseryStoriesBar';
@@ -12,7 +11,6 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { 
     currentUser,
-    vendors, 
     products, 
     categories: apiCategories, 
     itemTypes, 
@@ -28,8 +26,6 @@ export default function HomePage() {
   } = useApp();
   const [searchVal, setSearchVal] = useState('');
   const [gpsStatus, setGpsStatus] = useState('Detecting Live Location...');
-  const [showAllVendors, setShowAllVendors] = useState(false);
-  const [vendorFilter, setVendorFilter] = useState('all');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const [weatherData, setWeatherData] = useState(null);
 
@@ -159,16 +155,6 @@ export default function HomePage() {
     { name: "Winter Wonders", emoji: "❄️", desc: "Petunias, Marigolds & root food", img: "https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?auto=format&fit=crop&w=500&q=80" }
   ];
 
-  // Filter vendors based on active tab
-  const filteredVendors = vendors.filter(v => {
-    if (vendorFilter === 'express') return v.distance.includes('0.') || v.distance.includes('1.');
-    if (vendorFilter === 'top') return v.rating >= 4.6;
-    if (vendorFilter === 'open') return v.isOpen;
-    return true;
-  });
-
-  const visibleVendors = showAllVendors ? filteredVendors : filteredVendors.slice(0, 5);
-
   // Filter products based on active tab
   const filteredProducts = products.filter(p => {
     if (productCategoryFilter === 'all') return true;
@@ -205,8 +191,7 @@ export default function HomePage() {
     if (match) {
       navigate(`/?filter=${match.type}`);
     } else {
-      alert(`Showing nurseries stocking "${searchVal}".`);
-      navigate(`/`);
+      navigate(`/?search=${encodeURIComponent(searchVal)}`);
     }
   };
 
@@ -360,68 +345,6 @@ export default function HomePage() {
 
       {/* Apartment Society & Tech Park Group Drop */}
       <SocietyGroupDrop />
-
-      {/* Hyperlocal Verified Plant Nurseries & Stalls */}
-      <section style={{ marginBottom: '44px' }}>
-        <div className="section-title-row" style={{ alignItems: 'flex-end', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              HYPERLOCAL PARTNER NETWORK
-            </div>
-            <h2 className="section-title" style={{ fontSize: '26px', margin: '4px 0 0 0' }}>Nearby Plant Nurseries & Stalls</h2>
-            <p className="section-subtitle" style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-              Direct live inventory from certified local plant nurseries & roadside pottery stalls
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <Link to="/nurseries" className="btn" style={{ padding: '8px 14px', fontSize: '12px', textDecoration: 'none' }}>
-              View All ({vendors.length}) →
-            </Link>
-          </div>
-        </div>
-
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '16px', width: '100%', scrollbarWidth: 'none' }}>
-          <button 
-            className={`inventory-filter-btn ${vendorFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setVendorFilter('all')}
-          >
-            All Nurseries ({vendors.length})
-          </button>
-          <button 
-            className={`inventory-filter-btn ${vendorFilter === 'express' ? 'active' : ''}`}
-            onClick={() => setVendorFilter('express')}
-          >
-            Under 2 km (Express)
-          </button>
-          <button 
-            className={`inventory-filter-btn ${vendorFilter === 'top' ? 'active' : ''}`}
-            onClick={() => setVendorFilter('top')}
-          >
-            Top Rated (4.6+)
-          </button>
-          <button 
-            className={`inventory-filter-btn ${vendorFilter === 'open' ? 'active' : ''}`}
-            onClick={() => setVendorFilter('open')}
-          >
-            Open Now
-          </button>
-        </div>
-
-        {/* Horizontal scroll of VendorCards */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '16px', 
-          overflowX: 'auto', 
-          paddingBottom: '14px',
-          scrollbarWidth: 'thin',
-          WebkitOverflowScrolling: 'touch' 
-        }}>
-          {visibleVendors.map(vendor => (
-            <VendorCard key={vendor.id} vendor={vendor} />
-          ))}
-        </div>
-      </section>
 
       {/* REVENUE GENERATING BOTANICAL SERVICES & CLUBS */}
       <section style={{ marginBottom: '44px' }}>

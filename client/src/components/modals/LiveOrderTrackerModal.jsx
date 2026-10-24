@@ -79,7 +79,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
     items: [{ name: 'Premium Golden Pothos (Money Plant)', quantity: 1, price: 180 }],
     total: 279,
     address: 'Flat 402, Green Heights, 100ft Road, Indiranagar, Bengaluru',
-    vendorName: 'PlantMe Certified Local Nursery - Indiranagar',
+    vendorName: 'PlantMe Express Botanical Hub',
     riderCoords: { lat: 12.9732, lng: 77.6414, heading: 45 },
     rider: {
       name: 'Ramu Prasad',
@@ -93,7 +93,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
 
   const stages = [
     { title: 'Order Placed', desc: 'Plant verified & payment processed' },
-    { title: 'Nursery Preparing', desc: 'Selecting fresh foliage & hydrating roots' },
+    { title: 'PlantMe Hub Preparing', desc: 'Botanical inspection & root hydration packaging' },
     { title: 'Packed in Eco-Crate', desc: 'Awaiting Rider 4-digit Pickup PIN handover' },
     { title: 'Rider In Transit', desc: 'Ramu Prasad is cruising to your location' },
     { title: 'Delivered', desc: 'Doorstep OTP verified & 30-Day Guarantee active' }
@@ -167,7 +167,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
               <span style={{ fontSize: '13px', color: '#64748b' }}>Order #{data.orderId}</span>
             </div>
             <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0' }}>
-              {stageIdx >= 3 ? 'Rider En Route with your Plant!' : 'Nursery Preparing Foliage & Eco-Crate'}
+              {stageIdx >= 3 ? 'Rider En Route with your Plant!' : 'Hub Preparing Foliage & Eco-Crate'}
             </h3>
           </div>
 
@@ -233,7 +233,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
                 strokeLinecap="round"
               />
 
-              {/* Nursery Store Marker (Origin) */}
+              {/* PlantMe Botanical Hub Marker (Origin) */}
               <g transform="translate(80, 140)">
                 <circle cx="0" cy="0" r="16" fill="#15803d" />
                 <circle cx="0" cy="0" r="24" fill="#15803d" opacity="0.25">
@@ -241,7 +241,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
                   <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
                 </circle>
                 <text x="0" y="5" fill="#fff" fontSize="14" textAnchor="middle">🌿</text>
-                <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">NURSERY</text>
+                <text x="0" y="32" fill="#0f172a" fontSize="11" fontWeight="800" textAnchor="middle">PLANTME HUB</text>
               </g>
 
               {/* Delivery Partner Marker (Dynamic Position) */}
@@ -259,7 +259,7 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
                 <g transform="translate(100, 110)">
                   <circle cx="0" cy="0" r="14" fill="#64748b" />
                   <text x="0" y="5" fill="#fff" fontSize="12" textAnchor="middle">🛵</text>
-                  <text x="0" y="-12" fill="#475569" fontSize="9" fontWeight="700" textAnchor="middle">Arriving at Nursery</text>
+                  <text x="0" y="-12" fill="#475569" fontSize="9" fontWeight="700" textAnchor="middle">Arriving at Hub</text>
                 </g>
               )}
 
@@ -521,37 +521,56 @@ export default function LiveOrderTrackerModal({ isOpen, onClose, orderId }) {
               </div>
             </div>
 
-            {/* Nursery Card */}
+            {/* PlantMe Concierge & Support Card */}
             <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
-                  🏪
+                <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                  🌿
                 </div>
                 <div>
                   <strong style={{ fontSize: '13.5px', color: '#0f172a', display: 'block' }}>
-                    {data.vendorName || 'PlantMe Certified Local Nursery'}
+                    PlantMe Customer Concierge
                   </strong>
-                  <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 600 }}>● Botanist Certified Healthy Stock</span>
+                  <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 600 }}>● Botanical Care & Order Support</span>
                 </div>
               </div>
 
-              <a
-                href="tel:+918885600899"
-                style={{
-                  display: 'block',
-                  background: '#f0fdf4',
-                  color: '#15803d',
-                  padding: '8px',
-                  borderRadius: '10px',
-                  textAlign: 'center',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  border: '1px solid #bbf7d0'
-                }}
-              >
-                📞 Contact Nursery Store
-              </a>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <a
+                  href="tel:+918885600899"
+                  style={{
+                    flex: 1,
+                    background: '#f0fdf4',
+                    color: '#15803d',
+                    padding: '8px',
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    border: '1px solid #bbf7d0'
+                  }}
+                >
+                  📞 Call Support
+                </a>
+                <a
+                  href="mailto:care@plantme.in"
+                  style={{
+                    flex: 1,
+                    background: '#f8fafc',
+                    color: '#334155',
+                    padding: '8px',
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    border: '1px solid #cbd5e1'
+                  }}
+                >
+                  ✉️ Email Care
+                </a>
+              </div>
             </div>
           </div>
 

@@ -51,10 +51,10 @@ export default function NurseryStoriesBar() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '11px', background: '#dcfce7', color: '#166534', fontWeight: 900, padding: '3px 8px', borderRadius: '8px', textTransform: 'uppercase' }}>
-              ● LIVE NURSERY STORIES
+              ● PLANTME BOTANICAL ARRIVALS
             </span>
             <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--dark)', margin: 0 }}>
-              Today's Fresh Unboxings Nearby
+              Today's Fresh Batch Unboxings
             </h3>
           </div>
           <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>

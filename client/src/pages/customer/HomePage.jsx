@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import VendorCard from '../components/VendorCard';
 import ProductCard from '../components/ProductCard';
 
 const LIFESTYLE_FILTERS = [
@@ -14,10 +13,10 @@ const LIFESTYLE_FILTERS = [
 ];
 
 export default function HomePage() {
-  const { vendors, products, setSelectedCategoryName, setShowCategoryModal, setLoginPresetEmail, setShowLogin } = useApp();
+  const navigate = useNavigate();
+  const { products, setSelectedCategoryName, setShowCategoryModal } = useApp();
   const [searchVal, setSearchVal] = useState('');
   const [gpsStatus, setGpsStatus] = useState('Indiranagar, Bengaluru (20-30 mins)');
-  const [vendorFilter, setVendorFilter] = useState('all');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const [lifestyleFilter, setLifestyleFilter] = useState('all');
   const [matchmakerActive, setMatchmakerActive] = useState(false);
@@ -37,13 +36,6 @@ export default function HomePage() {
     { name: "Monsoon Magic", emoji: "🌧️", desc: "Rainy-day planters, herbs & vermicompost", img: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=500&q=80" },
     { name: "Winter Wonders", emoji: "❄️", desc: "Petunias, Marigolds & root food", img: "https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?auto=format&fit=crop&w=500&q=80" }
   ];
-
-  const filteredVendors = vendors.filter(v => {
-    if (vendorFilter === 'express') return v.distance.includes('0.') || v.distance.includes('1.');
-    if (vendorFilter === 'top') return v.rating >= 4.6;
-    if (vendorFilter === 'open') return v.isOpen;
-    return true;
-  });
 
   // Lifestyle matchmaker filter
   const applyLifestyleFilter = (p) => {
@@ -80,14 +72,14 @@ export default function HomePage() {
   const handleGpsConnect = () => setGpsStatus('Jayanagar 4th Block, Bengaluru (Live Location ✅)');
   const handleSearchSubmit = () => {
     if (!searchVal) return;
-    window.location.hash = `#/nurseries`;
+    navigate(`/?search=${encodeURIComponent(searchVal)}`);
   };
   const handleSeasonalClick = (seasonName) => {
     let key = 'spring';
     if (seasonName.toLowerCase().includes('summer')) key = 'summer';
     else if (seasonName.toLowerCase().includes('monsoon')) key = 'monsoon';
     else if (seasonName.toLowerCase().includes('winter')) key = 'winter';
-    window.location.hash = `#/seasonal/${key}`;
+    navigate(`/seasonal/${key}`);
   };
 
   const activeLifestyle = LIFESTYLE_FILTERS.find(f => f.key === lifestyleFilter);
@@ -112,13 +104,13 @@ export default function HomePage() {
         <div className="hero-content" style={{ maxWidth: '780px' }}>
           <div className="hero-badge" style={{ background: 'rgba(45, 106, 79, 0.1)', color: 'var(--primary-green)' }}>
             <svg width="16" height="16"><use href="#icon-leaf"></use></svg>
-            India's #1 Local Nursery & Plant Delivery Marketplace
+            India's #1 Hyperlocal Live Plant Delivery
           </div>
           <h1 className="hero-title" style={{ fontSize: '42px', lineHeight: 1.15 }}>
-            Order Plants, Pots & Soil<br />From <span>Nearby Nurseries</span>
+            Order Plants, Pots & Soil<br />Delivered by <span>PlantMe Express</span>
           </h1>
           <p className="hero-desc" style={{ fontSize: '16px', color: '#4a5568', marginTop: '12px' }}>
-            Buy live plants, hand-crafted terracotta pots, and organic compost directly from local nursery stalls. Delivered fresh in 20-30 minutes.
+            Buy live indoor plants, ceramic pots, and organic compost with moisture-preserving root hydration wraps. Delivered fresh to your doorstep in 20-30 minutes with our 30-day zero-hassle thrive guarantee.
           </p>
           <div className="search-container" style={{ marginTop: '24px' }}>
             <div className="search-input-wrapper">
@@ -198,41 +190,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Nearby Nurseries Section */}
-      <section style={{ marginBottom: '48px' }}>
-        <div className="section-title-row" style={{ alignItems: 'flex-end', marginBottom: '16px' }}>
-          <div>
-            <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>HYPERLOCAL DISCOVERY</div>
-            <h2 className="section-title" style={{ fontSize: '28px', margin: 0 }}>Nearby Nursery Stalls</h2>
-            <p className="section-subtitle">Browse physical nurseries selling live plants, pots, & care supplies nearby</p>
-          </div>
-          <Link to="/nurseries" className="view-all">View All Nurseries <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg></Link>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '4px' }}>
-          {[['all', `All Nurseries (${vendors.length})`], ['express', 'Express < 1.5 km'], ['top', 'Top Rated (4.6+)'], ['open', 'Open Now']].map(([key, label]) => (
-            <button key={key} className={`inventory-filter-btn ${vendorFilter === key ? 'active' : ''}`} onClick={() => setVendorFilter(key)}>{label}</button>
-          ))}
-        </div>
-        <div className="category-slider" id="home-vendors-list" style={{ paddingBottom: '12px', overflowX: 'auto', display: 'flex', gap: '16px' }}>
-          {filteredVendors.map(vendor => <VendorCard key={vendor.id} vendor={vendor} />)}
-        </div>
-      </section>
-
-      {/* Nursery Partner Banner */}
-      <section style={{ marginBottom: '48px', background: 'linear-gradient(135deg, #1b4332 0%, #081c15 100%)', borderRadius: '20px', padding: '32px', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
-        <div style={{ maxWidth: '580px' }}>
-          <span style={{ background: '#ffb703', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.5px' }}>🏪 FOR NURSERY OWNERS & ARTISANS</span>
-          <h3 style={{ fontSize: '26px', fontFamily: 'var(--font-serif)', color: '#fff', marginTop: '10px', marginBottom: '8px' }}>Own a Plant Nursery or Pottery Stall? Join PlantMe!</h3>
-          <p style={{ fontSize: '14px', color: '#d8f3dc', lineHeight: 1.5 }}>Put your local nursery online in 2 minutes. Receive instant plant orders from nearby plant lovers, manage live stock, and get instant payouts.</p>
-        </div>
-        <div>
-          <button className="btn" style={{ background: '#ffb703', color: '#000', border: 'none', fontWeight: 800, padding: '14px 28px', fontSize: '15px', borderRadius: '12px' }}
-            onClick={() => { setLoginPresetEmail('vendor@plantme.in'); setShowLogin(true); }}>
-            Open Nursery Vendor Portal →
-          </button>
-        </div>
-      </section>
-
       {/* Plant Marketplace Catalog */}
       <section style={{ marginBottom: '48px' }}>
         <div className="section-title-row" style={{ alignItems: 'flex-end', marginBottom: '16px' }}>
@@ -242,7 +199,7 @@ export default function HomePage() {
               {lifestyleFilter !== 'all' ? `${activeLifestyle?.label} Plants` : 'Fresh Plant & Pot Catalog'}
             </h2>
             <p className="section-subtitle">
-              {lifestyleFilter !== 'all' ? `${filteredProducts.length} plants matched · ${activeLifestyle?.desc}` : 'Stocked live across verified local nurseries & growers'}
+              {lifestyleFilter !== 'all' ? `${filteredProducts.length} plants matched · ${activeLifestyle?.desc}` : 'Direct live inventory dispatched via PlantMe Botanical Hub'}
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>

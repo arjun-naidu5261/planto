@@ -100,7 +100,7 @@ export default function CartPage() {
 
   const handlePaymentSuccess = async (paymentDetails) => {
     setShowPaymentModal(false);
-    const firstVendor = 'PlantMe Certified Local Nursery';
+    const firstVendor = 'PlantMe Express Fulfillment Hub';
     
     if (isGift) {
       try {
@@ -202,7 +202,7 @@ export default function CartPage() {
               Order Confirmed & Preparing!
             </h3>
             <p style={{ fontSize: '13px', color: '#555', marginBottom: '16px' }}>
-              Estimated Delivery: <strong>20-30 Mins</strong> • Certified Local Nursery Dispatch
+              Estimated Delivery: <strong>20-30 Mins</strong> • PlantMe Express Dispatch
             </p>
 
             {/* Live Plant Transit Guarantee Badge */}
@@ -220,8 +220,8 @@ export default function CartPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', opacity: trackerStage >= 1 ? 1 : 0.4 }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: trackerStage >= 1 ? '#2e7d32' : '#ccc', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800 }}>✓</div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '14px' }}>1. Quality Inspection at Partner Nursery</div>
-                  <div style={{ fontSize: '11px', color: '#666' }}>Foliage health and soil moisture verified by botanist</div>
+                  <div style={{ fontWeight: 800, fontSize: '14px' }}>1. Botanical Health Inspection & Hydration Wrap</div>
+                  <div style={{ fontSize: '11px', color: '#666' }}>Foliage health and root hydration verified by botanist</div>
                 </div>
               </div>
 
@@ -339,7 +339,7 @@ export default function CartPage() {
             <span style={{ fontSize: '20px' }}>🌿</span>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', textTransform: 'uppercase' }}>FULFILLED BY</div>
-              <div style={{ fontWeight: 800, fontSize: '14px', color: '#1b4332' }}>PlantMe Certified Partner Nursery (Bengaluru)</div>
+              <div style={{ fontWeight: 800, fontSize: '14px', color: '#1b4332' }}>PlantMe Express Botanical Hub</div>
             </div>
           </div>
 

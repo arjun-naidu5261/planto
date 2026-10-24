@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /vendor/
+Disallow: /nurseries
+Disallow: /stall/
+Disallow: /stall
+Disallow: /map
+
+Sitemap: https://plantme.in/sitemap.xml

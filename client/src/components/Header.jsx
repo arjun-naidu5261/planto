@@ -104,7 +104,6 @@ export default function Header() {
           
           {(!isLoggedIn || currentUser?.role === 'Customer') && (
             <>
-              <NavLink to="/nurseries" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Nurseries & Stalls</NavLink>
               <NavLink to="/ai" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>AI Plant Doctor</NavLink>
               <NavLink to="/garden" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Virtual Garden</NavLink>
               <NavLink to="/passport" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Plant Passports</NavLink>
