@@ -343,6 +343,121 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Plant Marketplace Catalog */}
+      <section style={{ marginBottom: '48px' }}>
+        <div style={{ marginBottom: '14px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>PLANT & POT MARKETPLACE</div>
+          <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: '4px 0 4px 0', color: 'var(--dark)' }}>Fresh Plant & Pot Catalog</h2>
+          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Inspected & dispatched fresh from PlantMe Certified Partner Nurseries</p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', width: '100%', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'all' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('all')}
+          >
+            All Items ({products.length})
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'pet' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('pet')}
+          >
+            Pet-Safe
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'air' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('air')}
+          >
+            Air Purifiers (8+)
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'lowlight' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('lowlight')}
+          >
+            Low-Light / AC
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'easy' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('easy')}
+          >
+            Easy Care
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'pots' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('pots')}
+          >
+            Pots & Planters
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'soil' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('soil')}
+          >
+            Organic Soil & Care
+          </button>
+          <button 
+            className={`inventory-filter-btn ${productCategoryFilter === 'bouquets' ? 'active' : ''}`}
+            onClick={() => setProductCategoryFilter('bouquets')}
+          >
+            💐 Flower Bouquets
+          </button>
+        </div>
+
+        {/* Express Fresh Flower Delivery Feature Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%)',
+          border: '1px solid #f472b6',
+          borderRadius: '16px',
+          padding: '16px 20px',
+          marginBottom: '20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <span style={{ fontSize: '34px', filter: 'drop-shadow(0 2px 6px rgba(244,114,182,0.4))' }}>💐</span>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ background: '#db2777', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
+                  NEW SERVICE
+                </span>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#9d174d' }}>20-30 Mins Express Delivery</span>
+              </div>
+              <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#831843', margin: '3px 0 2px 0' }}>
+                Handcrafted Fresh Flower Bouquets
+              </h4>
+              <p style={{ fontSize: '12px', color: '#9d174d', margin: 0 }}>
+                Dutch red roses, oriental lilies, carnations & orchids delivered with stem-hydration wraps & flower food.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setProductCategoryFilter('bouquets')}
+            style={{
+              background: '#db2777',
+              color: '#ffffff',
+              border: 'none',
+              padding: '9px 18px',
+              borderRadius: '10px',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 3px 10px rgba(219,39,119,0.3)',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Browse Bouquets →
+          </button>
+        </div>
+
+        <div className="products-grid" id="home-deals-grid">
+          {filteredProducts.map((prod) => (
+            <ProductCard key={prod.id} product={prod} />
+          ))}
+        </div>
+      </section>
+
       {/* Apartment Society & Tech Park Group Drop */}
       <SocietyGroupDrop />
 
@@ -636,121 +751,6 @@ export default function HomePage() {
               If your plant wilts within 30 days despite care tips, get a free replacement or virtual consultation with our botanist.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Plant Marketplace Catalog */}
-      <section style={{ marginBottom: '48px' }}>
-        <div style={{ marginBottom: '14px' }}>
-          <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-green)', letterSpacing: '1px', textTransform: 'uppercase' }}>PLANT & POT MARKETPLACE</div>
-          <h2 style={{ fontSize: '24px', fontFamily: 'var(--font-serif)', margin: '4px 0 4px 0', color: 'var(--dark)' }}>Fresh Plant & Pot Catalog</h2>
-          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Inspected & dispatched fresh from PlantMe Certified Partner Nurseries</p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', width: '100%', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('all')}
-          >
-            All Items ({products.length})
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'pet' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('pet')}
-          >
-            Pet-Safe
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'air' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('air')}
-          >
-            Air Purifiers (8+)
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'lowlight' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('lowlight')}
-          >
-            Low-Light / AC
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'easy' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('easy')}
-          >
-            Easy Care
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'pots' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('pots')}
-          >
-            Pots & Planters
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'soil' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('soil')}
-          >
-            Organic Soil & Care
-          </button>
-          <button 
-            className={`inventory-filter-btn ${productCategoryFilter === 'bouquets' ? 'active' : ''}`}
-            onClick={() => setProductCategoryFilter('bouquets')}
-          >
-            💐 Flower Bouquets
-          </button>
-        </div>
-
-        {/* Express Fresh Flower Delivery Feature Banner */}
-        <div style={{
-          background: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%)',
-          border: '1px solid #f472b6',
-          borderRadius: '16px',
-          padding: '16px 20px',
-          marginBottom: '20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ fontSize: '34px', filter: 'drop-shadow(0 2px 6px rgba(244,114,182,0.4))' }}>💐</span>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ background: '#db2777', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>
-                  NEW SERVICE
-                </span>
-                <span style={{ fontSize: '12px', fontWeight: 800, color: '#9d174d' }}>20-30 Mins Express Delivery</span>
-              </div>
-              <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#831843', margin: '3px 0 2px 0' }}>
-                Handcrafted Fresh Flower Bouquets
-              </h4>
-              <p style={{ fontSize: '12px', color: '#9d174d', margin: 0 }}>
-                Dutch red roses, oriental lilies, carnations & orchids delivered with stem-hydration wraps & flower food.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => setProductCategoryFilter('bouquets')}
-            style={{
-              background: '#db2777',
-              color: '#ffffff',
-              border: 'none',
-              padding: '9px 18px',
-              borderRadius: '10px',
-              fontSize: '12.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              boxShadow: '0 3px 10px rgba(219,39,119,0.3)',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            Browse Bouquets →
-          </button>
-        </div>
-
-        <div className="products-grid" id="home-deals-grid">
-          {filteredProducts.map((prod) => (
-            <ProductCard key={prod.id} product={prod} />
-          ))}
         </div>
       </section>
 
