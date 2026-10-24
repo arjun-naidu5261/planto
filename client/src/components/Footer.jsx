@@ -7,7 +7,7 @@ export default function Footer() {
       <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '40px' }}>
         <div>
           <Link to="/" className="logo" style={{ color: 'var(--white)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-            <img src="/logo.png" alt="PlantMe.in" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/logo.png" alt="PlantMe.in" style={{ height: '52px', width: 'auto', objectFit: 'contain' }} />
           </Link>
           <p style={{ fontSize: '13px', color: '#aaa', maxWidth: '250px' }}>
             India's premier hyperlocal live plant delivery platform. Moisture-preserving root hydration wraps, verified live plant batch inspection, and 30-day thrive guarantee.

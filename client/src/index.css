@@ -140,7 +140,7 @@ header {
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 18px 24px;
+  padding: 12px 24px;
 }
 
 .logo {
@@ -153,6 +153,15 @@ header {
   letter-spacing: -0.5px;
   color: var(--primary-green);
   text-decoration: none;
+}
+
+.brand-logo-img {
+  transition: transform 0.25s ease, filter 0.25s ease;
+  display: block;
+}
+
+.logo:hover .brand-logo-img {
+  transform: scale(1.03);
 }
 
 .logo span {
@@ -1799,7 +1808,7 @@ tr:last-child td {
     padding: 10px 14px !important;
   }
   .logo img {
-    height: 32px !important;
+    height: 44px !important;
   }
   .action-btn {
     width: 34px !important;

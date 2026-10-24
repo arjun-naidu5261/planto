@@ -96,7 +96,7 @@ export default function Header() {
       <header>
         <div className="header-container">
         <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-          <img src="/logo.png" alt="PlantMe.in" style={{ height: '42px', width: 'auto', objectFit: 'contain' }} />
+          <img src="/logo.png" alt="PlantMe.in" className="brand-logo-img" style={{ height: '58px', width: 'auto', objectFit: 'contain' }} />
         </Link>
         
         <nav className="desktop-nav">
