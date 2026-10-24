@@ -120,6 +120,9 @@ export const db = {
   saveAuditLogs: (data) => writeJSON('audit_logs.json', data),
 
   getPaymentWebhooks: () => readJSON('payment_webhooks.json'),
-  savePaymentWebhooks: (data) => writeJSON('payment_webhooks.json', data)
+  savePaymentWebhooks: (data) => writeJSON('payment_webhooks.json', data),
+
+  getStories: () => readJSON('stories.json'),
+  saveStories: (data) => writeJSON('stories.json', data)
 };
 

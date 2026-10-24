@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -51,6 +51,123 @@ export default function AdminPortalPage() {
   ]);
 
   const [activeMenuId, setActiveMenuId] = useState('dashboard');
+
+  // Daily Batch Unboxings & Stories Management State
+  const [adminStories, setAdminStories] = useState([]);
+  const [loadingStories, setLoadingStories] = useState(false);
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const [editingStory, setEditingStory] = useState(null);
+  const [storyForm, setStoryForm] = useState({
+    batchTitle: '',
+    plantName: '',
+    badge: 'Fresh Batch',
+    price: 199,
+    stock: 10,
+    distance: '20m Delivery',
+    media: '/images/golden_pothos.png',
+    caption: '',
+    active: true
+  });
+
+  const loadAdminStories = async () => {
+    setLoadingStories(true);
+    try {
+      const res = await api.getAdminStories();
+      if (res?.success && Array.isArray(res.stories)) {
+        setAdminStories(res.stories);
+      }
+    } catch (err) {
+      console.warn('Failed to load admin stories', err);
+    } finally {
+      setLoadingStories(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeMenuId === 'stories' && isAdmin) {
+      loadAdminStories();
+    }
+  }, [activeMenuId, isAdmin]);
+
+  const handleOpenAddStory = () => {
+    setEditingStory(null);
+    setStoryForm({
+      batchTitle: '',
+      plantName: '',
+      badge: 'Fresh Batch',
+      price: 199,
+      stock: 10,
+      distance: '20m Delivery',
+      media: '/images/golden_pothos.png',
+      caption: '🌿 Fresh live plant batch arrival inspected by PlantMe experts. 20-min express delivery!',
+      active: true
+    });
+    setShowStoryModal(true);
+  };
+
+  const handleOpenEditStory = (story) => {
+    setEditingStory(story);
+    const firstSlide = (story.slides && story.slides[0]) || {};
+    setStoryForm({
+      batchTitle: story.batchTitle || story.vendorName || '',
+      plantName: firstSlide.plantName || story.batchTitle || '',
+      badge: story.badge || 'Fresh Batch',
+      price: firstSlide.price || 199,
+      stock: firstSlide.stock || 10,
+      distance: story.distance || '20m Delivery',
+      media: firstSlide.media || story.vendorAvatar || '/images/golden_pothos.png',
+      caption: firstSlide.caption || '',
+      active: story.active !== false
+    });
+    setShowStoryModal(true);
+  };
+
+  const handleSaveStory = async (e) => {
+    e.preventDefault();
+    if (!storyForm.batchTitle.trim() && !storyForm.plantName.trim()) {
+      alert('Please enter a batch title or plant name.');
+      return;
+    }
+    try {
+      if (editingStory) {
+        await api.updateAdminStory(editingStory.id, storyForm);
+        alert('Batch unboxing story updated successfully!');
+      } else {
+        await api.createAdminStory(storyForm);
+        alert('New batch unboxing story published live!');
+      }
+      setShowStoryModal(false);
+      await loadAdminStories();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to save story.');
+    }
+  };
+
+  const handleToggleStory = async (id) => {
+    try {
+      const res = await api.toggleAdminStory(id);
+      if (res?.success) {
+        setAdminStories(prev => prev.map(s => s.id === id ? { ...s, active: res.active } : s));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to toggle story status.');
+    }
+  };
+
+  const handleDeleteStory = async (id, title) => {
+    if (!window.confirm(`Are you sure you want to delete "${title || 'this unboxing story'}"?`)) return;
+    try {
+      const res = await api.deleteAdminStory(id);
+      if (res?.success) {
+        setAdminStories(prev => prev.filter(s => s.id !== id));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete story.');
+    }
+  };
 
   const handleApprove = async (approved, index) => {
     try {
@@ -114,6 +231,7 @@ export default function AdminPortalPage() {
       items: [
         { id: "categories", label: "Categories", icon: "📁" },
         { id: "products", label: "Products", icon: "📦" },
+        { id: "stories", label: "Batch Unboxings & Stories", icon: "📸", badge: "Live" },
         { id: "stock", label: "Stock Overview", icon: "📈" },
         { id: "bulk", label: "Bulk Upload", icon: "📤" }
       ]
@@ -201,6 +319,13 @@ export default function AdminPortalPage() {
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
             <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
             <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+        );
+      case 'stories':
+        return (
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>
+            <circle cx="12" cy="12" r="10" />
+            <polygon points="10 8 16 12 10 16 10 8" />
           </svg>
         );
       case 'stock':
@@ -577,8 +702,245 @@ export default function AdminPortalPage() {
           </div>
         </div>
 
-        {/* Dynamic Page Views: Fallback simple tables if not Dashboard */}
-        {activeMenuId !== 'dashboard' ? (
+        {/* Dynamic Page Views: Dedicated Views for Stories, or Fallback simple tables */}
+        {activeMenuId === 'stories' ? (
+          <div style={{ background: '#ffffff', padding: '28px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)', boxShadow: 'var(--shadow-sm)' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid #edf2f7', paddingBottom: '20px', marginBottom: '24px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '24px' }}>📸</span>
+                  <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--dark)', margin: 0 }}>
+                    Daily Fresh Batch Unboxings & Live Stories
+                  </h3>
+                  <span style={{ background: '#dcfce7', color: '#166534', fontSize: '11px', fontWeight: 800, padding: '3px 8px', borderRadius: '12px' }}>
+                    {adminStories.filter(s => s.active !== false).length} Active Live Batches
+                  </span>
+                </div>
+                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '6px', margin: '6px 0 0' }}>
+                  Configure what appears on the homepage under <strong>"Today's Fresh Batch Unboxings"</strong>. Real-time updates sync directly to customer devices.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={loadAdminStories}
+                  className="btn btn-secondary"
+                  style={{ padding: '8px 14px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  🔄 Refresh
+                </button>
+                <button
+                  onClick={handleOpenAddStory}
+                  className="btn"
+                  style={{ padding: '8px 18px', fontSize: '13px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 12px rgba(27,67,50,0.2)' }}
+                >
+                  + Add New Batch Unboxing
+                </button>
+              </div>
+            </div>
+
+            {/* Live Preview Ribbon */}
+            <div style={{ background: '#f8fafc', padding: '16px 20px', borderRadius: '14px', marginBottom: '28px', border: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Live Home Carousel Preview (As seen by customers on PlantMe.in)
+                </span>
+                <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 700 }}>
+                  ● Click any circle to edit or preview
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '6px' }}>
+                {adminStories.map((story, sIdx) => {
+                  const firstSlide = (story.slides && story.slides[0]) || {};
+                  const title = story.batchTitle || firstSlide.plantName || story.vendorName || 'Batch';
+                  const isLive = story.active !== false;
+                  return (
+                    <div 
+                      key={story.id || sIdx} 
+                      onClick={() => handleOpenEditStory(story)}
+                      title="Click to edit"
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', opacity: isLive ? 1 : 0.45, cursor: 'pointer', flexShrink: 0 }}
+                    >
+                      <div style={{
+                        background: isLive ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #eab308 100%)' : '#cbd5e1',
+                        padding: '2.5px',
+                        borderRadius: '50%',
+                        boxShadow: isLive ? '0 3px 10px rgba(34,197,94,0.3)' : 'none'
+                      }}>
+                        <img
+                          src={story.vendorAvatar || firstSlide.media || '/images/golden_pothos.png'}
+                          alt={title}
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/golden_pothos.png'; }}
+                          style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', background: '#fff' }}
+                        />
+                      </div>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#1e293b', maxWidth: '82px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'center' }}>
+                        {title}
+                      </span>
+                      <span style={{ fontSize: '9px', fontWeight: 800, color: isLive ? '#16a34a' : '#94a3b8' }}>
+                        {isLive ? (story.badge || '20m Delivery') : 'Paused'}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Stories Table / Card List */}
+            {loadingStories ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+                Loading batch unboxing stories...
+              </div>
+            ) : adminStories.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '48px', background: '#f8fafc', borderRadius: '12px' }}>
+                <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '16px' }}>No batch unboxing stories created yet.</p>
+                <button onClick={handleOpenAddStory} className="btn">+ Add First Batch Story</button>
+              </div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #edf2f7', color: '#64748b' }}>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Thumbnail</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Batch Title & Plant</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Badge Tag</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Price & Stock</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Inspection Notes</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700 }}>Status</th>
+                      <th style={{ padding: '12px 16px', fontWeight: 700, textAlign: 'right' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {adminStories.map((story) => {
+                      const firstSlide = (story.slides && story.slides[0]) || {};
+                      const isLive = story.active !== false;
+                      return (
+                        <tr key={story.id} style={{ borderBottom: '1px solid #edf2f7', transition: 'background 0.15s' }}>
+                          <td style={{ padding: '14px 16px' }}>
+                            <img
+                              src={firstSlide.media || story.vendorAvatar || '/images/golden_pothos.png'}
+                              alt={story.batchTitle}
+                              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/golden_pothos.png'; }}
+                              style={{ width: '52px', height: '52px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e2e8f0' }}
+                            />
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <strong style={{ color: 'var(--dark)', fontSize: '14px', display: 'block' }}>
+                              {story.batchTitle || firstSlide.plantName}
+                            </strong>
+                            <span style={{ color: '#64748b', fontSize: '12px' }}>
+                              {firstSlide.plantName}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <span style={{
+                              background: '#f0fdf4',
+                              color: '#15803d',
+                              border: '1px solid #bbf7d0',
+                              padding: '3px 8px',
+                              borderRadius: '8px',
+                              fontSize: '11px',
+                              fontWeight: 800
+                            }}>
+                              {story.badge || 'Fresh Batch'}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <div style={{ fontWeight: 800, color: 'var(--primary-green)' }}>
+                              ₹{firstSlide.price || 199}
+                            </div>
+                            <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                              {firstSlide.stock || 5} units available
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px', maxWidth: '280px' }}>
+                            <p style={{
+                              margin: 0,
+                              fontSize: '12px',
+                              color: '#475569',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              lineHeight: 1.4
+                            }}>
+                              {firstSlide.caption || 'Live botanical arrival inspected and ready for 20-min express delivery.'}
+                            </p>
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <button
+                              onClick={() => handleToggleStory(story.id)}
+                              style={{
+                                background: isLive ? '#dcfce7' : '#f1f5f9',
+                                color: isLive ? '#166534' : '#64748b',
+                                border: 'none',
+                                padding: '5px 12px',
+                                borderRadius: '14px',
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                              }}
+                              title="Click to toggle live status on Home"
+                            >
+                              {isLive ? '● Live on Home' : '○ Hidden/Paused'}
+                            </button>
+                          </td>
+                          <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                            <div style={{ display: 'inline-flex', gap: '8px' }}>
+                              <button
+                                onClick={() => handleOpenEditStory(story)}
+                                style={{
+                                  background: '#f8fafc',
+                                  border: '1px solid #cbd5e1',
+                                  color: '#0f172a',
+                                  padding: '6px 12px',
+                                  borderRadius: '8px',
+                                  fontSize: '12px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteStory(story.id, story.batchTitle)}
+                                style={{
+                                  background: '#fff1f2',
+                                  border: '1px solid #fecdd3',
+                                  color: '#e11d48',
+                                  padding: '6px 10px',
+                                  borderRadius: '8px',
+                                  fontSize: '12px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Back button */}
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
+              <button 
+                onClick={() => setActiveMenuId('dashboard')} 
+                style={{ background: 'transparent', color: 'var(--primary-green)', border: '1px solid var(--primary-green)', padding: '8px 16px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+              >
+                &larr; Back to Dashboard
+              </button>
+            </div>
+          </div>
+        ) : activeMenuId !== 'dashboard' ? (
           <div style={{ background: '#ffffff', padding: '24px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '18px', borderBottom: '1px solid #eee', paddingBottom: '8px', textTransform: 'capitalize', color: 'var(--dark)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
@@ -1038,6 +1400,14 @@ export default function AdminPortalPage() {
                   </div>
                 </button>
 
+                <button onClick={() => setActiveMenuId('stories')} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f7fafc', border: '1px solid #edf2f7', padding: '12px 16px', borderRadius: '12px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-green)'} onMouseOut={(e) => e.currentTarget.style.borderColor = '#edf2f7'}>
+                  <span style={{ display: 'inline-flex', background: '#ebf8f2', padding: '8px', borderRadius: '8px', color: 'var(--primary-green)', fontSize: '15px' }}>📸</span>
+                  <div>
+                    <strong style={{ fontSize: '12.5px', display: 'block', color: 'var(--dark)' }}>Batch Unboxings</strong>
+                    <span style={{ fontSize: '9.5px', color: '#a0aec0', display: 'block' }}>Manage home story rings</span>
+                  </div>
+                </button>
+
                 <button onClick={() => setActiveMenuId('reports')} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f7fafc', border: '1px solid #edf2f7', padding: '12px 16px', borderRadius: '12px', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-green)'} onMouseOut={(e) => e.currentTarget.style.borderColor = '#edf2f7'}>
                   <span style={{ display: 'inline-flex', background: '#ebf8f2', padding: '8px', borderRadius: '8px', color: 'var(--primary-green)' }}>{renderDashboardIcon('quick-chart', 'var(--primary-green)')}</span>
                   <div>
@@ -1050,6 +1420,261 @@ export default function AdminPortalPage() {
           </>
         )}
       </div>
+
+      {/* 📸 ADD / EDIT BATCH UNBOXING STORY MODAL */}
+      {showStoryModal && (
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowStoryModal(false);
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(0, 0, 0, 0.72)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '20px',
+            maxWidth: '560px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: '28px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            border: '1px solid #e2e8f0',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setShowStoryModal(false)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: '#f1f5f9',
+                border: 'none',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              ✕
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '24px' }}>📸</span>
+              <h3 style={{ fontSize: '19px', fontWeight: 800, color: 'var(--dark)', margin: 0 }}>
+                {editingStory ? 'Edit Batch Unboxing Story' : 'Add New Daily Batch Unboxing'}
+              </h3>
+            </div>
+            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '20px' }}>
+              This story appears as an interactive circular ring on the homepage under "Today's Fresh Batch Unboxings".
+            </p>
+
+            <form onSubmit={handleSaveStory}>
+              {/* Batch Title */}
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  Batch Title (Appears below circle ring) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Golden Pothos Trailers, Monstera Aroid"
+                  value={storyForm.batchTitle}
+                  onChange={(e) => setStoryForm({ ...storyForm, batchTitle: e.target.value })}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                />
+              </div>
+
+              {/* Plant Name & Badge */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Plant Item Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Premium Golden Pothos"
+                    value={storyForm.plantName}
+                    onChange={(e) => setStoryForm({ ...storyForm, plantName: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Highlight Badge Tag
+                  </label>
+                  <select
+                    value={storyForm.badge}
+                    onChange={(e) => setStoryForm({ ...storyForm, badge: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none', background: '#fff' }}
+                  >
+                    <option value="Fresh Batch">Fresh Batch</option>
+                    <option value="Botanist Pick">Botanist Pick</option>
+                    <option value="NASA Top 10">NASA Top 10</option>
+                    <option value="Rare Bloom">Rare Bloom</option>
+                    <option value="Limited Batch">Limited Batch</option>
+                    <option value="Same-Day Special">Same-Day Special</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Price & Stock */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Price (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={storyForm.price}
+                    onChange={(e) => setStoryForm({ ...storyForm, price: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Available Stock
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={storyForm.stock}
+                    onChange={(e) => setStoryForm({ ...storyForm, stock: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                    Delivery Speed
+                  </label>
+                  <input
+                    type="text"
+                    value={storyForm.distance}
+                    onChange={(e) => setStoryForm({ ...storyForm, distance: e.target.value })}
+                    placeholder="e.g. 20m Delivery"
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
+              {/* Image Presets & Media URL */}
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  Unboxing Photo / Media (Click quick preset or enter URL) *
+                </label>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                  {[
+                    { label: '🌿 Pothos', url: '/images/golden_pothos.png' },
+                    { label: '🪴 Snake Plant', url: '/images/snake_plant.png' },
+                    { label: '🍃 Monstera', url: 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=800&auto=format&fit=crop&q=80' },
+                    { label: '🌸 Orchid', url: 'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?w=800&auto=format&fit=crop&q=80' },
+                    { label: '🌳 Bonsai', url: '/images/ficus_bonsai.png' },
+                    { label: '🌺 Hibiscus', url: '/images/red_hibiscus.png' }
+                  ].map(preset => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => setStoryForm({ ...storyForm, media: preset.url })}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '8px',
+                        border: storyForm.media === preset.url ? '1.5px solid var(--primary-green)' : '1px solid #cbd5e1',
+                        background: storyForm.media === preset.url ? '#e8f5e9' : '#f8fafc',
+                        color: '#1e293b',
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter image URL"
+                    value={storyForm.media}
+                    onChange={(e) => setStoryForm({ ...storyForm, media: e.target.value })}
+                    style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none' }}
+                  />
+                  <div style={{ width: '42px', height: '42px', borderRadius: '8px', border: '1px solid #cbd5e1', overflow: 'hidden', flexShrink: 0 }}>
+                    <img
+                      src={storyForm.media || '/images/golden_pothos.png'}
+                      alt="Preview"
+                      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/images/golden_pothos.png'; }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Caption */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  Botanist Inspection Notes / Story Caption
+                </label>
+                <textarea
+                  rows="3"
+                  value={storyForm.caption}
+                  onChange={(e) => setStoryForm({ ...storyForm, caption: e.target.value })}
+                  placeholder="e.g. 🌿 Inspected by our certified botanist at 9:00 AM today. Heavy foliage, rich organic soil, guaranteed thrive!"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '13px', outline: 'none', resize: 'vertical' }}
+                />
+              </div>
+
+              {/* Active Toggle */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+                <input
+                  type="checkbox"
+                  id="story-active-cb"
+                  checked={storyForm.active}
+                  onChange={(e) => setStoryForm({ ...storyForm, active: e.target.checked })}
+                  style={{ width: '16px', height: '16px', accentColor: 'var(--primary-green)', cursor: 'pointer' }}
+                />
+                <label htmlFor="story-active-cb" style={{ fontSize: '13px', fontWeight: 600, color: '#1e293b', cursor: 'pointer' }}>
+                  Make story live immediately on homepage
+                </label>
+              </div>
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowStoryModal(false)}
+                  style={{ padding: '10px 18px', borderRadius: '10px', border: '1px solid #cbd5e1', background: '#f8fafc', color: '#475569', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ padding: '10px 22px', borderRadius: '10px', fontSize: '13px', fontWeight: 800 }}
+                >
+                  {editingStory ? 'Save Changes' : 'Publish Live to Home'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

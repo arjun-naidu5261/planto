@@ -535,6 +535,60 @@ export const api = {
     });
     return handleResponse(res);
   },
+  getAdminStories: async () => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = {};
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+    const res = await fetch(`${API_BASE}/admin/stories`, { headers });
+    return handleResponse(res);
+  },
+  createAdminStory: async (data) => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = { 'Content-Type': 'application/json' };
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+    const res = await fetch(`${API_BASE}/admin/stories`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  updateAdminStory: async (id, data) => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = { 'Content-Type': 'application/json' };
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+    const res = await fetch(`${API_BASE}/admin/stories/${id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(data)
+    });
+    return handleResponse(res);
+  },
+  toggleAdminStory: async (id) => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = { 'Content-Type': 'application/json' };
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+    const res = await fetch(`${API_BASE}/admin/stories/${id}/toggle`, {
+      method: 'PATCH',
+      headers
+    });
+    return handleResponse(res);
+  },
+  deleteAdminStory: async (id) => {
+    const savedUser = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('planto_user') || 'null') : null;
+    const headers = {};
+    if (savedUser?.role) headers['x-user-role'] = savedUser.role;
+    if (savedUser?.email) headers['x-user-email'] = savedUser.email;
+    const res = await fetch(`${API_BASE}/admin/stories/${id}`, {
+      method: 'DELETE',
+      headers
+    });
+    return handleResponse(res);
+  },
 
   // 🌿 REVENUE MVP: PRODUCT BUNDLES & UPSELLS
   getBundles: async () => {

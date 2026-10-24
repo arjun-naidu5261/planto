@@ -2,12 +2,14 @@
   {
     "id": "story-v1",
     "vendorId": "v1",
-    "vendorName": "Sai Baba Plant & Pot Stall",
-    "owner": "Suresh Rao",
-    "vendorAvatar": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=200&q=80",
-    "distance": "0.6 km",
+    "batchTitle": "Golden Pothos Trailers",
+    "vendorName": "PlantMe Botanical Hub",
+    "vendorAvatar": "/images/golden_pothos.png",
+    "distance": "20m Delivery",
+    "badge": "Fresh Batch",
     "verified": true,
     "hasUnread": true,
+    "active": true,
     "slides": [
       {
         "id": "s1_1",
@@ -36,12 +38,14 @@
   {
     "id": "story-v2",
     "vendorId": "v2",
-    "vendorName": "Sri Lakshmi Garden Nursery",
-    "owner": "Lakshmi Narayana",
-    "vendorAvatar": "https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&w=200&q=80",
-    "distance": "1.2 km",
+    "batchTitle": "Monstera Aroid Batch",
+    "vendorName": "PlantMe Botanical Hub",
+    "vendorAvatar": "https://images.unsplash.com/photo-1545241047-6083a3684587?w=800&auto=format&fit=crop&q=80",
+    "distance": "20m Delivery",
+    "badge": "Botanist Pick",
     "verified": true,
     "hasUnread": true,
+    "active": true,
     "slides": [
       {
         "id": "s2_1",
@@ -59,12 +63,14 @@
   {
     "id": "story-v3",
     "vendorId": "v3",
-    "vendorName": "Green Valley Exotic Flora",
-    "owner": "Kavitha Reddy",
-    "vendorAvatar": "https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=200&auto=format&fit=crop&q=80",
-    "distance": "1.8 km",
+    "batchTitle": "Air-Purifying Snake Plants",
+    "vendorName": "PlantMe Botanical Hub",
+    "vendorAvatar": "/images/snake_plant.png",
+    "distance": "20m Delivery",
+    "badge": "NASA Top 10",
     "verified": true,
     "hasUnread": true,
+    "active": true,
     "slides": [
       {
         "id": "s3_1",
@@ -82,12 +88,14 @@
   {
     "id": "story-v4",
     "vendorId": "v4",
-    "vendorName": "Indiranagar Bonsai & Orchid Studio",
-    "owner": "Ramesh Kumar",
-    "vendorAvatar": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&auto=format&fit=crop&q=80",
-    "distance": "2.1 km",
+    "batchTitle": "Purple Phalaenopsis Orchids",
+    "vendorName": "PlantMe Botanical Hub",
+    "vendorAvatar": "https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?w=800&auto=format&fit=crop&q=80",
+    "distance": "20m Delivery",
+    "badge": "Rare Bloom",
     "verified": true,
     "hasUnread": true,
+    "active": true,
     "slides": [
       {
         "id": "s4_1",

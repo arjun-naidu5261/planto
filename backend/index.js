@@ -1370,21 +1370,30 @@ app.post('/api/ai/sync-to-garden', (req, res) => {
 
 // --- PLANTME DAILY BOTANICAL LIVE UNBOXINGS ---
 app.get('/api/stories', (req, res) => {
-  const storiesFile = path.join(__dirname, 'data', 'stories.json');
   try {
-    const raw = JSON.parse(fs.readFileSync(storiesFile, 'utf8') || '[]');
+    const raw = db.getStories ? db.getStories() : [];
     // Sanitize stories: brand under PlantMe Botanical Hub without supplier or owner identities
-    const sanitizedStories = raw.map(s => ({
-      id: s.id,
-      vendorName: 'PlantMe Botanical Hub',
-      vendorAvatar: '/logo.png',
-      verified: true,
-      hasUnread: s.hasUnread,
-      slides: (s.slides || []).map(slide => ({
-        ...slide,
-        caption: (slide.caption || '').replace(/nursery/gi, 'PlantMe Hub')
-      }))
-    }));
+    const sanitizedStories = raw
+      .filter(s => s && s.active !== false)
+      .map(s => {
+        const firstSlide = (s.slides && s.slides[0]) || {};
+        const title = s.batchTitle || firstSlide.plantName || s.title || 'Botanical Batch';
+        const avatar = s.vendorAvatar || firstSlide.media || '/images/golden_pothos.png';
+        return {
+          id: s.id,
+          batchTitle: title,
+          vendorName: title,
+          vendorAvatar: avatar,
+          badge: s.badge || 'Fresh Batch',
+          distance: s.distance || '20m Delivery',
+          verified: s.verified !== false,
+          hasUnread: s.hasUnread !== false,
+          slides: (s.slides || []).map(slide => ({
+            ...slide,
+            caption: (slide.caption || '').replace(/nursery/gi, 'PlantMe Hub')
+          }))
+        };
+      });
     res.json({ success: true, stories: sanitizedStories });
   } catch (e) {
     res.json({ success: true, stories: [] });
@@ -1396,10 +1405,151 @@ app.post('/api/stories/:id/react', (req, res) => {
   const { emoji, comment, plantId } = req.body;
   res.json({
     success: true,
-    message: 'Reaction sent directly to nursery owner via WhatsApp business chat!',
+    message: 'Reaction sent directly to botanical concierge via WhatsApp business chat!',
     storyId: id,
     emoji: emoji || '🌿'
   });
+});
+
+// --- ADMIN STORIES MANAGEMENT APIS ---
+app.get('/api/admin/stories', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
+  const raw = db.getStories ? db.getStories() : [];
+  res.json({ success: true, stories: raw });
+});
+
+app.post('/api/admin/stories', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
+  const { batchTitle, plantName, plantId, price, stock, media, caption, badge, distance } = req.body || {};
+  if (!batchTitle && !plantName) {
+    return res.status(400).json({ success: false, message: 'Batch title or plant name is required.' });
+  }
+
+  const stories = db.getStories ? db.getStories() : [];
+  const newStoryId = 'story-' + Date.now();
+  const slideId = 's_' + Date.now();
+
+  const newSlide = {
+    id: slideId,
+    media: media || '/images/golden_pothos.png',
+    mediaType: 'image',
+    caption: caption || `🌿 Fresh batch of ${plantName || batchTitle} inspected by PlantMe Certified Botanists!`,
+    timestamp: 'Today, ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+    plantId: plantId || ('p_' + Date.now()),
+    plantName: plantName || batchTitle,
+    price: Number(price) || 199,
+    stock: Number(stock) || 10
+  };
+
+  const newStory = {
+    id: newStoryId,
+    batchTitle: batchTitle || plantName,
+    vendorName: 'PlantMe Botanical Hub',
+    vendorAvatar: newSlide.media,
+    distance: distance || '20m Delivery',
+    badge: badge || 'Fresh Batch',
+    verified: true,
+    hasUnread: true,
+    active: true,
+    createdAt: new Date().toISOString(),
+    slides: [newSlide]
+  };
+
+  stories.unshift(newStory);
+  db.saveStories(stories);
+
+  // Write audit log
+  if (db.getAuditLogs && db.saveAuditLogs) {
+    const auditLogs = db.getAuditLogs();
+    auditLogs.unshift({
+      id: 'audit_' + Date.now(),
+      timestamp: new Date().toISOString(),
+      actor: req.headers['x-admin-email'] || 'admin@plantme.in',
+      role: 'admin',
+      action: 'ADD_BATCH_STORY',
+      details: `Created new botanical unboxing batch: ${newStory.batchTitle}`
+    });
+    db.saveAuditLogs(auditLogs);
+  }
+
+  res.json({ success: true, message: 'Batch unboxing story created successfully!', story: newStory });
+});
+
+app.put('/api/admin/stories/:id', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
+  const { id } = req.params;
+  const { batchTitle, plantName, price, stock, media, caption, badge, distance, active } = req.body || {};
+
+  const stories = db.getStories ? db.getStories() : [];
+  const idx = stories.findIndex(s => s.id === id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'Story not found.' });
+  }
+
+  if (batchTitle !== undefined) stories[idx].batchTitle = batchTitle;
+  if (distance !== undefined) stories[idx].distance = distance;
+  if (badge !== undefined) stories[idx].badge = badge;
+  if (active !== undefined) stories[idx].active = !!active;
+
+  if (!stories[idx].slides || stories[idx].slides.length === 0) {
+    stories[idx].slides = [{ id: 's_' + Date.now() }];
+  }
+
+  if (plantName !== undefined) stories[idx].slides[0].plantName = plantName;
+  if (price !== undefined) stories[idx].slides[0].price = Number(price);
+  if (stock !== undefined) stories[idx].slides[0].stock = Number(stock);
+  if (media !== undefined) {
+    stories[idx].slides[0].media = media;
+    stories[idx].vendorAvatar = media;
+  }
+  if (caption !== undefined) stories[idx].slides[0].caption = caption;
+
+  db.saveStories(stories);
+
+  res.json({ success: true, message: 'Story batch updated successfully!', story: stories[idx] });
+});
+
+app.patch('/api/admin/stories/:id/toggle', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
+  const { id } = req.params;
+  const stories = db.getStories ? db.getStories() : [];
+  const idx = stories.findIndex(s => s.id === id);
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: 'Story not found.' });
+  }
+
+  stories[idx].active = stories[idx].active === false ? true : false;
+  db.saveStories(stories);
+
+  res.json({ success: true, message: `Story ${stories[idx].active ? 'activated' : 'hidden'}.`, active: stories[idx].active });
+});
+
+app.delete('/api/admin/stories/:id', (req, res) => {
+  const role = getRequestRole(req);
+  if (role !== 'Admin') {
+    return res.status(403).json({ success: false, message: 'Access denied: Admin authorization required.' });
+  }
+  const { id } = req.params;
+  let stories = db.getStories ? db.getStories() : [];
+  const prevLen = stories.length;
+  stories = stories.filter(s => s.id !== id);
+  if (stories.length === prevLen) {
+    return res.status(404).json({ success: false, message: 'Story not found.' });
+  }
+  db.saveStories(stories);
+  res.json({ success: true, message: 'Story batch deleted successfully!' });
 });
 
 // --- ECOSYSTEM: VENDOR / NURSERY PARTNER APIS ---

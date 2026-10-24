@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../services/api';
 
 export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 0, onClose }) {
-  const { addToCart, products } = useApp();
-  const [currentStoryIdx, setCurrentStoryIdx] = useState(initialStoryIndex);
+  const { addToCart, products = [] } = useApp();
+  const [currentStoryIdx, setCurrentStoryIdx] = useState(initialStoryIndex || 0);
   const [currentSlideIdx, setCurrentSlideIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -12,13 +13,35 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
   const [questionText, setQuestionText] = useState('');
   const [addedPlantBanner, setAddedPlantBanner] = useState(false);
 
-  const SLIDE_DURATION = 5000; // 5 seconds per slide
-  const currentStory = stories[currentStoryIdx] || stories[0];
-  const slides = currentStory?.slides || [];
-  const currentSlide = slides[currentSlideIdx] || slides[0];
+  // Prevent background scrolling while modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
-  // Match plant in catalog
-  const catalogPlant = products.find(p => p.id === currentSlide?.plantId || p.name.toLowerCase().includes(currentSlide?.plantName?.toLowerCase() || ''));
+  const SLIDE_DURATION = 5000; // 5 seconds per slide
+  const currentStory = stories[currentStoryIdx] || stories[0] || {};
+  const rawSlides = currentStory?.slides || [];
+  const slides = rawSlides.length > 0 ? rawSlides : [{
+    id: 's_default',
+    media: currentStory?.vendorAvatar || '/images/golden_pothos.png',
+    mediaType: 'image',
+    caption: '🌿 Fresh botanical batch arrival inspected by PlantMe experts. 20-min express delivery!',
+    timestamp: 'Today',
+    plantName: currentStory?.batchTitle || currentStory?.vendorName || 'Botanical Special',
+    price: 199,
+    stock: 5
+  }];
+  const currentSlide = slides[currentSlideIdx] || slides[0] || {};
+
+  // Safely match plant in catalog
+  const catalogPlant = Array.isArray(products) ? products.find(p => p && (
+    (currentSlide?.plantId && p.id === currentSlide.plantId) || 
+    (p.name && currentSlide?.plantName && typeof p.name === 'string' && typeof currentSlide.plantName === 'string' && p.name.toLowerCase().includes(currentSlide.plantName.toLowerCase()))
+  )) : null;
 
   // Timer & Progress Bar Loop
   useEffect(() => {
@@ -74,7 +97,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
     } else if (currentStoryIdx > 0) {
       const prevStory = stories[currentStoryIdx - 1];
       setCurrentStoryIdx(prev => prev - 1);
-      setCurrentSlideIdx((prevStory.slides?.length || 1) - 1);
+      setCurrentSlideIdx((prevStory?.slides?.length || 1) - 1);
       setProgress(0);
     }
   };
@@ -82,7 +105,9 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
   const handleSendReaction = async (emoji) => {
     setReactionSent(emoji);
     try {
-      await api.reactToStory(currentStory.id, { emoji, plantId: currentSlide.plantId });
+      if (currentStory?.id) {
+        await api.reactToStory(currentStory.id, { emoji, plantId: currentSlide.plantId });
+      }
     } catch (e) {}
     setTimeout(() => setReactionSent(''), 2500);
   };
@@ -91,7 +116,9 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
     e.preventDefault();
     if (!questionText.trim()) return;
     try {
-      await api.reactToStory(currentStory.id, { comment: questionText, plantId: currentSlide.plantId });
+      if (currentStory?.id) {
+        await api.reactToStory(currentStory.id, { comment: questionText, plantId: currentSlide.plantId });
+      }
     } catch (e) {}
     setReactionSent('Message sent to botanical concierge!');
     setQuestionText('');
@@ -101,9 +128,9 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
   const handleOrderSlidePlant = () => {
     const itemToAdd = catalogPlant || {
       id: currentSlide.plantId || `story_p_${Date.now()}`,
-      name: currentSlide.plantName,
-      price: currentSlide.price,
-      images: [currentSlide.media],
+      name: currentSlide.plantName || currentStory.batchTitle || 'Botanical Special',
+      price: currentSlide.price || 199,
+      images: [currentSlide.media || '/images/golden_pothos.png'],
       rating: 4.8,
       reviewsCount: 24,
       quantity: currentSlide.stock || 5
@@ -114,36 +141,46 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
     setTimeout(() => setAddedPlantBanner(false), 3000);
   };
 
-  if (!currentStory || !currentSlide) return null;
-
-  return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 1400,
-      background: 'rgba(0, 0, 0, 0.88)',
-      backdropFilter: 'blur(12px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '16px'
-    }}>
+  const modalNode = (
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 999999,
+        background: 'rgba(0, 0, 0, 0.88)',
+        backdropFilter: 'blur(14px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        boxSizing: 'border-box'
+      }}
+    >
       
       {/* Story Container Frame */}
       <div 
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '430px',
+          maxWidth: '420px',
           height: '92vh',
-          maxHeight: '780px',
-          borderRadius: '28px',
+          maxHeight: '760px',
+          borderRadius: '24px',
           overflow: 'hidden',
           background: '#090d0b',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.6)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
           display: 'flex',
           flexDirection: 'column',
-          border: '1px solid rgba(255,255,255,0.1)'
+          border: '1px solid rgba(255,255,255,0.15)',
+          boxSizing: 'border-box'
         }}
         onMouseDown={() => setIsPaused(true)}
         onMouseUp={() => setIsPaused(false)}
@@ -154,8 +191,12 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
         {/* Media Background */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           <img
-            src={currentSlide.media}
-            alt={currentSlide.plantName}
+            src={currentSlide.media || '/images/golden_pothos.png'}
+            alt={currentSlide.plantName || 'Plant'}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/images/golden_pothos.png';
+            }}
             style={{
               width: '100%',
               height: '100%',
@@ -163,34 +204,36 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
               filter: 'brightness(0.92)'
             }}
           />
-          {/* Top & Bottom Dark Vignette Overlays for readability */}
+          {/* Top & Bottom Vignette Overlays */}
           <div style={{
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             height: '160px',
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%)'
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%)',
+            pointerEvents: 'none'
           }} />
           <div style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: '240px',
-            background: 'linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 60%, transparent 100%)'
+            height: '260px',
+            background: 'linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 60%, transparent 100%)',
+            pointerEvents: 'none'
           }} />
         </div>
 
         {/* Tap Interaction Zones (Left = Prev, Right = Next) */}
         <div 
           onClick={handlePrevSlide}
-          style={{ position: 'absolute', top: '100px', bottom: '180px', left: 0, width: '35%', zIndex: 5, cursor: 'pointer' }}
+          style={{ position: 'absolute', top: '90px', bottom: '200px', left: 0, width: '40%', zIndex: 5, cursor: 'pointer' }}
           title="Previous slide"
         />
         <div 
           onClick={handleNextSlide}
-          style={{ position: 'absolute', top: '100px', bottom: '180px', right: 0, width: '35%', zIndex: 5, cursor: 'pointer' }}
+          style={{ position: 'absolute', top: '90px', bottom: '200px', right: 0, width: '40%', zIndex: 5, cursor: 'pointer' }}
           title="Next slide"
         />
 
@@ -218,7 +261,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
                   <div style={{
                     width: `${fillPercent}%`,
                     height: '100%',
-                    background: '#ffffff',
+                    background: '#22c55e',
                     transition: idx === currentSlideIdx ? 'width 0.05s linear' : 'none'
                   }} />
                 </div>
@@ -226,29 +269,31 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
             })}
           </div>
 
-          {/* Stall Info & Actions */}
+          {/* Unboxing Hub Info & Actions */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <img
-                src={currentStory.vendorAvatar}
-                alt={currentStory.vendorName}
-                style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #22c55e' }}
+                src={currentStory.vendorAvatar || currentSlide.media || '/images/golden_pothos.png'}
+                alt={currentStory.batchTitle || 'PlantMe Hub'}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/golden_pothos.png';
+                }}
+                style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #22c55e' }}
               />
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#ffffff' }}>
-                    {currentStory.vendorName}
+                    {currentStory.batchTitle || currentStory.vendorName || 'PlantMe Botanical Hub'}
                   </span>
-                  {currentStory.verified && (
-                    <span style={{ background: '#22c55e', color: '#000', fontSize: '9px', fontWeight: 900, padding: '1px 5px', borderRadius: '6px' }}>
-                      ✓ VERIFIED
-                    </span>
-                  )}
+                  <span style={{ background: '#22c55e', color: '#000', fontSize: '9px', fontWeight: 900, padding: '1px 5px', borderRadius: '6px' }}>
+                    {currentStory.badge || '✓ VERIFIED'}
+                  </span>
                 </div>
-                <div style={{ fontSize: '11px', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>{currentStory.distance}</span>
+                <div style={{ fontSize: '11px', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                  <span>{currentStory.distance || '20m Delivery'}</span>
                   <span>•</span>
-                  <span>{currentSlide.timestamp}</span>
+                  <span>{currentSlide.timestamp || 'Fresh Batch'}</span>
                 </div>
               </div>
             </div>
@@ -269,6 +314,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
+                title={isPaused ? "Play" : "Pause"}
               >
                 {isPaused ? '▶' : '⏸'}
               </button>
@@ -288,6 +334,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
+                title="Close"
               >
                 ✕
               </button>
@@ -332,12 +379,12 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
             textShadow: '0 2px 4px rgba(0,0,0,0.8)',
             fontWeight: 500
           }}>
-            {currentSlide.caption}
+            {currentSlide.caption || '🌿 Fresh inspected live plant batch. Zero leaf defects, guaranteed thrive!'}
           </p>
 
           {/* Product Card Shelf Tag */}
           <div style={{
-            background: 'rgba(15, 23, 42, 0.85)',
+            background: 'rgba(15, 23, 42, 0.88)',
             backdropFilter: 'blur(12px)',
             border: '1px solid rgba(255,255,255,0.18)',
             borderRadius: '18px',
@@ -347,23 +394,27 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
             justifyContent: 'space-between',
             gap: '12px',
             marginBottom: '12px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
+            boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <img
-                src={currentSlide.media}
+                src={currentSlide.media || '/images/golden_pothos.png'}
                 alt={currentSlide.plantName}
-                style={{ width: '46px', height: '46px', borderRadius: '10px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/golden_pothos.png';
+                }}
+                style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
               />
               <div>
                 <span style={{ fontSize: '10px', background: '#dcfce7', color: '#166534', fontWeight: 800, padding: '2px 6px', borderRadius: '6px' }}>
-                  ● Only {currentSlide.stock} left in stock
+                  ● {currentSlide.stock ? `Only ${currentSlide.stock} left in stock` : 'Batch Inspected'}
                 </span>
                 <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: '#ffffff', margin: '3px 0 1px 0' }}>
-                  {currentSlide.plantName}
+                  {currentSlide.plantName || currentStory.batchTitle || 'Fresh Plant Arrival'}
                 </h4>
                 <div style={{ fontSize: '13px', fontWeight: 900, color: '#4ade80' }}>
-                  ₹{currentSlide.price}
+                  ₹{currentSlide.price || 199}
                 </div>
               </div>
             </div>
@@ -427,7 +478,7 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
             <form onSubmit={handleSendQuestion} style={{ flex: 1, display: 'flex', gap: '6px' }}>
               <input
                 type="text"
-                placeholder="Ask stall owner..."
+                placeholder="Ask PlantMe botanist..."
                 value={questionText}
                 onChange={(e) => setQuestionText(e.target.value)}
                 style={{
@@ -466,4 +517,6 @@ export default function NurseryStoriesModal({ stories = [], initialStoryIndex = 
       </div>
     </div>
   );
+
+  return createPortal(modalNode, document.body);
 }

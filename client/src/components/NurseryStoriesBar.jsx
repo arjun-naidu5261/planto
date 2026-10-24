@@ -36,14 +36,16 @@ export default function NurseryStoriesBar() {
           100% { transform: scale(1); opacity: 1; }
         }
         .story-ring-animated {
-          background: linear-gradient(135deg, #22c55e 0%, #eab308 50%, #16a34a 100%);
+          background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #eab308 100%);
           padding: 2.5px;
           border-radius: 50%;
           cursor: pointer;
-          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
         }
         .story-ring-animated:hover {
-          transform: scale(1.06);
+          transform: scale(1.08);
+          box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
         }
       `}</style>
 
@@ -71,64 +73,78 @@ export default function NurseryStoriesBar() {
           scrollbarWidth: 'none',
           WebkitOverflowScrolling: 'touch'
         }}>
-          {stories.map((story, idx) => (
-            <div
-              key={story.id || idx}
-              onClick={() => setActiveStoryIdx(idx)}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '6px',
-                cursor: 'pointer',
-                flexShrink: 0,
-                width: '78px'
-              }}
-            >
-              <div className="story-ring-animated">
-                <div style={{
-                  background: '#ffffff',
-                  padding: '2px',
-                  borderRadius: '50%',
+          {stories.map((story, idx) => {
+            const displayName = story.batchTitle || story.title || (story.vendorName ? story.vendorName.replace('PlantMe Botanical Hub', 'Fresh Batch') : 'Arrival');
+            return (
+              <div
+                key={story.id || idx}
+                onClick={() => setActiveStoryIdx(idx)}
+                style={{
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <img
-                    src={story.vendorAvatar}
-                    alt={story.vendorName}
-                    style={{
-                      width: '62px',
-                      height: '62px',
-                      borderRadius: '50%',
-                      objectFit: 'cover'
-                    }}
-                  />
+                  gap: '6px',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  width: '82px'
+                }}
+              >
+                <div className="story-ring-animated">
+                  <div style={{
+                    background: '#ffffff',
+                    padding: '2px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <img
+                      src={story.vendorAvatar || '/images/golden_pothos.png'}
+                      alt={displayName}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/images/golden_pothos.png';
+                      }}
+                      style={{
+                        width: '62px',
+                        height: '62px',
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <span style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                color: '#1e293b',
-                textAlign: 'center',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                width: '100%'
-              }}>
-                {story.vendorName.split(' ')[0]} {story.vendorName.split(' ')[1] || ''}
-              </span>
-              <span style={{
-                fontSize: '10px',
-                color: '#16a34a',
-                fontWeight: 800,
-                marginTop: '-4px'
-              }}>
-                {story.distance}
-              </span>
-            </div>
-          ))}
+                <span 
+                  title={displayName}
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: '#1e293b',
+                    textAlign: 'center',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: '100%'
+                  }}
+                >
+                  {displayName}
+                </span>
+                <span style={{
+                  fontSize: '10px',
+                  color: '#16a34a',
+                  fontWeight: 800,
+                  marginTop: '-4px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%'
+                }}>
+                  {story.badge || story.distance || '20m Delivery'}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </section>
 
